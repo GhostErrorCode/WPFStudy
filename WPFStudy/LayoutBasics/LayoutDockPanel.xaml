@@ -1,0 +1,21 @@
+﻿<Window x:Class="WPFStudy.LayoutBasics.LayoutDockPanel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFStudy.LayoutBasics"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="LayoutDockPanel" Height="450" Width="800">
+    <Grid>
+        <!-- DockPanel是一个强大的布局容器，允许子元素"停靠"在容器的四个边缘（上、下、左、右）或填充剩余空间 -->
+        <!-- LastChildFill: 决定最后一个子元素是否填充剩余空间(默认值true) -->
+        <!-- DockPanel.Dock: 附加属性，设置子元素的停靠位置(默认值left) -->
+        <DockPanel LastChildFill="False">
+            <ui:Button Width="100" Height="40" Background="BlueViolet" DockPanel.Dock="Left"></ui:Button>
+            <ui:Button Width="100" Height="40" Background="BlueViolet" DockPanel.Dock="Top" HorizontalAlignment="Center"></ui:Button>
+            <ui:Button Width="100" Height="40" Background="BlueViolet" DockPanel.Dock="Bottom"></ui:Button>
+            <ui:Button Width="100" Height="40" Background="BlueViolet" DockPanel.Dock="Right"></ui:Button>
+        </DockPanel>
+    </Grid>
+</Window>
