@@ -1,0 +1,63 @@
+﻿<Window x:Class="WPFStudy.LayoutBasics.LayoutWrapPanel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFStudy.LayoutBasics"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="LayoutWrapPanel" Height="450" Width="800">
+    <Grid>
+        <!-- 将当前页面分成两行两列 -->
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <!-- WrapPanel布局容器，当空间不够时，它能自动将内容换行或换列排列 -->
+        <!-- Orientation：控制排列方向，默认是Horizontal（水平排列）。设置为Vertical时则垂直排列 -->
+        <!-- ItemWidth 和 ItemHeight：设置这两个属性可以统一所有子元素的宽度和高度。如果不设置，子元素将使用自身所需尺寸 -->
+        <WrapPanel Grid.Row="0" Grid.Column="0">
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+        </WrapPanel>
+        
+        <WrapPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+        </WrapPanel>
+
+        <WrapPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" ItemWidth="200" ItemHeight="100">
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+        </WrapPanel>
+
+        <WrapPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical"  ItemWidth="80" ItemHeight="40">
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+            <ui:Button Width="100" Height="50" Appearance="Primary"></ui:Button>
+        </WrapPanel>
+    </Grid>
+</Window>
