@@ -1,0 +1,61 @@
+﻿<Window x:Class="WPFStudy.LayoutBasics.LayoutStackPanel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFStudy.LayoutBasics"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="LayoutStackPanel" Height="450" Width="800">
+    <Grid>
+        <!-- 将当前页面分成两行两列 -->
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <!-- StackPanel负责在Grid内部进行布局 -->
+        <!-- Orientation="Horizontal"决定子控件是垂直排列（默认）还是水平排列 -->
+        <!-- HorizontalAlignment 子控件在水平方向的对齐方式 -->
+        <!-- VerticalAlignment 子控件在垂直方向的对齐方式 -->
+        <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center">
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left">
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Top">
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+            <ui:Button Width="100" Height="50" Background="Red"></ui:Button>
+        </StackPanel>
+    </Grid>
+</Window>
