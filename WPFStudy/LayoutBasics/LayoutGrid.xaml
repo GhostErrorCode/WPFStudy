@@ -1,0 +1,51 @@
+﻿<Window x:Class="WPFStudy.LayoutBasics.LayoutGrid"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFStudy.LayoutBasics"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="LayoutGrid" Height="450" Width="800">
+    <Grid>
+        <!-- 各种容器 -->
+        <!-- Grid: 按行和列排列控件，功能类似HTML表格，非常灵活，常用的主布局容器。常用于创建结构化的窗体、数据输入界面等 -->
+        <!-- StackPanel: 按水平或垂直方向（通过Orientation属性设置）依次排列子元素。常用于工具栏、简单列表或表单项的线性排列 -->
+        <!-- WrapPanel: 按水平或垂直方向排列子元素，空间不足时自动换行/换列。常用于动态项目列表、图库或工具栏 -->
+        <!-- DockPanel: 将子元素停靠在容器的上、下、左、右边缘。默认最后一个元素填充剩余空间。常用于窗口框架布局，类似Visual Studio的界面（菜单停靠顶部、工具箱停靠左侧等） -->
+        <!-- Canvas: 使用绝对坐标（如Canvas.Left, Canvas.Top）定位子元素。	常用于需要精确控制位置的图形绘制或自定义布局 -->
+        <!-- UniformGrid: 所有单元格大小均匀的网格，会自动调整每个单元格的大小使所有子控件占据相同的空间。常用于棋盘、仪表盘等需要均匀排列控件的场景 -->
+        
+        <!-- Grid容器 -->
+        <!-- 将当前页面分成两行两列 -->
+        <!-- 页面分成两行 -->
+        <Grid.RowDefinitions>
+            <!-- 当高度设置成Auto自适应后,如果此容器内没有空间,则会被其他容器占用 -->
+            <!-- 这里因为第一行的容器里没有元素(控件),所以将只会显示第二行容器的内容 -->
+            <!-- Height="Auto"自动尺寸 -->
+            <!-- Height="100" 绝对尺寸 -->
+            <!-- Height="2*" 比例尺寸，表示是其他行的两倍 -->
+            <RowDefinition Height="0.5*"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <!-- 页面分成两列 -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <!-- 一旦第一行的容器内有控件,则会以第一行容器内所有控件中最高高度来定义 -->
+        <Label Grid.Row="0" Grid.Column="0" Height="50"></Label>
+        <Label Grid.Row="0" Grid.Column="1" Height="150"></Label>
+        
+        <!-- 定义4个Border,分别去渲染分出来的4个块的背景色 -->
+        <!-- Border（边框） 是WPF中一个非常实用的装饰性容器控件，主要用于为其他元素添加视觉装饰效果 -->
+        <!-- Grid.Row="0" Grid.Column="0"表示Border位于第一行第一列 -->
+        <!-- Grid.ColumnSpan="2" Grid.RowSpan="2"表示跨两行两列 -->
+        <!-- <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="Red"></Border> -->
+        <Border Grid.Row="0" Grid.Column="0" Background="Red"></Border>
+        <Border Grid.Row="0" Grid.Column="1" Background="Green"></Border>
+        <Border Grid.Row="1" Grid.Column="0" Background="Blue"></Border>
+        <Border Grid.Row="1" Grid.Column="1" Background="Yellow"></Border>
+    </Grid>
+</Window>

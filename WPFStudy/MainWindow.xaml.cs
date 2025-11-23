@@ -11,6 +11,7 @@ using System.Windows.Shapes;
 
 // 以下using为自己的代码
 using WPFStudy.CodeFile;
+using WPFStudy.LayoutBasics;
 
 namespace WPFStudy
 {
@@ -26,6 +27,7 @@ namespace WPFStudy
 
             /********** 需要调用的代码写在下面 **********/
             this.Hide();
+            new LayoutGrid().Show();
         }
     }
 }
