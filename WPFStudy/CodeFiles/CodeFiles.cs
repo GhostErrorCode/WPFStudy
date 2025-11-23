@@ -14,13 +14,19 @@ namespace WPFStudy.CodeFile
         // 代码说明
         private static string[] CodeFileExplanation = new string[]
         { 
-            "布局基础",
+            "Grid布局容器: ",
+            "StackPanel布局容器: ",
+            "WrapPanel布局容器: ",
+            "DockPanel布局容器: ",
         };
 
         // 代码路径
         private static string[] CodeFilePath = new string[]
         {
-            "CodeFile: ../Layout/LayoutBasics.xaml",
+            "../Layout/LayoutGrid.xaml",
+            "../Layout/LayoutStackPanel.xaml",
+            "../Layout/LayoutWrapPanel.xaml",
+            "../Layout/LayoutDockPanel.xaml",
         };
 
 
@@ -35,7 +41,7 @@ namespace WPFStudy.CodeFile
             for(int  i = 0; i < CodeFileExplanation.Length; i++)
             {
                 // 先输出代码说明
-                Debug.Write($"{i + 1}. ");
+                Debug.Write(i > 9 ? $"{i + 1}.": $"{i + 1} .");
                 Debug.Write(CodeFileExplanation[i]);
                 // 在代码文件路径中间补充(点.)
                 for(int j = 0; j < CodeFileStandardLength - CodeFileExplanation[i].Length; j++)
