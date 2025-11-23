@@ -1,0 +1,22 @@
+# 忽略 bin 和 obj
+[Bb]in/
+[Oo]bj/
+
+# 忽略 .vs 目录
+.vs/
+
+# 忽略各种输出目录
+x64/       # 明确排除 x64 输出目录
+x86/       # 排除 x86 输出目录
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Dd]ebug/
+[Rr]elease/
+wpfui/
+*.exe
+# *.dll
+*.lib
+*.pdb
+*.ilk
+*.ipch
+*.cache
