@@ -11,6 +11,9 @@
     <Compile Update="LayoutBasics\LayoutStackPanel.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="LayoutBasics\LayoutUniformGrid.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="LayoutBasics\LayoutWrapPanel.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
