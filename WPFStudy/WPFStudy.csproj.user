@@ -23,5 +23,8 @@
     <Compile Update="StyleBasics\StyleBasic.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Template\ControlTemplate.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

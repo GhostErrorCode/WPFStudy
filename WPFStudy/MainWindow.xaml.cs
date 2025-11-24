@@ -13,6 +13,8 @@ using System.Windows.Shapes;
 using WPFStudy.CodeFile;
 
 using WPFStudy.LayoutBasics;  // 布局基础
+using WPFStudy.StyleBasics;  // 样式基础
+using WPFStudy.Template;  // 模板 - 控件/数据模板
 
 
 namespace WPFStudy
@@ -29,7 +31,7 @@ namespace WPFStudy
 
             /********** 需要调用的代码写在下面 **********/
             this.Hide();
-            // new LayoutGrid().Show();
+            new Template.ControlTemplate().Show();
         }
     }
 }

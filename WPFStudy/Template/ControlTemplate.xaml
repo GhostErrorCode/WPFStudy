@@ -1,0 +1,304 @@
+﻿<Window x:Class="WPFStudy.Template.ControlTemplate"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFStudy.Template"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="ControlTemplate" Height="450" Width="800">
+
+    <Window.Resources>
+        <!-- 定义圆形按钮模板 - 直接设置Template属性 -->
+
+        <!-- 第1部分：定义圆形按钮模板 -->
+        <!-- 
+            直接定义控件模板，不通过样式
+            x:Key="DirectCircleTemplate" - 给模板命名，方便引用
+            TargetType="Button" - 指定这个模板只能用于Button控件
+        -->
+        <ControlTemplate x:Key="DirectCircleTemplate" TargetType="Button">
+            <!-- 第2部分：定义模板的视觉结构 -->
+            <!-- Grid作为布局容器，用于组织模板中的元素 -->
+            <Grid>
+
+                <!-- 第3部分：圆形背景元素 -->
+                <!-- 
+                    Ellipse - 椭圆形状，当宽高相等时就是圆形
+                    x:Name="CircleBg" - 给这个元素命名，方便在触发器中引用
+                    Fill="{TemplateBinding Background}" - 关键！将圆形的填充色绑定到按钮的Background属性
+                    Stroke="{TemplateBinding BorderBrush}" - 将圆形边框颜色绑定到按钮的BorderBrush属性
+                    StrokeThickness="2" - 设置边框粗细为2像素
+                -->
+                <Ellipse x:Name="CircleBg"
+                         Fill="{TemplateBinding Background}"
+                         Stroke="{TemplateBinding BorderBrush}"
+                         StrokeThickness="2"/>
+
+                <!-- 第4部分：内容显示区域 -->
+                <!-- 
+                    ContentPresenter - 显示按钮内容的占位符，必须要有！
+                    HorizontalAlignment="Center" - 内容水平居中
+                    VerticalAlignment="Center" - 内容垂直居中
+                    TextElement.Foreground="{TemplateBinding Foreground}" - 文字颜色绑定到按钮的Foreground属性
+                -->
+                <ContentPresenter x:Name="ContentDisplay"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  TextElement.Foreground="{TemplateBinding Foreground}"/>
+            </Grid>
+
+            <!-- 第5部分：模板触发器 - 定义交互效果 -->
+            <ControlTemplate.Triggers>
+
+                <!-- 鼠标悬停效果 -->
+                <!-- 
+                    Trigger - 属性触发器
+                    Property="IsMouseOver" - 监视按钮的IsMouseOver属性
+                    Value="True" - 当属性值为True时触发
+                -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <!-- 
+                        Setter - 设置器，修改模板中指定元素的属性
+                        TargetName="CircleBg" - 目标元素是名为CircleBg的椭圆
+                        Property="Fill" - 要修改的属性是填充色
+                        Value="LightBlue" - 修改为浅蓝色
+                    -->
+                    <Setter TargetName="CircleBg" Property="Fill" Value="LightBlue"/>
+                    <Setter TargetName="CircleBg" Property="Stroke" Value="Blue"/>
+                </Trigger>
+
+                <!-- 按钮按下效果 -->
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="CircleBg" Property="Fill" Value="Blue"/>
+                    <!-- 让文字下移1像素，模拟按下效果 -->
+                    <Setter TargetName="ContentDisplay" Property="RenderTransform">
+                        <Setter.Value>
+                            <!-- TranslateTransform - 平移变换，Y="1"表示向下移动1像素 -->
+                            <TranslateTransform Y="1"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+
+                <!-- 禁用状态效果 -->
+                <Trigger Property="IsEnabled" Value="False">
+                    <!-- 设置半透明效果 -->
+                    <Setter TargetName="CircleBg" Property="Opacity" Value="0.5"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+
+        
+        
+        <!-- 定义圆形按钮模板 - 在Style内定义Template -->
+
+        <!-- 第1部分：定义包含模板的样式 -->
+        <!-- 
+            定义样式，样式内包含模板
+            x:Key="StyleCircleButton" - 给样式命名
+            TargetType="Button" - 这个样式只能用于Button控件
+        -->
+        <Style x:Key="StyleCircleButton" TargetType="Button">
+
+            <!-- 第2部分：在样式中设置按钮的默认属性 -->
+            <!-- 
+                这些Setter会在应用样式时自动设置按钮的属性
+                与直接模板方式不同，这里我们把属性设置封装在样式中
+            -->
+            <Setter Property="Background" Value="#3498DB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#2980B9"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="100"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="0"/>
+
+            <!-- 第3部分：在样式中定义模板 -->
+            <!-- 
+                Setter Property="Template" - 设置按钮的Template属性
+                这是关键区别：模板是作为样式的一部分来定义的
+            -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <!-- 模板定义开始 -->
+                    <ControlTemplate TargetType="Button">
+
+                        <!-- 第4部分：模板的视觉结构（与方式一相同） -->
+                        <Grid>
+                            <!-- 圆形背景 -->
+                            <Ellipse x:Name="StyleCircleBg"
+                                     Fill="{TemplateBinding Background}"
+                                     Stroke="{TemplateBinding BorderBrush}"
+                                     StrokeThickness="{TemplateBinding BorderThickness}"/>
+
+                            <!-- 内容显示 -->
+                            <ContentPresenter x:Name="StyleContentDisplay"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"
+                                              TextElement.FontSize="{TemplateBinding FontSize}"
+                                              TextElement.FontWeight="{TemplateBinding FontWeight}"/>
+                        </Grid>
+
+                        <!-- 第5部分：模板触发器 -->
+                        <ControlTemplate.Triggers>
+                            <!-- 鼠标悬停效果 -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="StyleCircleBg" Property="Fill" Value="#2980B9"/>
+                            </Trigger>
+
+                            <!-- 按钮按下效果 -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="StyleCircleBg" Property="Fill" Value="#21618C"/>
+                                <Setter TargetName="StyleContentDisplay" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TranslateTransform Y="1"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+
+                            <!-- 禁用状态效果 -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="StyleCircleBg" Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 第6部分：基于基础样式的变体样式 -->
+        <!-- 
+            使用BasedOn实现样式继承
+            这样可以创建不同颜色的圆形按钮，而无需重复定义模板
+        -->
+        <Style x:Key="SuccessCircleButton" TargetType="Button" BasedOn="{StaticResource StyleCircleButton}">
+            <Setter Property="Background" Value="#27AE60"/>
+            <Setter Property="BorderBrush" Value="#229954"/>
+        </Style>
+
+        <Style x:Key="DangerCircleButton" TargetType="Button" BasedOn="{StaticResource StyleCircleButton}">
+            <Setter Property="Background" Value="#E74C3C"/>
+            <Setter Property="BorderBrush" Value="#C0392B"/>
+        </Style>
+    </Window.Resources>
+    
+    
+    <Grid>
+        <!-- 对于控件模板有两种配置方法 -->
+        
+        <!-- 
+        1.直接设置Template：
+        - 只负责外观结构
+        - 需要单独设置其他属性（颜色、大小等）
+        
+        2.在Style内定义Template：
+        - 一站式解决方案：外观 + 属性设置
+        - 更好的封装性：把所有相关设置打包在一起
+        -->
+        
+        <!--
+        简单记法：
+        1.只是临时改个外观 → 直接设置Template
+        2.要创建可重用、易维护的控件 → 在Style内定义Template
+        在实际WPF开发中，在Style内定义Template是最常用和推荐的做法，因为它提供了更好的工程实践和代码组织。
+        -->
+        
+        <!-- 分成两列 -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <!-- 第6部分：使用直接模板的按钮 -->
+        <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+
+            <!-- 第一个直接模板按钮 -->
+            <!-- 
+            Template="{StaticResource DirectCircleTemplate}" - 关键！应用我们定义的圆形模板
+            Content="直接模板1" - 按钮上显示的文字
+            Background="LightGreen" - 按钮背景色（会通过TemplateBinding传递给圆形）
+            Foreground="DarkGreen" - 文字颜色
+            BorderBrush="Green" - 边框颜色
+            Width="100" Height="100" - 按钮尺寸（必须宽高相等才能得到正圆形）
+            Margin="10" - 外边距
+        -->
+            <Button Template="{StaticResource DirectCircleTemplate}"
+                Content="直接模板1"
+                Background="LightGreen"
+                Foreground="DarkGreen"
+                BorderBrush="Green"
+                Width="100" 
+                Height="100"
+                Margin="10"/>
+
+            <!-- 第二个直接模板按钮 -->
+            <Button Template="{StaticResource DirectCircleTemplate}"
+                Content="直接模板2"
+                Background="LightCoral"
+                Foreground="DarkRed"
+                BorderBrush="Red"
+                Width="100" 
+                Height="100"
+                Margin="10"/>
+
+            <!-- 第三个直接模板按钮（禁用状态） -->
+            <Button Template="{StaticResource DirectCircleTemplate}"
+                Content="已禁用"
+                Background="LightGray"
+                Foreground="Gray"
+                BorderBrush="DarkGray"
+                Width="100" 
+                Height="100"
+                Margin="10"
+                IsEnabled="False"/>
+        </StackPanel>
+
+
+
+
+        <!-- 第7部分：使用样式模板的按钮 -->
+        <WrapPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <!-- 第一个样式按钮 - 使用基础样式 -->
+            <!-- 
+            Style="{StaticResource StyleCircleButton}" - 应用我们定义的样式
+            注意：这里不需要单独设置Template属性，因为模板已经包含在样式中
+            也不需要设置Width、Height等属性，因为样式已经设置了默认值
+        -->
+            <Button Style="{StaticResource StyleCircleButton}" 
+                Content="样式按钮1"
+                Margin="10"/>
+
+            <!-- 第二个样式按钮 - 使用基础样式但覆盖背景色 -->
+            <!-- 
+            可以覆盖样式中的默认属性
+            Background="Purple" - 覆盖样式中的Background设置
+        -->
+            <Button Style="{StaticResource StyleCircleButton}" 
+                Content="自定义颜色"
+                Background="Purple"
+                BorderBrush="DarkOrchid"
+                Margin="10"/>
+
+            <!-- 第三个样式按钮 - 使用成功变体样式 -->
+            <Button Style="{StaticResource SuccessCircleButton}" 
+                Content="成功按钮"
+                Margin="10"/>
+
+            <!-- 第四个样式按钮 - 使用危险变体样式 -->
+            <Button Style="{StaticResource DangerCircleButton}" 
+                Content="危险按钮"
+                Margin="10"/>
+
+            <!-- 第五个样式按钮 - 禁用状态 -->
+            <Button Style="{StaticResource StyleCircleButton}" 
+                Content="禁用按钮"
+                IsEnabled="False"
+                Margin="10"/>
+        </WrapPanel>
+    </Grid>
+</Window>
