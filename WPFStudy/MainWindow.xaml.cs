@@ -31,7 +31,7 @@ namespace WPFStudy
 
             /********** 需要调用的代码写在下面 **********/
             this.Hide();
-            new Template.ControlTemplate().Show();
+            new Template.DataTemplate().Show();
         }
     }
 }
