@@ -1,0 +1,381 @@
+﻿<Window x:Class="WPFStudy.Template.DataTemplate"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFStudy.Template"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="DataTemplate" Height="800" Width="1500">
+
+    <Window.Resources>
+
+        <!--  
+        WPF样式的优先级从高到低：
+        1.本地设置（直接在元素上设置属性）
+        2.元素样式（如DataGrid.RowStyle）
+        3.隐式样式（在Resources中没有x:Key的样式）
+        4.继承样式（BasedOn继承的样式）
+        5.默认样式（控件自带的样式）
+         -->
+        <!-- 自定义ListBox样式 -->
+        <Style x:Key="VisibleBackgroundListBox" TargetType="ListBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBox">
+                        <!-- 关键：使用TemplateBinding将Border的背景绑定到ListBox的Background -->
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer>
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DataGridColumnHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <Style x:Key="DataGridSeleted" TargetType="DataGridRow">
+            <!-- 默认状态 -->
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="Black"/>
+
+            <Style.Triggers>
+                <!-- 选中状态 -->
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="LightGreen"/>
+                    <Setter Property="Foreground" Value="DarkGreen"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Trigger>
+
+                <!-- 鼠标悬停状态 -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="LightYellow"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DataGridRowEliminateGaps" TargetType="DataGridRow" BasedOn="{StaticResource DataGridSeleted}">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <!-- 防止最小高度造成间隙 -->
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!-- 分成2列：左List，右DataGrid -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <!-- 左边的List数据模板示例 -->
+        <Border Grid.Row="0" Grid.Column="0" Margin="20" Background="#FF92E8B3" BorderBrush="Black" BorderThickness="2">
+            <!-- ListBox设置的背景色会被DataTemplate里容器的背景色覆盖，导致不生效 -->
+            <!-- 可以采用ListBox外面加个Border，Boder来设置背景色。 或进行重写ListBox外观 -->
+            <ListBox x:Name="StudentListBox" ItemsSource="{Binding StudentLists}" HorizontalContentAlignment="Left">
+                <!-- 
+        x:Name="StudentListBox" - 给控件起名，方便在代码中访问
+        ItemsSource="{Binding Students}" - 绑定到数据源（Students集合）
+        HorizontalContentAlignment="Stretch" - 列表项内容水平拉伸填满整个宽度
+        HorizontalAlignment - 用于让ListBox在父容器中怎么对齐
+    -->
+
+                <!-- ItemTemplate：定义每个列表项的显示模板 -->
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <!-- 
+                DataTemplate - 数据模板，定义如何显示每条数据
+                这里会针对Students集合中的每个Student对象应用此模板
+            -->
+                        <Border Background="White" 
+                    BorderBrush="LightGray" 
+                    BorderThickness="1"
+                    Margin="5" 
+                    Padding="10"
+                    CornerRadius="5">
+                            <!-- 
+                    Background="White" - 白色背景
+                    BorderBrush="LightGray" - 浅灰色边框
+                    BorderThickness="1" - 边框粗细1像素
+                    Margin="5" - 外边距5像素（项与项之间的间距）
+                    Padding="10" - 内边距10像素（内容与边框的间距）
+                    CornerRadius="5" - 圆角5像素
+                -->
+
+                            <!-- StackPanel：水平排列学生信息的容器 -->
+                            <StackPanel Orientation="Horizontal">
+                                <!-- 左侧：学生头像区域 -->
+                                <Border Background="LightBlue" Width="50" Height="50" CornerRadius="25" Margin="0,0,15,0">
+                                    <!-- 
+                            Background="LightBlue" - 浅蓝色背景（模拟头像）
+                            Width="50" Height="50" - 固定宽高
+                            CornerRadius="25" - 圆角25像素（变成圆形）
+                            Margin="0,0,15,0" - 右边距15像素
+                        -->
+
+                                    <!-- 显示学生姓名首字母作为头像 -->
+                                    <TextBlock Text="{Binding Name}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="White">
+                            <!-- 
+                                Text绑定到Name属性，通过转换器取首字母
+                                HorizontalAlignment="Center" - 水平居中
+                                VerticalAlignment="Center" - 垂直居中
+                                FontSize="18" - 字体大小18
+                                FontWeight="Bold" - 粗体
+                                Foreground="White" - 白色文字
+                            -->
+                                    </TextBlock>
+                                </Border>
+
+                                <!-- 右侧：学生详细信息 -->
+                                <StackPanel Orientation="Vertical">
+                                    <!-- 学生姓名 -->
+                                    <TextBlock Text="{Binding Name}" 
+                                       FontSize="16" 
+                                       FontWeight="Bold"
+                                       Foreground="#333333">
+                                <!-- 
+                                    Text="{Binding Name}" - 显示学生姓名
+                                    FontSize="16" - 字体大小16
+                                    FontWeight="Bold" - 粗体
+                                    Foreground="#333333" - 深灰色文字
+                                -->
+                                    </TextBlock>
+
+                                    <!-- 学生年龄和年级 -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                        <!-- 
+                                        Orientation="Horizontal" - 水平排列
+                                        Margin="0,5,0,0" - 上边距5像素
+                                    -->
+
+                                        <TextBlock Text="{Binding Age, StringFormat='年龄: {0}岁'}"
+                                               FontSize="12"
+                                               Foreground="Gray">
+                                        <!-- 
+                                            StringFormat='{}年龄: {0}岁' - 格式化显示
+                                            显示为：年龄: 18岁
+                                        -->
+                                        </TextBlock>
+
+                                        <TextBlock Text=" | " 
+                                               FontSize="12"
+                                               Foreground="Gray"
+                                               Margin="5,0">
+                                        <!-- 分隔符 -->
+                                        </TextBlock>
+
+                                        <TextBlock Text="{Binding Grade}"
+                                               FontSize="12"
+                                               Foreground="Gray">
+                                        <!-- 显示年级 -->
+                                        </TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+
+
+        <!-- ############################################################################################################################### -->
+            
+        
+        <!-- 右边的DataGrid数据模板示例 -->
+        <Border Grid.Row="0" Grid.Column="1" Margin="10" BorderBrush="Black" BorderThickness="1">
+            <ui:DataGrid x:Name="StudentDataGrid"
+                         ItemsSource="{Binding StudentDataGrids}"
+                         AutoGenerateColumns="False"
+                         CanUserAddRows="False"
+                         HeadersVisibility="Column"
+                         GridLinesVisibility="All"
+                         BorderBrush="Black"
+                         BorderThickness="2,2,2,2"
+                         HorizontalGridLinesBrush="Black"
+                         VerticalGridLinesBrush="Black"
+                         RowHeight="50"
+                         Margin="20"
+                         ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                         RowStyle="{StaticResource DataGridRowEliminateGaps}">
+                <DataGrid.Resources>
+                    <!-- 覆盖系统颜色，将选中颜色设置为透明，这样默认的蓝色就不会显示 -->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
+                </DataGrid.Resources>
+                <!-- 
+                    x:Name="StudentDataGrid" - 控件名称
+                    ItemsSource="{Binding Students}" - 绑定到数据源
+                    AutoGenerateColumns="False" - 不自动生成列（我们要自定义列）
+                    CanUserAddRows="False" - 禁止用户添加新行
+                    HeadersVisibility="Column" - 只显示列标题
+                    GridLinesVisibility="Horizontal" - 只显示水平网格线
+                    RowHeight="60" - 行高60像素
+                -->
+                <!-- 确保行没有间距，让内置网格线连续 防止最小高度造成间隙-->
+                <!--
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="MinHeight" Value="0"/>
+                </Style>
+                </DataGrid.RowStyle>
+                -->
+
+                <!-- 移除单元格自定义边框，让内置网格线显示 -->
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Padding" Value="8,6"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <!-- 不设置自定义边框 -->
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    </Style>
+                </DataGrid.CellStyle>
+                <!-- Columns：定义表格的列 -->
+                <ui:DataGrid.Columns>
+                    <!-- 第一列：学生头像 -->
+                    <DataGridTemplateColumn Header="头像" Width="50">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <!-- <DataGridTemplateColumn.CellTemplate> 的核心作用是 自定义数据列的单元格显示内容 —— 它允许你通过 XAML 模板（DataTemplate）完全控制单元格内的 UI 结构，而不是使用 DataGrid 内置的简单列 -->
+                            <DataTemplate>
+                                <!-- 依旧数据模板 -->
+                                <!-- 圆形头像 -->
+                                <Border Background="LightBlue"
+                                        Width="40"
+                                        Height="40"
+                                        CornerRadius="20"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                    <!-- 
+                                        Width="40" Height="40" - 头像大小
+                                        CornerRadius="20" - 圆角20（变成圆形）
+                                        HorizontalAlignment="Center" - 水平居中
+                                        VerticalAlignment="Center" - 垂直居中
+                                    -->
+                                    <TextBlock Text="{Binding Name}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               FontSize="14"
+                                               FontWeight="Bold"
+                                               Foreground="White"/>
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- 第二列：学生姓名 -->
+                    <DataGridTemplateColumn Header="姓名" Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Name}" 
+                                   FontSize="14" 
+                                   FontWeight="Bold"
+                                               Foreground="Black"/>
+                                    <TextBlock Text="{Binding EnglishName}" 
+                                   FontSize="11" 
+                                   Foreground="Gray"
+                                   Margin="0,2,0,0"/>
+                                    <!-- 
+                            EnglishName - 英文名（假设Student类有这个属性）
+                            FontSize="11" - 较小字体
+                            Foreground="Gray" - 灰色文字
+                            Margin="0,2,0,0" - 上边距2像素
+                        -->
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- 第三列：年龄和年级 -->
+                    <DataGridTemplateColumn Header="基本信息" Width="150">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Age, StringFormat='{}年龄: {0}岁'}"
+                                   FontSize="12"
+                                               Foreground="Blue"/>
+                                    <TextBlock Text="{Binding Grade, StringFormat='{}年级: {0}'}"
+                                   FontSize="12"
+                                   Foreground="Gray"
+                                   Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- 第四列：成绩进度条 -->
+                    <DataGridTemplateColumn Header="成绩" Width="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <!-- 进度条显示成绩 -->
+                                    <ProgressBar Value="{Binding Score}" 
+                                     Maximum="100"
+                                     Height="10"
+                                     Margin="0,0,0,5">
+                                        <!-- 
+                                Value="{Binding Score}" - 绑定到成绩（0-100）
+                                Maximum="100" - 最大值100
+                                Height="10" - 进度条高度
+                                Margin="0,0,0,5" - 下边距5像素
+                            -->
+                                    </ProgressBar>
+
+                                    <!-- 成绩文字 -->
+                                    <TextBlock Text="{Binding Score, StringFormat='{}成绩: {0}分'}"
+                                   FontSize="11"
+                                   HorizontalAlignment="Center"
+                                               Foreground="Black"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- 第五列：操作按钮 -->
+                    <DataGridTemplateColumn Header="操作" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="查看详情" 
+                            Padding="8,3"
+                            FontSize="11"
+                                        Foreground="White"
+                                        BorderBrush="Black"
+                                        Background="Green">
+                                    <!-- 
+                            Content="查看详情" - 按钮文字
+                            Padding="8,3" - 内边距（水平8，垂直3）
+                            FontSize="11" - 字体大小
+                            Click="ViewDetailButton_Click" - 点击事件
+                        -->
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </ui:DataGrid.Columns>
+            </ui:DataGrid>
+        </Border>
+    </Grid>
+</Window>
