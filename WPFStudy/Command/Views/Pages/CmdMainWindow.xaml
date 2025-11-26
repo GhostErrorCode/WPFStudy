@@ -1,0 +1,23 @@
+﻿<Window x:Class="WPFStudy.Command.Views.Pages.CmdMainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFStudy.Command.Views.Pages"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="CmdMainWindow" Height="450" Width="800">
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <!-- 学习通知更改UI元素显示的内容 -->
+            <!-- 绑定Name属性 -->
+            <ui:TextBox Text="{Binding Name, Mode=TwoWay}" Margin="0,10,0,10" Cursor="IBeam" />
+            
+            <!-- button绑定ShowCommand命令 -->
+            <!-- 还需要添加上下文 -->
+            <!-- Command - 用于绑定命令 -->
+            <!-- CommandParameter - 用于给命令传递参数 -->
+            <ui:Button Command="{Binding ShowCommand}" Appearance="Primary" Content="ICommandStudy" Icon="{ui:SymbolIcon KeyCommand24}" HorizontalAlignment="Stretch" Height="50"/>
+        </StackPanel>
+    </Grid>
+</Window>

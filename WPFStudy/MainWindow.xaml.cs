@@ -17,6 +17,9 @@ using WPFStudy.StyleBasics;  // 样式基础
 using WPFStudy.Template;  // 模板 - 控件/数据模板
 using WPFStudy.Bind;  // 绑定
 
+// 以下均为学习ICommand命令引入的
+using WPFStudy.Command.Views.Pages;
+
 
 namespace WPFStudy
 {
@@ -32,7 +35,7 @@ namespace WPFStudy
 
             /********** 需要调用的代码写在下面 **********/
             this.Hide();
-            new BindingElement().Show();
+            new CmdMainWindow().Show();
         }
     }
 }
