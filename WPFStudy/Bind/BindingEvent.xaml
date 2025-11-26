@@ -1,0 +1,20 @@
+﻿<Window x:Class="WPFStudy.Bind.BindingEvent"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFStudy.Bind"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="BindingEvent" Height="450" Width="800">
+
+    <Grid>
+        <!-- 用事件驱动的绑定(不常用,仅作用演示) -->
+        <StackPanel Orientation="Vertical" Cursor="">
+            <Slider x:Name="slider" Margin="5" ValueChanged="slider_ValueChanged"></Slider>
+            <ui:TextBox x:Name="text1Box1" Margin="5" PlaceholderText="Type something..." TextChanged="textBox1_TextChanged"/>
+            <ui:TextBox x:Name="text1Box2" Margin="5" PlaceholderText="Type something..."/>
+            <ui:TextBox x:Name="text1Box3" Margin="5" PlaceholderText="Type something..."/>
+        </StackPanel>
+    </Grid>
+</Window>
