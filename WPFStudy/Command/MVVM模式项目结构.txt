@@ -1,0 +1,61 @@
+MyMVVMApp/
+├── Models/                    # 数据模型层
+│   ├── Entities/             # 实体类
+│   ├── DTOs/                 # 数据传输对象
+│   ├── Enums/                # 枚举类型
+│   └── Interfaces/           # 模型接口
+├── ViewModels/               # 视图模型层
+│   ├── Base/                 # 基类 ViewModel
+│   ├── Pages/                # 页面 ViewModel
+│   ├── Dialogs/              # 对话框 ViewModel
+│   └── Interfaces/           # ViewModel 接口
+├── Views/                    # 视图层
+│   ├── Pages/                # 页面视图
+│   ├── Dialogs/              # 对话框视图
+│   ├── Controls/             # 自定义控件
+│   └── Templates/            # 数据模板
+├── Services/                 # 服务层
+│   ├── Interfaces/           # 服务接口
+│   ├── Data/                 # 数据服务
+│   ├── Navigation/           # 导航服务
+│   └── Business/             # 业务服务
+├── Commands/                 # 命令层
+│   ├── Base/                 # 命令基类
+│   └── Custom/               # 自定义命令
+├── Converters/               # 值转换器
+│   ├── Base/                 # 转换器基类
+│   └── Custom/               # 自定义转换器
+├── Behaviors/                # 行为类
+├── Helpers/                  # 辅助类
+│   ├── Extensions/           # 扩展方法
+│   ├── Utilities/            # 工具类
+│   └── Constants/            # 常量定义
+├── Resources/                # 资源文件
+│   ├── Styles/               # 样式资源
+│   ├── Templates/            # 模板资源
+│   ├── Images/               # 图片资源
+│   └── Localization/         # 本地化资源
+├── Infrastructure/           # 基础设施
+│   ├── EventHandlers/        # 事件处理器
+│   ├── Messaging/            # 消息机制
+│   └── Logging/              # 日志系统
+└── App.xaml                  # 应用程序入口
+
+
+MVVM 各层职责总结
+
+    Models: 纯粹的数据对象和业务逻辑
+
+    ViewModels: 视图的抽象，包含视图状态和命令
+
+    Views: 纯粹的UI展示，不包含业务逻辑
+
+    Services: 业务逻辑和数据访问
+
+    Commands: 用户操作的封装
+
+    Converters: 数据绑定时的值转换
+
+    Resources: 样式、模板和本地化资源
+
+这种结构确保了关注点分离，使代码更易于维护、测试和扩展。
