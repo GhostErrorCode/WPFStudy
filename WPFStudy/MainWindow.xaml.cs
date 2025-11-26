@@ -15,6 +15,7 @@ using WPFStudy.CodeFile;
 using WPFStudy.LayoutBasics;  // 布局基础
 using WPFStudy.StyleBasics;  // 样式基础
 using WPFStudy.Template;  // 模板 - 控件/数据模板
+using WPFStudy.Bind;  // 绑定
 
 
 namespace WPFStudy
@@ -31,7 +32,7 @@ namespace WPFStudy
 
             /********** 需要调用的代码写在下面 **********/
             this.Hide();
-            new Template.DataTemplate().Show();
+            new BindingElement().Show();
         }
     }
 }
