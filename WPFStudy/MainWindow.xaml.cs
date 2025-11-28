@@ -19,6 +19,7 @@ using WPFStudy.Bind;  // 绑定
 
 // 以下均为学习ICommand命令引入的
 using WPFStudy.Command.Views.Pages;
+using WPFStudy.Resources;
 
 
 namespace WPFStudy
@@ -35,7 +36,7 @@ namespace WPFStudy
 
             /********** 需要调用的代码写在下面 **********/
             this.Hide();
-            new MvvmMainWindow().Show();
+            new ResourcesBasics().Show();
         }
     }
 }
