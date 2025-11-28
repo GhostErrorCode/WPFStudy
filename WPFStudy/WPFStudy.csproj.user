@@ -35,6 +35,9 @@
     <Compile Update="Resources\ResourcesBasics.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Resources\ResourcesMain.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="StyleBasics\StyleBasic.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

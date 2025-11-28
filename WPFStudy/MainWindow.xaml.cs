@@ -36,7 +36,7 @@ namespace WPFStudy
 
             /********** 需要调用的代码写在下面 **********/
             this.Hide();
-            new ResourcesBasics().Show();
+            new ResourcesMain().Show();
         }
     }
 }

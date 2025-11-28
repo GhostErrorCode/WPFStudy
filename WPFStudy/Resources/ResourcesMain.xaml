@@ -1,0 +1,35 @@
+﻿<Window x:Class="WPFStudy.Resources.ResourcesMain"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFStudy.Resources"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="ResourcesMain" Height="450" Width="800">
+    <!-- 定义窗口资源 -->
+    <Window.Resources>
+        <!-- 创建资源字典 -->
+        <ResourceDictionary>
+            <!-- 合并外部资源字典 -->
+            <ResourceDictionary.MergedDictionaries>
+                <!-- 指定资源字典文件路径 -->
+                <ResourceDictionary Source="/Resources/ResourceDictionaryMain.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <!-- 使用StackPanel进行垂直布局 -->
+        <StackPanel>
+            <!-- 使用样式资源 -->
+            <TextBlock Style="{StaticResource TitleTextStyle}"
+                       Text="{StaticResource WelcomeMessage}"/>
+
+            <!-- 使用控件模板资源 -->
+            <Button Template="{StaticResource RoundedRectangleButtonTemplate}"
+                    Content="圆形按钮"
+                    Width="100"
+                    Height="100"/>
+        </StackPanel>
+    </Grid>
+</Window>
