@@ -11,6 +11,9 @@
     <Compile Update="Command\Views\Pages\CmdMainWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Command\Views\Pages\MvvmMainWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="LayoutBasics\LayoutDockPanel.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
