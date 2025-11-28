@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+    资源字典的用处：
+    1. 资源组织和模块化：按功能模块分离资源
+    2. 主题和换肤功能：创建不同主题
+    3. 跨项目/程序集共享资源：创建可重用的资源库
+    4. 团队协作和设计分工：设计师与开发人员并行工作
+    5. 维护性和可维护性：集中管理资源
+    6. 性能优化：按需加载资源
+    7. 本地化和国际化：多语言资源
+    8. 复杂样式的重用：创建复杂控件模板
+    -->
+    
+    <!-- 定义一个笔刷 -->
+    <SolidColorBrush x:Key="SolidColor" Color="Red" />
+
+    <!-- 定义一个button按钮的样式 -->
+    <Style x:Key="DefaultButtonStyle" TargetType="Button">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="#AFEEEE" />
+        <Setter Property="BorderBrush" Value="Red" />
+        <Setter Property="BorderThickness" Value="5" />
+    </Style>
+</ResourceDictionary>

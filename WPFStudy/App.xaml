@@ -10,6 +10,9 @@
                 <!-- 一定必须要看这个模式 -->
                 <ui:ThemesDictionary Theme="Light" />
                 <ui:ControlsDictionary />
+                
+                <!-- 添加资源字典 -->
+                <ResourceDictionary Source="/Resources/ResourceDictionaryBasics.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
