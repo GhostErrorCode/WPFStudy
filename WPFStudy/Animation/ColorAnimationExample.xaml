@@ -1,0 +1,43 @@
+﻿<Window x:Class="WPFStudy.Animation.ColorAnimationExample"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFStudy.Animation"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="ColorAnimationExample" Height="450" Width="800">
+    <Grid>
+        <!-- 垂直排列的子元素容器 -->
+        <StackPanel Orientation="Vertical" 
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center">
+
+            <!-- 要应用颜色动画的矩形 -->
+            <Rectangle x:Name="ColorAnimationRectangle" 
+                       Width="150" 
+                       Height="150" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" 
+                       Margin="0,0,0,20">
+                <!-- 设置矩形的填充画刷 -->
+                <Rectangle.Fill>
+                    <!-- 使用纯色画刷，初始颜色为红色 -->
+                    <SolidColorBrush Color="Red"/>
+                </Rectangle.Fill>
+            </Rectangle>
+
+            <!-- 触发颜色动画的按钮 -->
+            <ui:Button x:Name="ColorAnimationButton" 
+                    Content="执行颜色动画" 
+                    Click="ColorAnimationButton_Click"
+                    Width="150" 
+                    Height="30" 
+                    HorizontalAlignment="Center"
+                    Icon="{ui:SymbolIcon AppTitle24}"
+                    Background="#EF4444"
+                    Foreground="White"/>
+
+        </StackPanel>
+    </Grid>
+</Window>
