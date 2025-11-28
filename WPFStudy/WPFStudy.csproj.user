@@ -5,6 +5,27 @@
     <Compile Update="Animation\AnimationBasics.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Animation\ColorAnimationExample.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Animation\DoubleAnimationExample.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Animation\DoubleAnimationUsingKeyFramesExample.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Animation\EasingFunctionExample.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Animation\EventTriggerExample.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Animation\PointAnimationExample.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Animation\StoryboardExample.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Bind\BindingElement.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

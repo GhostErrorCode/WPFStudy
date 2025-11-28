@@ -1,0 +1,65 @@
+﻿<Window x:Class="WPFStudy.Animation.StoryboardExample"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFStudy.Animation"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="StoryboardExample" Height="450" Width="800">
+    <!-- 定义窗口资源 -->
+    <Window.Resources>
+        <!-- 定义故事板资源，包含多个动画 -->
+        <Storyboard x:Key="CompositeAnimationStoryboard">
+            <!-- 定义第一个动画：透明度变化动画 -->
+            <DoubleAnimation Storyboard.TargetName="AnimatedBorderElement"
+                             Storyboard.TargetProperty="Opacity"
+                             From="0.0" 
+                             To="1.0" 
+                             Duration="0:0:2"/>
+            <!-- 持续时间2秒 -->
+
+            <!-- 定义第二个动画：宽度变化动画 -->
+            <DoubleAnimation Storyboard.TargetName="AnimatedBorderElement"
+                             Storyboard.TargetProperty="Width"
+                             From="50.0" 
+                             To="400.0" 
+                             Duration="0:0:2"/>
+            <!-- 持续时间2秒 -->
+
+            <!-- 定义第三个动画：高度变化动画 -->
+            <DoubleAnimation Storyboard.TargetName="AnimatedBorderElement"
+                             Storyboard.TargetProperty="Height"
+                             From="50.0" 
+                             To="200.0" 
+                             Duration="0:0:2"/>
+            <!-- 持续时间2秒 -->
+        </Storyboard>
+    </Window.Resources>
+    <Grid>
+        <!-- 垂直排列的子元素容器 -->
+        <StackPanel Orientation="Vertical" 
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center">
+
+            <!-- 要应用组合动画的边框元素 -->
+            <Border x:Name="AnimatedBorderElement"
+                    Width="50" 
+                    Height="50"
+                    Background="Purple" 
+                    Opacity="0"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center" 
+                    Margin="0,0,0,20"/>
+
+                <!-- 触发组合动画的按钮 -->
+                <Button x:Name="CompositeAnimationButton" 
+                    Content="执行组合动画" 
+                    Click="CompositeAnimationButton_Click"
+                    Width="120" 
+                    Height="30" 
+                    HorizontalAlignment="Center"/>
+
+        </StackPanel>
+    </Grid>
+</Window>

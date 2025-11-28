@@ -38,7 +38,7 @@ namespace WPFStudy
 
             /********** 需要调用的代码写在下面 **********/
             this.Hide();
-            new AnimationBasics().Show();
+            new EasingFunctionExample().Show();
         }
     }
 }
