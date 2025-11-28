@@ -1,0 +1,383 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- ============================================ -->
+    <!-- xmlns:x 声明XAML命名空间，声明XAML语言特有的功能和属性 -->
+    <!-- xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" -->
+
+    <!-- xmlns:sys 声明系统命名空间，用于访问系统类型，在XAML中直接使用.NET基础类型 -->
+    <!-- xmlns:sys="clr-namespace:System;assembly=mscorlib" -->
+
+    <!-- xmlns:local 声明本地程序集命名空间，引用当前项目中的自定义类型 -->
+    <!-- xmlns:local="clr-namespace:WpfApp.Converters" -->
+    <!-- ============================================ -->
+
+    
+    
+    <!-- ============================================ -->
+    <!-- 1. 字符串资源示例 -->
+    <!-- ============================================ -->
+    <!-- System:String 定义字符串资源 -->
+    <sys:String x:Key="ApplicationTitle">
+        <!-- 字符串资源的值 -->
+        我的WPF应用程序
+    </sys:String>
+
+    <!-- 另一个字符串资源示例 -->
+    <sys:String x:Key="WelcomeMessage">
+        <!-- 这个字符串用作欢迎消息 -->
+        欢迎使用WPF资源字典
+    </sys:String>
+
+
+
+    <!-- ============================================ -->
+    <!-- 2. 数值资源示例 -->
+    <!-- ============================================ -->
+    <!-- System:Double 定义双精度浮点数资源 -->
+    <sys:Double x:Key="SmallFontSize">
+        <!-- 定义小字体大小值 -->
+        12.0
+    </sys:Double>
+
+    <!-- System:Int32 定义整数资源 -->
+    <sys:Int32 x:Key="StandardMargin">
+        <!-- 定义标准边距值 -->
+        10
+    </sys:Int32>
+
+
+
+    <!-- ============================================ -->
+    <!-- 3. 颜色资源示例 -->
+    <!-- ============================================ -->
+    <!-- Color 定义颜色资源 -->
+    <Color x:Key="PrimaryColor">
+        <!-- 使用16进制格式定义主色调 -->
+        #FF2196F3
+    </Color>
+
+    <!-- 另一个颜色资源 -->
+    <Color x:Key="AccentColor">
+        <!-- 定义强调色调 -->
+        #FFFF5722
+    </Color>
+
+
+
+    <!-- ============================================ -->
+    <!-- 4. 画刷资源示例 -->
+    <!-- ============================================ -->
+    <!-- SolidColorBrush 定义单色画刷资源 -->
+    <SolidColorBrush x:Key="PrimaryBrush">
+        <!-- 设置画刷颜色，引用之前定义的颜色资源 -->
+        <SolidColorBrush.Color>
+            <StaticResource ResourceKey="PrimaryColor"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
+    <!-- LinearGradientBrush 定义线性渐变画刷 -->
+    <LinearGradientBrush x:Key="GradientBrush" 
+                         StartPoint="0,0"
+                         EndPoint="1,1">
+        
+        <!-- 设置渐变起始点 -->
+        <!-- StartPoint="0,0" -->
+        
+        <!-- 设置渐变结束点 -->
+        <!-- EndPoint="1,1"> -->
+        
+        <!-- 定义第一个渐变点 -->
+        <GradientStop>
+            <!-- 设置第一个渐变点的颜色 -->
+            <GradientStop.Color>
+                #FF2196F3
+            </GradientStop.Color>
+            <!-- 设置第一个渐变点的位置 -->
+            <GradientStop.Offset>
+                0.0
+            </GradientStop.Offset>
+        </GradientStop>
+
+        <!-- 定义第二个渐变点 -->
+        <GradientStop>
+            <!-- 设置第二个渐变点的颜色 -->
+            <GradientStop.Color>
+                #FF03A9F4
+            </GradientStop.Color>
+            <!-- 设置第二个渐变点的位置 -->
+            <GradientStop.Offset>
+                0.5
+            </GradientStop.Offset>
+        </GradientStop>
+
+        <!-- 定义第三个渐变点 -->
+        <GradientStop>
+            <!-- 设置第三个渐变点的颜色 -->
+            <GradientStop.Color>
+                #FF00BCD4
+            </GradientStop.Color>
+            <!-- 设置第三个渐变点的位置 -->
+            <GradientStop.Offset>
+                1.0
+            </GradientStop.Offset>
+        </GradientStop>
+    </LinearGradientBrush>
+
+
+
+    <!-- ============================================ -->
+    <!-- 5. 样式资源示例 -->
+    <!-- ============================================ -->
+    <!-- Style 定义文本块样式 -->
+    <Style x:Key="TitleTextStyle" TargetType="TextBlock">
+
+        <!-- 指定样式目标类型为TextBlock -->
+        <!-- TargetType="TextBlock" -->
+
+        <!-- Setter 设置FontSize属性 -->
+        <Setter Property="FontSize">
+            <!-- 设置属性值，引用数值资源 -->
+            <Setter.Value>
+                <StaticResource ResourceKey="SmallFontSize"/>
+            </Setter.Value>
+        </Setter>
+
+        <!-- Setter 设置FontWeight属性 -->
+        <Setter Property="FontWeight">
+            <!-- 直接设置属性值为Bold -->
+            <Setter.Value>
+                Bold
+            </Setter.Value>
+        </Setter>
+
+        <!-- Setter 设置Foreground属性 -->
+        <Setter Property="Foreground">
+            <!-- 设置前景色，引用画刷资源 -->
+            <Setter.Value>
+                <StaticResource ResourceKey="PrimaryBrush"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+    <!-- ============================================ -->
+    <!-- 6. 控件模板资源示例 -->
+    <!-- ============================================ -->
+    <!-- ControlTemplate 定义按钮控件模板 -->
+    <ControlTemplate x:Key="RoundButtonTemplate" TargetType="Button">
+
+        <!-- 指定模板目标类型为Button -->
+        <!-- TargetType="Button" -->
+
+        <!-- 定义模板的视觉树 -->
+        <Grid>
+            <!-- Ellipse 定义圆形背景 -->
+            <Ellipse x:Name="ButtonBackground" 
+                    Fill="{TemplateBinding Background}"
+                    Stroke="{TemplateBinding BorderBrush}"
+                    StrokeThickness="{TemplateBinding BorderThickness}"/>
+
+            <!-- 使用模板绑定设置填充色 -->
+            <!-- Fill="{TemplateBinding Background}" -->
+
+            <!-- 使用模板绑定设置边框色 -->
+            <!-- Stroke="{TemplateBinding BorderBrush}" -->
+
+            <!-- 使用模板绑定设置边框厚度 -->
+            <!-- StrokeThickness="{TemplateBinding BorderThickness}" -->
+
+            <!-- ContentPresenter 显示按钮内容 -->
+            <ContentPresenter x:Name="ButtonContent" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+
+            <!-- 设置水平居中对齐 -->
+            <!-- HorizontalAlignment="Center" -->
+
+            <!-- 设置垂直居中对齐 -->
+            <!-- VerticalAlignment="Center" -->
+        </Grid>
+
+        <!-- 定义模板触发器 -->
+        <ControlTemplate.Triggers>
+            <!-- Trigger 定义鼠标悬停触发器 -->
+            <Trigger Property="IsMouseOver" Value="True">
+
+                <!-- 设置触发条件为True -->
+                <!-- Value="True" -->
+
+                <!-- Setter 设置鼠标悬停时的背景色变化 -->
+                <Setter TargetName="ButtonBackground" Property="Fill">
+                    <Setter.Value>
+                        <StaticResource ResourceKey="PrimaryBrush"/>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+
+
+    <!-- ============================================ -->
+    <!-- 7. 控件模板资源示例 - 圆角方框 -->
+    <!-- ============================================ -->
+    <!-- ControlTemplate 定义按钮控件模板 -->
+    <ControlTemplate x:Key="RoundedRectangleButtonTemplate" TargetType="Button">
+
+        <!-- 指定模板目标类型为Button -->
+        <!-- TargetType="Button" -->
+
+        <!-- 定义模板的视觉树 -->
+        <Grid>
+            <!-- Border 元素创建渐变背景的圆角方框 -->
+            <Border x:Name="GradientButtonBorder"
+                CornerRadius="12"
+                BorderThickness="1"
+                Padding="15,8">
+
+                <!-- 设置圆角半径，更大的圆角 -->
+                <!-- CornerRadius="12" -->
+                
+                <!-- 设置边框厚度 -->
+                <!-- BorderThickness="1" -->
+                
+                <!-- 设置内边距 -->
+                <!-- Padding="15,8" -->
+
+                <!-- 定义边框的背景 -->
+                <Border.Background>
+                    <!-- 创建线性渐变画刷 -->
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <!-- 定义渐变起始颜色 -->
+                        <GradientStop Color="#FFD28C" Offset="0"/>
+                        <!-- 定义渐变中间颜色 -->
+                        <GradientStop Color="#FFA546" Offset="0.5"/>
+                        <!-- 定义渐变结束颜色 -->
+                        <GradientStop Color="#FF6E1E" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+
+                <!-- 定义边框的边框画刷 -->
+                <Border.BorderBrush>
+                    <!-- 创建线性渐变边框画刷 -->
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <!-- 定义边框渐变起始颜色 -->
+                        <GradientStop Color="#FF90CAF9" Offset="0"/>
+                        <!-- 定义边框渐变结束颜色 -->
+                        <GradientStop Color="#FF64B5F6" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.BorderBrush>
+
+                <!-- ContentPresenter 显示按钮的内容 -->
+                <ContentPresenter x:Name="GradientButtonContentPresenter"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                
+                    <!-- 设置水平居中对齐 -->
+                    <!-- HorizontalAlignment="Center" -->
+                
+                    <!-- 设置垂直居中对齐 -->
+                    <!-- VerticalAlignment="Center" -->
+
+            </Border>
+        </Grid>
+
+        <!-- 定义模板触发器 -->
+        <ControlTemplate.Triggers>
+            <!-- Trigger 定义鼠标悬停效果 -->
+            <Trigger Property="IsMouseOver" Value="True">
+
+                <!-- 设置触发条件为True -->
+                <!-- Value="True" -->
+
+                <!-- Setter 改变边框背景为悬停渐变 -->
+                <Setter TargetName="GradientButtonBorder"
+                        Property="Background">
+                    <Setter.Value>
+                        <!-- 创建悬停状态的渐变 -->
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#FF64B5F6" Offset="0"/>
+                            <GradientStop Color="#FF42A5F5" Offset="0.5"/>
+                            <GradientStop Color="#FF2196F3" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+
+            <!-- Trigger 定义按钮按下效果 -->
+            <Trigger Property="IsPressed" Value="True">
+                <!-- Setter 改变边框背景为按下渐变 -->
+                <Setter TargetName="GradientButtonBorder"
+                        Property="Background">
+                    <Setter.Value>
+                        <!-- 创建按下状态的渐变 -->
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#FF1976D2" Offset="0"/>
+                            <GradientStop Color="#FF1565C0" Offset="0.5"/>
+                            <GradientStop Color="#FF0D47A1" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    
+    
+    
+
+    <!-- ============================================ -->
+    <!-- 8. 数据模板资源示例 -->
+    <!-- ============================================ -->
+    <!-- DataTemplate 定义数据模板 -->
+    <DataTemplate x:Key="PersonDataTemplate">
+        <!-- 定义数据模板的视觉树 -->
+        <Border>
+            <!-- 设置边框背景色 -->
+            <Border.Background>
+                <SolidColorBrush Color="#FFE3F2FD"/>
+            </Border.Background>
+
+            <!-- 设置边框边距 -->
+            <Border.Margin>
+                <Thickness>5</Thickness>
+            </Border.Margin>
+
+            <!-- 设置边框内边距 -->
+            <Border.Padding>
+                <Thickness>10</Thickness>
+            </Border.Padding>
+
+            <!-- 使用StackPanel布局 -->
+            <StackPanel>
+                <!-- TextBlock 显示姓名 -->
+                <TextBlock>
+                    <!-- 设置文本内容，使用数据绑定 -->
+                    <TextBlock.Text>
+                        <Binding Path="Name"/>
+                    </TextBlock.Text>
+                    
+                    <!-- 设置字体大小 -->
+                    <TextBlock.FontSize>
+                        <StaticResource ResourceKey="SmallFontSize"/>
+                    </TextBlock.FontSize>
+                </TextBlock>
+
+                <!-- TextBlock 显示年龄 -->
+                <TextBlock>
+                    <!-- 设置文本内容，使用数据绑定 -->
+                    <TextBlock.Text>
+                        <Binding Path="Age"/>
+                    </TextBlock.Text>
+                    
+                    <!-- 设置字体大小 -->
+                    <TextBlock.FontSize>
+                        <StaticResource ResourceKey="SmallFontSize"/>
+                    </TextBlock.FontSize>
+                </TextBlock>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+</ResourceDictionary>
