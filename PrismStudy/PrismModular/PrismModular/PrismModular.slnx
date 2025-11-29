@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="../PrismModuleA/PrismModuleA.csproj" Id="4782abc0-fcf0-48c3-a284-1df232f22be6" />
+  <Project Path="../PrismModuleB/PrismModuleB.csproj" Id="2a95df35-7e9c-46c0-99ab-ea4fb7fe04ba" />
+  <Project Path="PrismModular.csproj" />
+</Solution>
