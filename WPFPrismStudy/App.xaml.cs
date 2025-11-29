@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Windows;
+using WPFPrismStudy.PrismRegion.Views;
 using WPFPrismStudy.Views;
 
 namespace WPFPrismStudy
@@ -46,45 +47,11 @@ namespace WPFPrismStudy
             // 注册HomeView用于导航
             // "Home"是导航时使用的标识符
             containerRegistry.RegisterForNavigation<HomeView>("Home");
-            Debug.WriteLine("Home视图已注册到容器");
-        }
 
-        protected override void OnInitialized()
-        {
-            // 输出调试信息，标记OnInitialized方法的开始执行
-            // 这有助于我们在输出窗口中看到代码执行的顺序
-            Debug.WriteLine("=== OnInitialized开始 ===");
-
-            // 调用基类(PrismApplication)的OnInitialized方法
-            // 这是最关键的一步！这个方法会：
-            // 1. 调用CreateShell()创建主窗口
-            // 2. 显示主窗口(设置Application.Current.MainWindow并调用Show())
-            // 3. 完成Prism框架的核心初始化工作
-            // 如果不调用base.OnInitialized()，主窗口不会显示，整个应用会卡住
-            base.OnInitialized();
-
-            // 获取当前应用程序的主窗口实例，并转换为具体的MainWindow类型
-            // Application.Current.MainWindow在base.OnInitialized()中被设置
-            // 这里需要强制转换是因为Current.MainWindow是Window基类类型
-            MainWindow mainWindow = (MainWindow)Current.MainWindow;
-
-            // 从依赖注入容器中解析(获取)IRegionManager服务实例
-            // RegionManager是Prism中负责管理区域和导航的核心服务
-            // Container是PrismApplication提供的依赖注入容器
-            IRegionManager regionManager = Container.Resolve<IRegionManager>();
-
-            // 使用RegionManager请求在"MainRegion"区域中导航到"Home"视图
-            // "MainRegion"必须与MainWindow.xaml中定义的RegionName一致
-            // "Home"必须与RegisterTypes中注册的视图名称一致
-            // 这行代码会让HomeView显示在MainRegion区域中
-            regionManager.RequestNavigate("MainRegion", "Home");
-
-            // 输出调试信息，确认导航请求已完成
-            // 注意：这只表示导航请求已发送，不保证视图已完全加载
-            Debug.WriteLine("导航到Home完成");
-
-            // 输出调试信息，标记OnInitialized方法执行结束
-            Debug.WriteLine("=== OnInitialized结束 ===");
+            // 注册PrismRegion中的View
+            containerRegistry.RegisterForNavigation<PrismRegionUserControlA>("PrismRegionUserControlA");
+            containerRegistry.RegisterForNavigation<PrismRegionUserControlB>("PrismRegionUserControlB");
+            containerRegistry.RegisterForNavigation<PrismRegionUserControlC>("PrismRegionUserControlC");
         }
     }
 }

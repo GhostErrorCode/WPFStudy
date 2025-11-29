@@ -1,0 +1,28 @@
+﻿<Window x:Class="WPFPrismStudy.PrismRegion.Views.PrismRegionMainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFPrismStudy.PrismRegion.Views"
+        xmlns:prism="http://prismlibrary.com/" xmlns:viewmodels="clr-namespace:WPFPrismStudy.PrismRegion.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:PrismRegionMainViewModel}"
+        mc:Ignorable="d"
+        Title="PrismRegionMainView" Height="450" Width="800">
+    <!-- 官方规范：可添加 prism:ViewModelLocator.AutoWireViewModel="True" 显式启用自动绑定（可选，默认已启用） -->
+    <prism:ViewModelLocator.AutoWireViewModel>True</prism:ViewModelLocator.AutoWireViewModel>
+    <Grid>
+        <!-- 两行 -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <!-- 容器放在第一行，水平排列 -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Content="Show ViewA" Margin="5" Command="{Binding OpenCommand}" CommandParameter="PrismRegionUserControlA"></Button>
+            <Button Content="Show ViewB" Margin="5" Command="{Binding OpenCommand}" CommandParameter="PrismRegionUserControlB"></Button>
+            <Button Content="Show ViewC" Margin="5" Command="{Binding OpenCommand}" CommandParameter="PrismRegionUserControlC"></Button>
+        </StackPanel>
+
+        <ContentControl Grid.Row="1" prism:RegionManager.RegionName="PrismRegionContentControl" />
+    </Grid>
+</Window>
