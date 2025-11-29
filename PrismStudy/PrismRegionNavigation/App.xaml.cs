@@ -18,7 +18,7 @@ namespace PrismRegionNavigation
 
     // 安装了Prism.Wpf和Prism.Unity组件包
     // Prism.Wpf：Prism框架的核心功能，包含MVVM、导航、区域管理等
-    // Prism.Unity：提供Unity容器支持，用于依赖注入
+    // Prism.Dryloc：用于依赖注入
     public partial class App : PrismApplication
     {
 
