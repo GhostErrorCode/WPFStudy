@@ -2,6 +2,18 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
+    <Compile Update="PrismRegion\Views\PrismRegionMainView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="PrismRegion\Views\PrismRegionUserControlA.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="PrismRegion\Views\PrismRegionUserControlB.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="PrismRegion\Views\PrismRegionUserControlC.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\HomeView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
