@@ -1,0 +1,18 @@
+﻿<Window x:Class="WPFPrismStudy.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFPrismStudy"
+        xmlns:prism="http://prismlibrary.com/"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <!-- 
+            ContentControl：一个可以显示内容的控件
+            prism:RegionManager.RegionName：Prism的区域附加属性，给这个区域命名为"MainRegion"
+            区域(Region)是Prism的核心概念，相当于一个占位符，其他视图可以动态注入到这个区域[citation:1]
+        -->
+        <ContentControl prism:RegionManager.RegionName="MainRegion" Width="700" Height="400" Background="Red"/>
+    </Grid>
+</Window>
