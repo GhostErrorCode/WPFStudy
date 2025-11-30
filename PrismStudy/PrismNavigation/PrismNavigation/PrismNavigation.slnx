@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../UserControllerModule/UserControllerModule.csproj" Id="500df069-2f3c-448a-a90c-97e1fd459436" />
+  <Project Path="PrismNavigation.csproj" />
+</Solution>
