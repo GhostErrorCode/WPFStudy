@@ -1,0 +1,60 @@
+﻿<Window x:Class="PrismNavigation.Views.PrismNavigationView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PrismNavigation.Views"
+        xmlns:prism="http://prismlibrary.com/"
+        mc:Ignorable="d"
+        Title="PrismNavigationView" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- 定义网格的行 -->
+            <RowDefinition Height="Auto"/>
+            <!-- 第一行高度自适应内容 -->
+            <RowDefinition Height="*"/>
+            <!-- 第二行高度填充剩余空间 -->
+        </Grid.RowDefinitions>
+
+        <!-- 导航控制面板，位于第一行 -->
+        <StackPanel 
+            Grid.Row="0"
+            Orientation="Horizontal"
+            Margin="10">
+
+            <!-- 导航到用户视图按钮 -->
+            <Button 
+                Content="导航到用户视图"
+                Command="{Binding NavigateToUserCommand}"
+                Margin="5"
+                Padding="10"/>
+
+            <!-- 后退按钮 -->
+            <Button 
+                Content="后退"
+                Command="{Binding GoBackCommand}"
+                Margin="5"
+                Padding="10"/>
+
+            <Button 
+                Content="前进"
+                Command="{Binding GoForwardCommand}"
+                Margin="5"
+                Padding="10"/>
+
+            <!-- 查看导航日志按钮 -->
+            <Button 
+                Content="查看导航日志"
+                Command="{Binding ViewJournalCommand}"
+                Margin="5"
+                Padding="10"/>
+        </StackPanel>
+
+        <!-- 主要内容区域，位于第二行 -->
+        <!-- ContentControl使用Prism区域管理，RegionName指定区域名称 -->
+        <ContentControl 
+            Grid.Row="1"
+            prism:RegionManager.RegionName="MainRegion" />
+            <!-- 指定区域名称为MainRegion -->
+    </Grid>
+</Window>
