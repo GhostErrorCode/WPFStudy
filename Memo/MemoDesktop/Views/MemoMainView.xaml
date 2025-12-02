@@ -12,7 +12,7 @@
         Style="{StaticResource MaterialDesignWindow}"
         ResizeMode="CanResize" 
         AllowsTransparency="False"
-        Title="MemoMainView" Height="450" Width="800">
+        Title="MemoMainView" Height="800" Width="1300">
     <!-- AllowsTransparency="False"确保关闭，以获得更好性能 -->
     <!-- ResizeMode="CanResize" 保持可调整大小 -->
     <!-- WindowStyle="None"移除标题栏、边框及所有系统按钮,但会失去Win的原生动画 -->
@@ -22,7 +22,7 @@
         <!-- 关键：通过WindowChrome接管非客户区 -->
         <shell:WindowChrome
             CaptionHeight="0" 
-            ResizeBorderThickness="6"/>
+            ResizeBorderThickness="3"/>
         <!-- CaptionHeight="0" 将标题栏区域高度设为0，隐藏系统默认区域 -->
         <!-- ResizeBorderThickness="6"调整边框的厚度，可根据需要修改 -->
     </shell:WindowChrome.WindowChrome>
@@ -36,8 +36,35 @@
 
         <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
             <materialDesign:DrawerHost.LeftDrawerContent>
-                <DockPanel MinWidth="220">
+                <DockPanel MinWidth="220" LastChildFill="False">
+                    <!-- LastChildFill关闭/开启最后一个子元素填充所有剩余空间 -->
+                    <!-- 上方的头像和昵称显示区域 -->
+                    <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
+                        <!-- 嵌入资源使用以下路径    /项目名;component/路径 -->
+                        <Image Source="/MemoDesktop;component/Assets/Images/新之助.jpg" Width="50" Height="50" Margin="0,30,0,0">
+                            <Image.Clip>
+                                <!-- 使用EllipseGeometry进行圆形裁剪 -->
+                                <EllipseGeometry Center="25,25" RadiusX="25" RadiusY="25"/>
+                            </Image.Clip>
+                        </Image>
+                        <!-- 名称显示区域 -->
+                        <TextBlock Margin="0,10,0,0" Text="幽灵" HorizontalAlignment="Center" />
+                    </StackPanel>
 
+                    <!-- 下方的ListBox菜单列表 -->
+                    <ListBox ItemContainerStyle="{StaticResource LeftMenuBarStyle}" ItemsSource="{Binding MenuBars}" DockPanel.Dock="Top" Margin="0,30,0,0">
+                        <!-- 定义数据模板，需要显示图标和菜单名称 -->
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                    <!-- 菜单图标 -->
+                                    <materialDesign:PackIcon Kind="{Binding Icon}" Margin="10,0,0,0" VerticalAlignment="Center" Padding="0"/>
+                                    <!-- 菜单名称 -->
+                                    <TextBlock Margin="10,0,0,0" Text="{Binding Name}" VerticalAlignment="Center" Padding="0" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </DockPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
 
@@ -76,7 +103,6 @@
                                    VerticalAlignment="Center"
                                    AutomationProperties.Name="Material Design In XAML Toolkit"
                                    FontSize="22"
-                                   Height="27"
                                    Text="记事本" />
                         </StackPanel>
 

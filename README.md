@@ -4,12 +4,6 @@
 
 此库内的所有项目均作为学习使用，使用的SDK：.NET10
 
-#### 项目目录介绍
-
-1. Memo：WPF+ASP.NET WebApi项目实战
-2. PrismStudy：Prism框架学习
-3. WPFStudy：WPF框架学习
-
 #### 计划
 
 1. C#语言学习
@@ -21,3 +15,9 @@
 
 1. 学习AvaloniaUI框架，并将已有项目移植或重构到AvaloniaUI框架（跨平台）
 2. 学习WinUI3，并开发新项目或已有项目重构
+
+#### 项目目录介绍
+
+1. Memo：WPF+ASP.NET WebApi项目实战
+2. PrismStudy：Prism框架学习
+3. WPFStudy：WPF框架学习

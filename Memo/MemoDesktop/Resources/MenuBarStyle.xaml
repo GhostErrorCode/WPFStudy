@@ -1,0 +1,40 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 左侧菜单ListBoxItem每项的自定义样式 -->
+    <Style x:Key="LeftMenuBarStyle" TargetType="ListBoxItem">
+        <!-- 每项的最低高度 -->
+        <Setter Property="MinHeight" Value="50" />
+        <!-- 自定义模板 -->
+        <Setter Property="Template">
+            <Setter.Value>
+                <!-- 控件模板 -->
+                <ControlTemplate TargetType="ListBoxItem">
+                    <!-- 为根Grid设置背景，使其能接收整个区域的鼠标事件，如果不设置，每项的空白处将无法点击 -->
+                    <Grid Background="{TemplateBinding Background}">
+                        <Border x:Name="BorderHeader" />
+                        <Border x:Name="Border" />
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+                    </Grid>
+                    
+                    <!-- 触发器 -->
+                    <ControlTemplate.Triggers>
+                        <!-- 选中时的触发器 -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="BorderHeader" Property="BorderThickness" Value="6,0,0,0" />
+                            <Setter TargetName="BorderHeader" Property="BorderBrush" Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+                            <Setter TargetName="Border" Property="Opacity" Value="0.4" />
+                        </Trigger>
+                        
+                        <!-- 鼠标悬浮 -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource MaterialDesign.Brush.Primary}" />
+                            <Setter TargetName="Border" Property="Opacity" Value="0.3" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
