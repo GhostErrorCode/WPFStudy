@@ -1,4 +1,5 @@
-﻿using MemoDesktop.Views;
+﻿using MemoDesktop.ViewModels;
+using MemoDesktop.Views;
 using System.Configuration;
 using System.Data;
 using System.Windows;
@@ -21,8 +22,8 @@ namespace MemoDesktop
         // 注册应用程序中使用的各种类型（服务、视图等）
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+            // 绑定主界面的View和ViewModel
+            containerRegistry.RegisterForNavigation<MemoMainView, MemoMainViewModel>();
         }
     }
-
 }
