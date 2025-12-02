@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../MemoApi/MemoApi.csproj" />
+  <Project Path="MemoDesktop.csproj" />
+</Solution>

@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "MemoStart",
+    "Projects": [
+      {
+        "Path": "..\\MemoApi\\MemoApi.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      },
+      {
+        "Path": "MemoDesktop.csproj",
+        "Action": "Start",
+        "DebugTarget": "MemoDesktop"
+      }
+    ]
+  }
+]

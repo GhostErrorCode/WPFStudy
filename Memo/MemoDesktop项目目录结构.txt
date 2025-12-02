@@ -1,0 +1,20 @@
+MemoDesktop/
+├── Properties/
+│   ├── AssemblyInfo.cs
+│   ├── Resources.resx
+│   ├── Settings.settings
+│   └── Settings.Designer.cs
+├── Views/                          # 视图文件夹 (Prism惯例)
+│   └── MainWindow.xaml             # 主窗口视图
+│   └── MainWindow.xaml.cs          # 主窗口视图代码隐藏文件
+├── ViewModels/                     # 视图模型文件夹 (Prism惯例)
+│   └── MainWindowViewModel.cs      # 主窗口的视图模型（需手动创建）
+├── Services/                       # 服务层文件夹
+│   ├── IMemoService.cs             # 备忘录服务接口（需手动创建）
+│   └── MemoService.cs              # 调用Web API的具体实现（需手动创建）
+├── Models/                         # 客户端数据模型文件夹
+│   └── MemoItem.cs                 # 备忘录项模型（可共享或独立于API模型）
+├── App.xaml                        # 应用程序资源入口，已改为PrismApplication
+├── App.xaml.cs                     # 应用程序启动逻辑，继承自PrismApplication
+├── App.config
+└── MemoDesktop.csproj              # 项目文件，包含Prism、MaterialDesign等引用

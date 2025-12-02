@@ -1,0 +1,13 @@
+MemoApi/
+├── Properties/
+│   └── launchSettings.json         # 项目启动配置文件（定义Https/Http等配置）
+├── Controllers/                    # API控制器文件夹
+│   └── MemoItemsController.cs      # 备忘录项的API控制器（需手动创建）
+├── Models/                         # 数据模型文件夹
+│   └── MemoItem.cs                 # 备忘录数据模型类（需手动创建）
+├── Data/                           # 数据上下文文件夹（可选，若用EF Core）
+│   └── MemoContext.cs              # Entity Framework 数据库上下文（需手动创建）
+├── Program.cs                      # 应用程序入口和主要配置
+├── appsettings.json                # 应用程序配置文件（如连接字符串）
+├── appsettings.Development.json    # 开发环境专用配置
+└── MemoApi.csproj                  # 项目文件，定义SDK和NuGet包引用
