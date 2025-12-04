@@ -23,7 +23,13 @@ namespace MemoDesktop
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // 绑定主界面的View和ViewModel
-            containerRegistry.RegisterForNavigation<MemoMainView, MemoMainViewModel>();
+            containerRegistry.RegisterForNavigation<MemoMainView, MemoMainViewModel>("MemoMainView");
+
+            // 注册首页、备忘录、待办事项、设置页面和视图模型，并将View和ViewModel绑定
+            containerRegistry.RegisterForNavigation<IndexView, IndexViewModel>("IndexView");
+            containerRegistry.RegisterForNavigation<MemoView, MemoViewModel>("MemoView");
+            containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>("SettingsView");
+            containerRegistry.RegisterForNavigation<ToDoView, ToDoViewModel>("ToDoView");
         }
     }
 }

@@ -18,3 +18,64 @@ MemoDesktop/
 ├── App.xaml.cs                     # 应用程序启动逻辑，继承自PrismApplication
 ├── App.config
 └── MemoDesktop.csproj              # 项目文件，包含Prism、MaterialDesign等引用
+
+
+MyApp.Solution/
+├── MyApp.Client/                                    # 主WPF客户端项目 (启动项)
+│   │
+│   ├── Assets/                                      # 静态资源
+│   │   ├── Images/                                  # 图片资源
+│   │   ├── Icons/                                   # 图标资源
+│   │   ├── Styles/                                  # 静态样式、主题文件
+│   │   └── Fonts/                                   # 字体文件
+│   │
+│   ├── Constants/                                   # 常量定义
+│   │   ├── RegionNames.cs                          # Prism区域名称 (核心！)
+│   │   └── AppConstants.cs                         # 应用程序级常量
+│   │
+│   ├── Views/                                       # 视图层 (XAML)
+│   │   ├── ShellView.xaml                          # 主窗口/Shell
+│   │   ├── Dialogs/                                 # 对话框视图
+│   │   ├── Pages/                                   # 主要页面视图
+│   │   │   ├── DashboardView.xaml
+│   │   │   ├── UserManagementView.xaml
+│   │   │   └── SettingsView.xaml
+│   │   └── Controls/                                # 可复用的用户控件
+│   │
+│   ├── ViewModels/                                  # 视图模型层
+│   │   ├── ShellViewModel.cs
+│   │   ├── Dialogs/
+│   │   ├── Pages/                                   # 对应Pages的ViewModel
+│   │   │   ├── DashboardViewModel.cs
+│   │   │   ├── UserManagementViewModel.cs
+│   │   │   └── SettingsViewModel.cs
+│   │   └── Controls/                                # 对应Controls的ViewModel
+│   │
+│   ├── Services/                                    # 应用服务层
+│   │   ├── Data/                                    # 数据服务 (对接Web API)
+│   │   │   ├── IApiClient.cs
+│   │   │   └── UserDataService.cs
+│   │   ├── Navigation/                              # 导航服务
+│   │   ├── Dialog/                                  # 对话框服务
+│   │   └── Business/                                # 核心业务逻辑服务
+│   │
+│   ├── Commands/                                    # 命令层
+│   │   ├── Base/                                    # 如：DelegateCommand基类扩展
+│   │   └── Custom/                                  # 自定义业务命令
+│   │
+│   ├── Converters/                                  # 值转换器 (IValueConverter)
+│   │   ├── Base/
+│   │   └── Custom/                                  # 如：DateTimeFormatConverter
+│   │
+│   ├── Models/                                      # 数据模型 (DTO/实体)
+│   │   ├── DTOs/                                    # 与API交互的数据传输对象
+│   │   └── Entities/                                # 客户端业务实体
+│   │
+│   ├── Behaviors/                                   # XAML交互行为 (Blend Behaviors)
+│   ├── Validation/                                  # 数据验证规则
+│   ├── Extensions/                                  # 扩展方法类
+│   │
+│   ├── App.xaml                                     # 应用程序入口
+│   └── MyApp.Client.csproj
+│
+└── MyApp.sln                                        # 解决方案文件

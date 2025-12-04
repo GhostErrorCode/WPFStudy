@@ -15,6 +15,8 @@
 
 1. 学习AvaloniaUI框架，并将已有项目移植或重构到AvaloniaUI框架（跨平台）
 2. 学习WinUI3，并开发新项目或已有项目重构
+3. B/S架构采用Vue + Java的SpringBoot / Python的FastAPI
+4. C/S架构采用WPF/WinUI3/AvaloniaUI + ASP.NET CoreWebApi / Java的SpringBoot / Python的FastAPI
 
 #### 项目目录介绍
 

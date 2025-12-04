@@ -16,7 +16,6 @@
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalAlignment}" />
                     </Grid>
-                    
                     <!-- 触发器 -->
                     <ControlTemplate.Triggers>
                         <!-- 选中时的触发器 -->

@@ -7,7 +7,19 @@
     <ActiveDebugProfile>MemoDesktop</ActiveDebugProfile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Update="Views\IndexView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\MemoMainView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\MemoView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\SettingsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\ToDoView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
