@@ -38,6 +38,9 @@ namespace MemoDesktop.Views
 
             // 自定义标题栏订阅双击放大/还原
             ColorZoneTilteBar.MouseDoubleClick += WindowMaximizeOrNormal;
+
+            // 左侧菜单ListBox的选中事件绑定方法，用于自动关闭左侧菜单
+            LeftMenuListBox.SelectionChanged += CloseLeftMenu;
         }
 
         // 实现窗口最小化
@@ -87,6 +90,12 @@ namespace MemoDesktop.Views
                 // 如果当前窗口是普通状态就最大化
                 this.WindowState = WindowState.Maximized;
             }
+        }
+
+        // 实现自动关闭左侧菜单
+        private void CloseLeftMenu(object sender, SelectionChangedEventArgs e)
+        {
+            MemoMainViewDrawerHost.IsLeftDrawerOpen = false;
         }
     }
 }

@@ -30,13 +30,13 @@ namespace MemoDesktop.Models
         }
 
         /// <summary>
-        /// 菜单命名空间
+        /// Prism 导航的 ViewName（对应已注册的 View），例如 "DashboardView"
         /// </summary>
-        private string _namesapce;
-        public string Nameapce
+        private string _navigationpath;
+        public string NavigationPath
         {
-            get { return _namesapce; }
-            set { _namesapce = value; }
+            get { return _navigationpath; }
+            set { _navigationpath = value; }
         }
     }
 }

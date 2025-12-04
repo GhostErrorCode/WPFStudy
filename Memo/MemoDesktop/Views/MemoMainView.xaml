@@ -7,6 +7,9 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:materialDesignConverters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:constants="clr-namespace:MemoDesktop.Constants"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         WindowStyle="None"
         Style="{StaticResource MaterialDesignWindow}"
@@ -16,6 +19,7 @@
     <!-- AllowsTransparency="False"确保关闭，以获得更好性能 -->
     <!-- ResizeMode="CanResize" 保持可调整大小 -->
     <!-- WindowStyle="None"移除标题栏、边框及所有系统按钮,但会失去Win的原生动画 -->
+    <!-- xmlns:i="http://schemas.microsoft.com/xaml/behaviors"在 XAML 中无代码实现 “事件与命令 / 行为的绑定”,在 XAML 中无代码实现 “事件与命令 / 行为的绑定” -->
 
     <!-- 使用WindowChrome，这是WPF中更强大、性能更优的自定义窗口方案。它可以精细控制非客户区，从根本上避免白边，甚至能解决启动时的白屏问题 -->
     <shell:WindowChrome.WindowChrome>
@@ -32,9 +36,9 @@
     <materialDesign:DialogHost DialogTheme="Inherit"
                                Identifier="RootDialog"
                                SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}">
-        
 
-        <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+
+        <materialDesign:DrawerHost x:Name="MemoMainViewDrawerHost" IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
             <materialDesign:DrawerHost.LeftDrawerContent>
                 <DockPanel MinWidth="220" LastChildFill="False">
                     <!-- LastChildFill关闭/开启最后一个子元素填充所有剩余空间 -->
@@ -52,7 +56,19 @@
                     </StackPanel>
 
                     <!-- 下方的ListBox菜单列表 -->
-                    <ListBox ItemContainerStyle="{StaticResource LeftMenuBarStyle}" ItemsSource="{Binding MenuBars}" DockPanel.Dock="Top" Margin="0,30,0,0">
+                    <ListBox x:Name="LeftMenuListBox" ItemContainerStyle="{StaticResource LeftMenuBarStyle}" ItemsSource="{Binding MenuBars}" DockPanel.Dock="Top" Margin="0,30,0,0">
+                        <!-- 交互触发器：连接UI事件与ViewModel命令的桥梁 -->
+                        <i:Interaction.Triggers>
+                            <!-- 事件触发器：监听ListBox的SelectionChanged事件 -->
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <!-- Prism行为：将触发的事件转换为对ViewModel中命令的调用 -->
+                                <i:InvokeCommandAction
+                                    Command="{Binding NavigateCommand}" 
+                                    CommandParameter="{Binding SelectedItem, ElementName=LeftMenuListBox}"/>
+                                    <!-- 关键：将ListBox当前选中的对象作为参数传递给命令 -->
+                                    <!-- Command="{Binding MenuItemClickedCommand}" 绑定到要执行的命令 -->
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <!-- 定义数据模板，需要显示图标和菜单名称 -->
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -83,19 +99,19 @@
 
                             <Button Margin="24,0,0,0"
                                     materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={x:Static materialDesignConverters:BrushRoundConverter.Instance}}"
-                                    Command="{Binding MovePrevCommand}"
+                                    Command="{Binding GoBackCommand}"
                                     Content="{materialDesign:PackIcon Kind=ArrowLeft,Size=24}"
                                     Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
                                     Style="{StaticResource MaterialDesignToolButton}"
-                                    ToolTip="Previous Item" />
+                                    ToolTip="Previous Item" Cursor="Hand" />
 
                             <Button Margin="16,0,0,0"
                                     materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource Self}, Path=Foreground, Converter={x:Static materialDesignConverters:BrushRoundConverter.Instance}}"
-                                    Command="{Binding MoveNextCommand}"
+                                    Command="{Binding GoForwardCommand}"
                                     Content="{materialDesign:PackIcon Kind=ArrowRight,Size=24}"
                                     Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
                                     Style="{StaticResource MaterialDesignToolButton}"
-                                    ToolTip="Next Item" />
+                                    ToolTip="Next Item" Cursor="Hand" />
 
                             <!-- 标题 -->
                             <TextBlock Margin="20,0,0,0"
@@ -130,9 +146,16 @@
                                 <materialDesign:PackIcon Kind="WindowClose" />
                             </Button>
                         </StackPanel>
-
                     </DockPanel>
                 </materialDesign:ColorZone>
+                <!--
+                MaterialDesign的 DrawerHost 控件：
+                它是一个内容控件 (ContentControl)，只能包含一个直接子元素
+                这个子元素就是它的"主内容区"
+                抽屉内容通过 LeftDrawerContent 属性单独设置
+                -->
+                <!-- 导航区域 -->
+                <ContentControl DockPanel.Dock="Top" prism:RegionManager.RegionName="{x:Static constants:RegionNames.MainViewRegionName}" />
             </DockPanel>
         </materialDesign:DrawerHost>
     </materialDesign:DialogHost>
