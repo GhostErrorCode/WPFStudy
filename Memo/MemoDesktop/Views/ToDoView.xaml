@@ -4,9 +4,121 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MemoDesktop.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="ToDoView" FontSize="80" />
-    </Grid>
+    <materialDesign:DialogHost>
+        <!-- 右侧添加栏 -->
+        <materialDesign:DrawerHost IsRightDrawerOpen="{Binding IsRightDrawerOpen}">
+            <materialDesign:DrawerHost.RightDrawerContent>
+                <DockPanel Width="300" LastChildFill="False">
+                    <TextBlock Text="添加待办" FontSize="20" FontWeight="Bold" DockPanel.Dock="Top" Padding="20"/>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="20">
+                        <TextBlock Text="状态: " VerticalAlignment="Center"/>
+                        <ComboBox Margin="8,0,0,0" Width="80">
+                            <ComboBoxItem>待办</ComboBoxItem>
+                            <ComboBoxItem>已完成</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                    <TextBox Margin="20,0,20,20" materialDesign:HintAssist.Hint="请输入待办标题..." DockPanel.Dock="Top"/>
+                    <TextBox Margin="20,0,20,20" materialDesign:HintAssist.Hint="请输出待办内容..." DockPanel.Dock="Top" MinHeight="100" TextWrapping="Wrap" VerticalContentAlignment="Top" />
+                    <Button Margin="20,0,20,0" Content="添加待办事项" DockPanel.Dock="Top" />
+                </DockPanel>
+            </materialDesign:DrawerHost.RightDrawerContent>
+
+            <Grid>
+                <!-- 分成两行 -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- 第一行的搜索框以及添加按钮 -->
+                <StackPanel Grid.Row="0" Margin="10,10,0,0" Orientation="Horizontal">
+                    <!-- 查询输入框 -->
+                    <!-- materialDesign:TextFieldAssist.HasClearButton="True，是否开启编辑时右侧清除按钮 -->
+                    <TextBox
+                    Width="250"
+                    VerticalAlignment="Center"
+                    materialDesign:HintAssist.Hint="查询待办事项..."
+                    materialDesign:TextFieldAssist.HasClearButton="True"/>
+                    <!-- 筛选说明文本块 -->
+                    <TextBlock
+                    Text="筛选: "
+                    Margin="30,8,2,0"
+                    VerticalAlignment="Center"/>
+                    <!-- 筛选组合框 -->
+                    <ComboBox Width="100" Margin="0,8,0,0" VerticalAlignment="Center">
+                        <ComboBoxItem>全部</ComboBoxItem>
+                        <ComboBoxItem>待办</ComboBoxItem>
+                        <ComboBoxItem>已完成</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- 第一行的添加待办按钮 -->
+                <Button Command="{Binding AddToDoDataCommand}"  Content=" + 添加待办" HorizontalAlignment="Right" Margin="0,10,10,0" Cursor="Hand"/>
+
+                <!-- ########################################################################################################## -->
+
+                <!-- 第二行内容：ItemsControl -->
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding ToDoDataModels}" HorizontalAlignment="Center" Margin="0,20,0,0">
+                    <!-- 先定义容器类型 -->
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <!-- 在定义数据模板 -->
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <!-- 分两行 -->
+                            <Grid Width="220" MinHeight="180" MaxHeight="250" Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <!-- 右上角三点按钮 -->
+                                <materialDesign:PopupBox HorizontalAlignment="Right" Panel.ZIndex="1">
+                                    <Button Content="删除" />
+                                </materialDesign:PopupBox>
+
+                                <!-- Border负责背景色和圆角 -->
+                                <Border
+                                Grid.RowSpan="2"
+                                Background="Green"
+                                CornerRadius="10" />
+
+                                <!-- 具体的数据项 -->
+                                <TextBlock Padding="10,10,10,10" Grid.Row="0" Text="{Binding Title}" FontWeight="Bold" />
+                                <TextBlock Grid.Row="1" Padding="10,10,10,10" Text="{Binding Content}" />
+
+                                <!-- 右侧圆底花纹 -->
+                                <Canvas Grid.RowSpan="2" ClipToBounds="True">
+                                    <!-- ClipToBounds裁剪超出边界的元素 -->
+                                    <Border
+                                    Canvas.Top="10"
+                                    Canvas.Right="-50"
+                                    CornerRadius="100"
+                                    Width="120"
+                                    Height="120"
+                                    Background="#FFFFFF"
+                                    Opacity="0.1" />
+                                    <Border
+                                    Canvas.Top="80"
+                                    Canvas.Right="-30"
+                                    CornerRadius="100"
+                                    Width="120"
+                                    Height="120"
+                                    Background="#FFFFFF"
+                                    Opacity="0.1" />
+                                </Canvas>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </materialDesign:DrawerHost>
+    </materialDesign:DialogHost>
 </UserControl>
