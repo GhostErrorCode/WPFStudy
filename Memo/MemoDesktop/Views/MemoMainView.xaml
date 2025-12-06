@@ -84,7 +84,7 @@
                 </DockPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
 
-            <DockPanel VerticalAlignment="Top">
+            <DockPanel>
                 <materialDesign:ColorZone x:Name="ColorZoneTilteBar"
                                           Padding="12"
                                           materialDesign:ElevationAssist.Elevation="Dp4"
@@ -155,7 +155,10 @@
                 抽屉内容通过 LeftDrawerContent 属性单独设置
                 -->
                 <!-- 导航区域 -->
-                <ContentControl DockPanel.Dock="Top" prism:RegionManager.RegionName="{x:Static constants:RegionNames.MainViewRegionName}" />
+                <ContentControl
+                    prism:RegionManager.RegionName="{x:Static constants:RegionNames.MainViewRegionName}"
+                    VerticalContentAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"/>
             </DockPanel>
         </materialDesign:DrawerHost>
     </materialDesign:DialogHost>
