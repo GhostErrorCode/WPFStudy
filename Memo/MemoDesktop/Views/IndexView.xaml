@@ -4,9 +4,247 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MemoDesktop.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Text="IndexView" FontSize="80" />
+        <!-- 分成3行 -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- 第一行 -->
+        <!-- 文本块，包号用户名称，当前时间 -->
+        <TextBlock
+            Grid.Row="0"
+            Margin="10,10,0,0"
+            Text="你好，幽灵！今天是2025年12月6日 星期六"
+            FontSize="22" />
+        
+        <!-- 第二行 -->
+        <!--
+            ItemsControl 是所有可展示 “集合型数据” 控件的基类:
+            核心作用是将一个数据集合（如List<T>、ObservableCollection<T>）可视化呈现
+            是 WPF 数据绑定、MVVM（Prism 架构核心）中最常用的控件之一。
+        -->
+        <!--
+            你可以把它理解为 “数据集合的可视化容器”—— 它不规定最终的展示样式（比如列表、网格、瀑布流）
+            但提供了一套通用机制：绑定数据源 + 定义单个数据项的模板 + 控制整体布局。
+        -->
+        <!-- ItemControl
+            数据驱动：通过 ItemsSource 属性绑定集合数据源（Prism 中通常绑定 ViewModel 的ObservableCollection<T>），数据源更新时 UI 自动同步；
+            模板化：通过 ItemTemplate 定义单个数据项的 UI 样式（可结合 MaterialDesign 控件）；
+            布局灵活：通过 ItemsPanel 自定义整体布局（列表、网格、环绕等）；
+            无默认交互：纯展示型控件（无选中、点击等默认交互），如需交互可派生或扩展（如ListBox、ListView）。
+         -->
+        <!-- ItemsControl核心用法 -->
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding TaskBarModels}">
+            <!-- <ItemsControl.ItemsPanel> 是 ItemsControl 控件的专属属性，核心作用是为 ItemsControl 指定承载所有数据项的布局容器模板（ItemsPanelTemplate） —— 它是连接 ItemsControl 和 ItemsPanelTemplate 的 “桥梁”，决定了 ItemsControl 内部所有数据项的整体排布规则。 -->
+            <!-- <ItemsControl.ItemsPanel> 就是 ItemsControl 的 “布局设置入口”，你通过这个入口告诉控件：“请用 StackPanel/UniformGrid/WrapPanel 等布局容器来摆放我的所有数据项 -->
+            <!-- 1. 单个数据项的模板（MaterialDesign样式） -->
+            <ItemsControl.ItemsPanel>
+                <!-- <ItemsPanelTemplate> 是专门为 ItemsControl（及派生控件如 ListBox、ListView、ComboBox 等）设计的核心模板 -->
+                <!-- 作用是定义承载所有数据项的 “布局容器” -->
+                <ItemsPanelTemplate>
+                    <!-- 创建4个行列大小完全均等的网格布局 -->
+                    <UniformGrid Columns="4" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            
+            <!-- 创建数据项模板 -->
+            <!-- 用于定义 ItemsControl 中 “单个数据项” 的可视化 UI 样式 -->
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        Margin="10"
+                        Background="{Binding Color}"
+                        CornerRadius="10">
+
+                        <!-- 为此Border定义专属样式 -->
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <!-- 【基础设置】默认状态下，定义一个完全透明的阴影（即无阴影） -->
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <!-- DropShadowEffect：用于创建投影效果 -->
+                                        <!-- Opacity="0"透明度为0，完全透明 -->
+                                        <!-- ShadowDepth="0"阴影投射距离为0 -->
+                                        <!-- BlurRadius="0"模糊半径为0，即无模糊 -->
+                                        <DropShadowEffect
+                                            Opacity="0"
+                                            ShadowDepth="0"
+                                            BlurRadius="0"/>
+                                            
+                                    </Setter.Value>
+                                </Setter>
+
+                                <!-- 【触发器】定义当特定属性条件满足时，如何改变样式 -->
+                                <Style.Triggers>
+                                    <!-- Trigger：当 Border 的 IsMouseOver（鼠标悬停）属性变为 True 时触发 -->
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <!-- 触发后，将 Effect 属性设置为新的阴影效果 -->
+                                        <Setter Property="Effect">
+                                            <Setter.Value>
+                                                <!-- Color="LightGray"阴影颜色 -->
+                                                <!-- Opacity="0.8"不透明度：80% -->
+                                                <!-- ShadowDepth="6"阴影偏移量：6像素，值越大感觉“浮起”越高 -->
+                                                <!-- BlurRadius="15"模糊半径：15像素，值越大阴影边缘越柔和 -->
+                                                <!-- Direction="270"阴影方向：270度（正下方）-->
+                                                <DropShadowEffect
+                                                    Color="LightGray"
+                                                    Opacity="0.8"
+                                                    ShadowDepth="1"
+                                                    BlurRadius="15"
+                                                    Direction="270"/>
+                                                    
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+
+                        <Grid>
+                            <!-- 左侧数据项 -->
+                            <StackPanel
+                                Orientation="Vertical"
+                                Margin="20,10,0,0">
+                                <materialDesign:PackIcon Kind="{Binding Icon}" Width="30" Height="30" />
+                                <TextBlock
+                                    Text="{Binding Title}"
+                                    Margin="0,15,0,0"
+                                    FontSize="20"/>
+                                <TextBlock
+                                    FontWeight="Bold"
+                                    Text="{Binding Content}"
+                                    FontSize="40"/>
+                            </StackPanel>
+                            <!-- 右侧圆底花纹 -->
+                            <Canvas ClipToBounds="True">
+                                <!-- ClipToBounds裁剪超出边界的元素 -->
+                                <Border
+                                    Canvas.Top="10"
+                                    Canvas.Right="-50"
+                                    CornerRadius="100"
+                                    Width="120"
+                                    Height="120"
+                                    Background="#FFFFFF"
+                                    Opacity="0.1" />
+                                <Border
+                                    Canvas.Top="80"
+                                    Canvas.Right="-30"
+                                    CornerRadius="100"
+                                    Width="120"
+                                    Height="120"
+                                    Background="#FFFFFF"
+                                    Opacity="0.1" />
+                            </Canvas>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- 第三行分两列 -->
+        <Grid Grid.Row="2" Margin="0,0,0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            
+            <!-- 第三行第一列 -->
+            <Border
+                Grid.Column="0"
+                Margin="10,5,10,5"
+                CornerRadius="10"
+                Opacity="0.1"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                Background="#BEBEBE" />
+
+            <DockPanel Grid.Column="0" Margin="15,12,15,10">
+                <!-- 待办事项和按钮 -->
+                <DockPanel DockPanel.Dock="Top" LastChildFill="False" Margin="15,12,15,10">
+                    <TextBlock
+                        Text="待办事项"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        DockPanel.Dock="Left"
+                        VerticalAlignment="Top"/>
+                    <Button
+                        Height="30"
+                        Width="30"
+                        FontSize="20"
+                        DockPanel.Dock="Right"
+                        VerticalAlignment="Top"
+                        Style="{StaticResource MaterialDesignFloatingActionSecondaryButton}">
+                        <materialDesign:PackIcon Kind="Add" />
+                    </Button>
+                </DockPanel>
+                
+                <!-- listBox数据 -->
+                <ListBox ItemsSource="{Binding ToDoDataModels}" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch">
+                    <!-- 使用数据模板 -->
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <!-- DockPanel用于排列左侧数据和右侧按钮 -->
+                            <DockPanel MaxHeight="80" LastChildFill="True">
+                                <ToggleButton DockPanel.Dock="Right" />
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="16" />
+                                    <TextBlock Text="{Binding Content}" Opacity="0.5" Margin="0,5,0,0" />
+                                </StackPanel>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+            
+            <!-- 第三行第二列 -->
+            <Border
+                Grid.Column="1"
+                Margin="10,5,10,5"
+                CornerRadius="10"
+                Opacity="0.1"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                Background="#BEBEBE" />
+
+            <DockPanel Grid.Column="1" Margin="15,12,15,10">
+                <!-- 待办事项和按钮 -->
+                <DockPanel DockPanel.Dock="Top" LastChildFill="False" Margin="15,12,15,10">
+                    <TextBlock
+                        Text="备忘录"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        DockPanel.Dock="Left"
+                        VerticalAlignment="Top"/>
+                    <Button
+                        Height="30"
+                        Width="30"
+                        FontSize="20"
+                        DockPanel.Dock="Right"
+                        VerticalAlignment="Top"
+                        Style="{StaticResource MaterialDesignFloatingActionSecondaryButton}">
+                        <materialDesign:PackIcon Kind="Add" />
+                    </Button>
+                </DockPanel>
+
+                <!-- listBox数据 -->
+                <ListBox ItemsSource="{Binding MemoDataModels}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <!-- 使用数据模板 -->
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel MaxHeight="80">
+                                <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="16" />
+                                <TextBlock Text="{Binding Content}" Opacity="0.5" Margin="0,5,0,0" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Grid>
     </Grid>
 </UserControl>
