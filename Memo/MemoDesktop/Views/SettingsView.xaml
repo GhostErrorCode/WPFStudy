@@ -4,9 +4,59 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MemoDesktop.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Text="SettingsView" FontSize="80" />
+        <!-- 分两行 -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <!-- 第一行标题 -->
+        <TextBlock Margin="20,10,20,10" FontSize="26" Text="设置" />
+        <Border BorderBrush="#DDDDDD" BorderThickness="0,0,0,3" />
+        
+        
+        <!-- 第二行分两列 -->
+        <Grid Grid.Row="1" Margin="10,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <!-- 第二行第一列的ListBox导航菜单 -->
+            <ListBox Grid.Column="0" x:Name="LeftMenuListBox" ItemContainerStyle="{StaticResource LeftMenuBarStyle}" ItemsSource="{Binding SettingsMenuBars}" DockPanel.Dock="Top" Margin="0,30,0,0">
+                <!-- 交互触发器：连接UI事件与ViewModel命令的桥梁 -->
+                <i:Interaction.Triggers>
+                    <!-- 事件触发器：监听ListBox的SelectionChanged事件 -->
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <!-- Prism行为：将触发的事件转换为对ViewModel中命令的调用 -->
+                        <i:InvokeCommandAction
+                            Command="{Binding SettingsNavigateCommand}" 
+                            CommandParameter="{Binding SelectedItem, ElementName=LeftMenuListBox}"/>
+                        <!-- 关键：将ListBox当前选中的对象作为参数传递给命令 -->
+                        <!-- Command="{Binding MenuItemClickedCommand}" 绑定到要执行的命令 -->
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <!-- 定义数据模板，需要显示图标和菜单名称 -->
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                            <!-- 菜单图标 -->
+                            <materialDesign:PackIcon Kind="{Binding Icon}" Margin="10,0,0,0" VerticalAlignment="Center" Padding="0"/>
+                            <!-- 菜单名称 -->
+                            <TextBlock Margin="10,0,0,0" Text="{Binding Name}" VerticalAlignment="Center" Padding="0" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            
+            <!-- 第二行第二列的内容区 -->
+            <ContentControl x:Name="SettingsRegionContentControl" Grid.Column="1" Margin="20,0,0,0"/>
+        </Grid>
     </Grid>
 </UserControl>

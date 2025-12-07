@@ -1,5 +1,4 @@
-﻿using MemoDesktop.Constants;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -15,17 +14,13 @@ using System.Windows.Shapes;
 namespace MemoDesktop.Views
 {
     /// <summary>
-    /// SettingsView.xaml 的交互逻辑
+    /// SkinView.xaml 的交互逻辑
     /// </summary>
-    public partial class SettingsView : UserControl
+    public partial class SkinView : UserControl
     {
-        // 
-        public SettingsView()
+        public SkinView()
         {
             InitializeComponent();
-
-            // SettingsRegionContentControl控件设置区域名称
-            RegionManager.SetRegionName(SettingsRegionContentControl, RegionNames.SettingsViewRegionName);
         }
     }
 }
