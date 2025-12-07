@@ -11,5 +11,8 @@ namespace MemoDesktop.Constants
     {
         // 主页面的静态区域Region
         public const string MainViewRegionName = "MainViewRegion";
+
+        // 设置页面的静态区域Region
+        public const string SettingsViewRegionName = "SettingsViewRegion";
     }
 }

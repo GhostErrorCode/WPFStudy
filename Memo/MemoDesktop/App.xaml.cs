@@ -30,6 +30,10 @@ namespace MemoDesktop
             containerRegistry.RegisterForNavigation<MemoView, MemoViewModel>("MemoView");
             containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>("SettingsView");
             containerRegistry.RegisterForNavigation<ToDoView, ToDoViewModel>("ToDoView");
+
+            // 设置的个性化、系统设置、关于更多的页面和视图模型
+            containerRegistry.RegisterForNavigation<SkinView, SkinViewModel>("SkinView");
+            containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>("AboutView");
         }
     }
 }
