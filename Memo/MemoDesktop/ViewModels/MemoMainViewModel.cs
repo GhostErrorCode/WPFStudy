@@ -76,10 +76,10 @@ namespace MemoDesktop.ViewModels
         // 创建动态的菜单栏
         private void CreateMenuBar()
         {
-            MenuBars.Add(new MenuBarModel() { Icon = PackIconKind.Home, Name = "首页", NavigationPath = "IndexView" });
-            MenuBars.Add(new MenuBarModel() { Icon = PackIconKind.NotebookOutline, Name = "代办事项", NavigationPath = "ToDoView" });
-            MenuBars.Add(new MenuBarModel() { Icon = PackIconKind.NotebookPlus, Name = "备忘录", NavigationPath = "MemoView" });
-            MenuBars.Add(new MenuBarModel() { Icon = PackIconKind.Cog, Name = "设置", NavigationPath = "SettingsView" });
+            MenuBars.Add(new MenuBarModel() { Icon = "Home", Name = "首页", NavigationPath = "IndexView" });
+            MenuBars.Add(new MenuBarModel() { Icon = "NotebookOutline", Name = "代办事项", NavigationPath = "ToDoView" });
+            MenuBars.Add(new MenuBarModel() { Icon = "NotebookPlus", Name = "备忘录", NavigationPath = "MemoView" });
+            MenuBars.Add(new MenuBarModel() { Icon = "Cog", Name = "设置", NavigationPath = "SettingsView" });
         }
 
         /// <summary>

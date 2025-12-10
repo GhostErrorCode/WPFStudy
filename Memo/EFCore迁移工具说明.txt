@@ -1,0 +1,6 @@
+1.优先定义表实体等，并配置DbContext，以及配置builder.Services.AddDbContext<MemoApplicationDbContext>(options =>    options.UseSqlite($"Data Source=XXXXXX"));
+2.安装NuGet包：Microsoft.EntityFrameworkCore.Tools
+3.VS界面点击“工具”→“NuGet包管理器”→“程序包管理器控制台”
+4.输入 Add-Migration <名称>后回车运行
+5.解决方案中会出现Migrations文件夹，里面包含了迁移的主要文件和快照
+6.现在可以执行Update-Database命令来直接创建数据库，或者代码添加dbContext.Database.Migrate()方法，运行时创建数据库

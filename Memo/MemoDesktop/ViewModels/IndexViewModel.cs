@@ -47,10 +47,10 @@ namespace MemoDesktop.ViewModels
         private void CreateTaskBars()
         {
             this.TaskBarModels = new ObservableCollection<TaskBarModel>();
-            TaskBarModels.Add(new TaskBarModel() { Icon = PackIconKind.ClockFast, Title = "汇总", Content = "9", Color = "#FF0CA0FF", Target = "" });
-            TaskBarModels.Add(new TaskBarModel() { Icon = PackIconKind.ClockCheckOutline, Title = "已完成", Content = "9", Color = "#FF1ECA3A", Target = "" });
-            TaskBarModels.Add(new TaskBarModel() { Icon = PackIconKind.ChartLineVariant, Title = "完成率", Content = "100%", Color = "#FF02C6DC", Target = "" });
-            TaskBarModels.Add(new TaskBarModel() { Icon = PackIconKind.PlaylistStar, Title = "备忘录", Content = "19", Color = "#FFFFA000", Target = "" });
+            TaskBarModels.Add(new TaskBarModel() { Icon = "ClockFast", Title = "汇总", Content = "9", Color = "#FF0CA0FF", Target = "" });
+            TaskBarModels.Add(new TaskBarModel() { Icon = "ClockCheckOutline", Title = "已完成", Content = "9", Color = "#FF1ECA3A", Target = "" });
+            TaskBarModels.Add(new TaskBarModel() { Icon = "ChartLineVariant", Title = "完成率", Content = "100%", Color = "#FF02C6DC", Target = "" });
+            TaskBarModels.Add(new TaskBarModel() { Icon = "PlaylistStar", Title = "备忘录", Content = "19", Color = "#FFFFA000", Target = "" });
         }
 
         // 创建待办事项和备忘录的测试数据
