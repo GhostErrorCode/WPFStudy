@@ -12,8 +12,8 @@ namespace MemoDesktop.Models
         /// 任务栏图标
         /// PackIconKind是UI组件的
         /// </summary>
-        private PackIconKind _icon;
-        public PackIconKind Icon
+        private string _icon;
+        public string Icon
         {
             get { return _icon; } 
             set { _icon = value; }

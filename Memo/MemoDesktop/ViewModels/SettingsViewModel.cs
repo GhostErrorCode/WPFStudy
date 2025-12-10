@@ -46,9 +46,9 @@ namespace MemoDesktop.ViewModels
         private void CreateSettingsMenuBars()
         {
             this.SettingsMenuBars = new ObservableCollection<MenuBarModel>();
-            SettingsMenuBars.Add(new MenuBarModel() { Icon = PackIconKind.Palette, Name = "个性化", NavigationPath = "SkinView" });
-            SettingsMenuBars.Add(new MenuBarModel() { Icon = PackIconKind.Cog, Name = "系统设置", NavigationPath = "" });
-            SettingsMenuBars.Add(new MenuBarModel() { Icon = PackIconKind.Information, Name = "关于我们", NavigationPath = "AboutView" });
+            SettingsMenuBars.Add(new MenuBarModel() { Icon = "Palette", Name = "个性化", NavigationPath = "SkinView" });
+            SettingsMenuBars.Add(new MenuBarModel() { Icon = "Cog", Name = "系统设置", NavigationPath = "" });
+            SettingsMenuBars.Add(new MenuBarModel() { Icon = "PaleInformationtte", Name = "关于我们", NavigationPath = "AboutView" });
         }
     }
 }
