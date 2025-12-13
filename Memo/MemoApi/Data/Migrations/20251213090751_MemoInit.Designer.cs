@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace MemoApi.Migrations
+namespace MemoApi.Data.Migrations
 {
     [DbContext(typeof(MemoApplicationDbContext))]
-    [Migration("20251210081912_MemoInit")]
+    [Migration("20251213090751_MemoInit")]
     partial class MemoInit
     {
         /// <inheritdoc />
