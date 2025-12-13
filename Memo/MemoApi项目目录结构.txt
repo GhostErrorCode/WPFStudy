@@ -1,13 +1,94 @@
-MemoApi/
+MyWebApiProject/
+├── Controllers/                     # API 控制器
+│   ├── v1/                         # API 版本控制
+│   │   ├── ProductsController.cs
+│   │   ├── CategoriesController.cs
+│   │   └── UsersController.cs
+│   └── AccountController.cs
+│
+├── Entities/                        # 数据库实体
+│   ├── Base/
+│   │   ├── BaseEntity.cs
+│   │   └── AuditableEntity.cs
+│   ├── Product.cs
+│   ├── Category.cs
+│   ├── User.cs
+│   ├── Order.cs
+│   └── OrderItem.cs
+│
+├── UnitOfWork/
+│   ├── IUnitOfWork.cs
+│   └── UnitOfWork.cs
+├── Data/
+│   └── Repository/
+│
+│
+├── Data/                           # 数据访问相关
+│   ├── ApplicationDbContext.cs     # DbContext
+│   ├── DbInitializer.cs           # 数据库初始化
+│   ├── Migrations/                # EF Core 迁移
+│   ├── Repository/                # 仓储实现
+│   │   ├── GenericRepository.cs
+│   │   ├── ProductRepository.cs
+│   │   ├── UserRepository.cs
+│   │   └── UnitOfWork.cs
+│   ├── Configurations/            # 实体配置
+│   │   ├── ProductConfiguration.cs
+│   │   └── CategoryConfiguration.cs
+│   └── SeedData/                  # 种子数据
+│
+├── DTOs/                          # 数据传输对象
+│   ├── Requests/                  # 请求DTO
+│   │   ├── CreateProductDto.cs
+│   │   ├── UpdateProductDto.cs
+│   │   └── LoginDto.cs
+│   ├── Responses/                 # 响应DTO
+│   │   ├── ProductDto.cs
+│   │   ├── CategoryDto.cs
+│   │   └── UserDto.cs
+│   └── ViewModels/                # 视图模型
+│
+├── Services/                      # 业务逻辑服务
+│   ├── Interfaces/                # 服务接口
+│   │   ├── IProductService.cs
+│   │   ├── IUserService.cs
+│   │   └── IEmailService.cs
+│   ├── ProductService.cs
+│   ├── UserService.cs
+│   ├── AuthService.cs
+│   └── EmailService.cs
+│
+├── Middleware/                    # 自定义中间件
+│   ├── ErrorHandlingMiddleware.cs
+│   ├── RequestLoggingMiddleware.cs
+│   └── JwtMiddleware.cs
+│
+├── Filters/                       # 过滤器
+│   ├── ValidateModelAttribute.cs
+│   └── CustomAuthorizeFilter.cs
+│
+├── Helpers/                       # 辅助类
+│   ├── AutoMapperProfile.cs      # AutoMapper配置
+│   ├── JwtHelper.cs
+│   ├── PasswordHasher.cs
+│   └── Constants.cs              # 常量
+│
+├── Extensions/                    # 扩展方法
+│   ├── ServiceExtensions.cs      # 服务注册扩展
+│   ├── SwaggerExtensions.cs
+│   └── ApplicationBuilderExtensions.cs
+│
+├── Validators/                    # 验证器
+│   ├── CreateProductValidator.cs
+│   └── UpdateProductValidator.cs
+│
+├── wwwroot/                       # 静态文件
+│   ├── images/
+│   └── uploads/
+│
+├── Program.cs                     # 程序入口
+├── appsettings.json               # 配置文件
+├── appsettings.Development.json
 ├── Properties/
-│   └── launchSettings.json         # 项目启动配置文件（定义Https/Http等配置）
-├── Controllers/                    # API控制器文件夹
-│   └── MemoItemsController.cs      # 备忘录项的API控制器（需手动创建）
-├── Models/                         # 数据模型文件夹
-│   └── MemoItem.cs                 # 备忘录数据模型类（需手动创建）
-├── Data/                           # 数据上下文文件夹（可选，若用EF Core）
-│   └── MemoContext.cs              # Entity Framework 数据库上下文（需手动创建）
-├── Program.cs                      # 应用程序入口和主要配置
-├── appsettings.json                # 应用程序配置文件（如连接字符串）
-├── appsettings.Development.json    # 开发环境专用配置
-└── MemoApi.csproj                  # 项目文件，定义SDK和NuGet包引用
+│   └── launchSettings.json
+└── MyWebApiProject.csproj

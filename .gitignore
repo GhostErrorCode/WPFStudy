@@ -14,6 +14,7 @@ x86/       # 排除 x86 输出目录
 [Rr]elease/
 wpfui/
 MaterialDesignInXamlToolkit/
+ArchUnitOfWork/
 *.exe
 # *.dll
 *.lib

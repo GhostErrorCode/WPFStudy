@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace MemoApi.Migrations
+namespace MemoApi.Data.Migrations
 {
     /// <inheritdoc />
     public partial class MemoInit : Migration

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace MemoApi.Migrations
+namespace MemoApi.Data.Migrations
 {
     [DbContext(typeof(MemoApplicationDbContext))]
     partial class MemoApplicationDbContextModelSnapshot : ModelSnapshot

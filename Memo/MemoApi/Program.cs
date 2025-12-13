@@ -1,7 +1,13 @@
 
 using MemoApi.Data;
+using MemoApi.Repositories;
+using MemoApi.Repositories.Implements;
+using MemoApi.Services;
+using MemoApi.Services.Implements;
+using MemoApi.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
+using System;
 using System.Runtime.CompilerServices;
 
 namespace MemoApi
@@ -45,8 +51,39 @@ namespace MemoApi
             // 3. 配置数据库上下文 (DbContext)
             //    将ApplicationDbContext注册到依赖注入容器，使用SQLite数据库提供程序
             //    并将解析得到的完整路径作为连接字符串的数据源(Data Source)
+            // 1. 注册数据库上下文（Scoped生命周期）
+            // 重要：DbContext必须是Scoped，确保一次HTTP请求内共享同一个实例
             builder.Services.AddDbContext<MemoApplicationDbContext>(options =>
-                options.UseSqlite($"Data Source={resolvedDbPath}"));
+            {
+                // 获取连接字符串
+                string connectionString = $"Data Source={resolvedDbPath}";
+
+                // 配置SQL Server（根据你的数据库类型调整）
+                options.UseSqlite(connectionString);
+
+                // 开发环境启用详细日志
+                if (builder.Environment.IsDevelopment())
+                {
+                    options.EnableSensitiveDataLogging(); // 记录SQL参数值
+                    options.EnableDetailedErrors();       // 详细错误信息
+                }
+            });
+
+            // 为什么是Scoped？确保一次HTTP请求内的所有操作共享同一个工作单元
+            // 注册通用仓储和工作单元
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork.Implements.UnitOfWork>();
+
+            // 3. 注册具体仓储（Scoped生命周期）
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IToDoRepository, ToDoRepository>();
+            builder.Services.AddScoped<IMemoRepository, MemoRepository>();
+
+            // 4. 注册业务服务（Scoped生命周期）
+            builder.Services.AddScoped<IToDoService, ToDoService>();
+
+            // 5. 注册API控制器
+            builder.Services.AddControllers();
             // ===================================================================
 
             var app = builder.Build();
