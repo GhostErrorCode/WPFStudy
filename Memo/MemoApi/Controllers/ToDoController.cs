@@ -1,4 +1,5 @@
-﻿using MemoApi.Entities;
+﻿using MemoApi.Dtos.ToDo;
+using MemoApi.Entities;
 using MemoApi.Results;
 using MemoApi.Services;
 using Microsoft.AspNetCore.Http;
@@ -7,10 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace MemoApi.Controllers
 {
     // 待办事项控制器
-    // 路径: api/todo
+    // 路径: Api/ToDo/...
 
     [ApiController]
-    [Route("api/todo")]
+    [Route("Api/ToDo")]
     public class ToDoController : ApiControllerBase
     {
         // 依赖注入服务层对象
@@ -24,31 +25,31 @@ namespace MemoApi.Controllers
 
         // 根据ID查询对应的待办事项
         [HttpGet("GetToDoById/{id}")]
-        public async Task<ActionResult<ToDo>> GetToDoById(int id)
+        public async Task<ActionResult<ToDoDto>> GetToDoById(int id)
         {
-            return HandleServiceResult<ToDo>(await this._toDoService.GetToDoByIdAsync(id));
+            return HandleServiceResult<ToDoDto>(await this._toDoService.GetToDoByIdAsync(id));
         }
 
         // 查询所有的待办事项
         [HttpGet("GetToDoAll")]
-        public async Task<ActionResult<List<ToDo>>> GetToDoAll()
+        public async Task<ActionResult<List<ToDoDto>>> GetToDoAll()
         {
-            ServiceResult<List<ToDo>> toDos = await this._toDoService.GetToDoAllAsync();
-            return HandleServiceResult<List<ToDo>>(toDos);
+            ServiceResult<List<ToDoDto>> toDoDtos = await this._toDoService.GetToDoAllAsync();
+            return HandleServiceResult<List<ToDoDto>>(toDoDtos);
         }
 
         // 修改相应待办事项
         [HttpPut("UpdateToDo")]
-        public async Task<ActionResult<ToDo>> UpdateToDo([FromBody] ToDo toDo)
+        public async Task<ActionResult<ToDoDto>> UpdateToDo([FromBody] UpdateToDoDto updateToDoDto)
         {
-            return HandleServiceResult<ToDo>(await this._toDoService.UpdateToDoAsync(toDo));
+            return HandleServiceResult<ToDoDto>(await this._toDoService.UpdateToDoAsync(updateToDoDto));
         }
 
         // 添加待办事项
         [HttpPost("AddToDo")]
-        public async Task<ActionResult<ToDo>> AddToDo([FromBody] ToDo toDo)
+        public async Task<ActionResult<ToDoDto>> AddToDo([FromBody] CreateToDoDto createToDoDto)
         {
-            return HandleServiceResult<ToDo>(await this._toDoService.AddToDoAsync(toDo));
+            return HandleServiceResult<ToDoDto>(await this._toDoService.AddToDoAsync(createToDoDto));
         }
 
         // 删除相应待办事项
