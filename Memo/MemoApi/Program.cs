@@ -1,10 +1,12 @@
 
 using MemoApi.Data;
+using MemoApi.Entities;
 using MemoApi.Repositories;
 using MemoApi.Repositories.Implements;
 using MemoApi.Services;
 using MemoApi.Services.Implements;
 using MemoApi.UnitOfWork;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using System;
@@ -81,9 +83,14 @@ namespace MemoApi
 
             // 4. 注册业务服务（Scoped生命周期）
             builder.Services.AddScoped<IToDoService, ToDoService>();
+            builder.Services.AddScoped<IMemoService, MemoService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             // 5. 注册API控制器
             builder.Services.AddControllers();
+
+            // 6.注册PasswordHasher
+            builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             // ===================================================================
 
             var app = builder.Build();

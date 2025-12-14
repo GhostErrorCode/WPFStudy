@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MemoApi.Controllers
 {
     // 待办事项控制器
-    // 路径: api/todo
+    // 路径: Api/ToDo/...
 
     [ApiController]
     [Route("Api/ToDo")]

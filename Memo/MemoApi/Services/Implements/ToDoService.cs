@@ -1,4 +1,5 @@
-﻿using MemoApi.Dtos.ToDo;
+﻿using MemoApi.Dtos.Memo;
+using MemoApi.Dtos.ToDo;
 using MemoApi.Entities;
 using MemoApi.Enums;
 using MemoApi.Mappings;
@@ -120,7 +121,7 @@ namespace MemoApi.Services.Implements
         {
             // Task.FromResult	方法中没有异步操作，但要保持接口一致性
             // 如果传入的待办事项实体为NULL,则返回失败
-            if (createToDoDto == null) return ServiceResult<ToDoDto>.Fail(ErrorCodes.ParameterNull, "新增的待办事项为空(NULL)");
+            if (createToDoDto == null) return ServiceResult<ToDoDto>.Fail(ErrorCodes.ParameterNull, "添加的待办事项为空(NULL)");
             try
             {
                 // 添加映射：将CreateToDoDto转换为ToDo实体
@@ -135,7 +136,7 @@ namespace MemoApi.Services.Implements
                     return ServiceResult<ToDoDto>.Success(resultToDoDto);
                 }
                 // 如果添加失败
-                return ServiceResult<ToDoDto>.Fail(ErrorCodes.DataInsertFailed, $"新增待办事项 {createToDo.Id} 失败");
+                return ServiceResult<ToDoDto>.Fail(ErrorCodes.DataInsertFailed, $"添加待办事项失败 标题: {createToDoDto.Title}");
             }
             catch(Exception ex)
             {
