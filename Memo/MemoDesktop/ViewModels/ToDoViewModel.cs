@@ -1,16 +1,22 @@
-﻿using MemoDesktop.Models;
+﻿using MemoDesktop.ApiResponses;
+using MemoDesktop.Dtos.Memo;
+using MemoDesktop.Dtos.ToDo;
+using MemoDesktop.Models;
+using MemoDesktop.Services;
+using MemoDesktop.Services.Implements;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MemoDesktop.ViewModels
 {
     public class ToDoViewModel : BindableBase
     {
         // 字段和属性
-        private ObservableCollection<ToDoDataModel> _toDoDataModels;
-        public ObservableCollection<ToDoDataModel> ToDoDataModels
+        private ObservableCollection<ToDoDto> _toDoDataModels;
+        public ObservableCollection<ToDoDto> ToDoDataModels
         {
             get { return _toDoDataModels; }
             set { _toDoDataModels = value; RaisePropertyChanged(); }
@@ -24,27 +30,32 @@ namespace MemoDesktop.ViewModels
             get { return _isRightDrawerOpen; }
             set { _isRightDrawerOpen = value; RaisePropertyChanged(); }
         }
-
+        // 待办事项Api相关服务Service
+        private readonly IToDoApiService _toDoApiService;
 
 
         // 构造函数
-        public ToDoViewModel()
+        public ToDoViewModel(IToDoApiService toDoApiService)
         {
-            // 创建待办事项的测试数据
-            this.CreateToDoDataModels();
+            // 获取备忘录Api服务
+            this._toDoApiService = toDoApiService;
+            this.GetAllToDo();
 
             // 绑定添加待办事项Command方法
             this.AddToDoDataCommand = new DelegateCommand(AddToDoData);
         }
 
-        private void CreateToDoDataModels()
+        private async Task GetAllToDo()
         {
-            // 初始化待办事项属性
-            this.ToDoDataModels = new ObservableCollection<ToDoDataModel>();
-            // 循环添加数据
-            for(int i = 0; i < 20; i++)
+            this.ToDoDataModels = new ObservableCollection<ToDoDto>();
+            ApiResponse<List<ToDoDto>> response = await this._toDoApiService.GetAllToDoAsync();
+            if (response.IsSuccess)
             {
-                this.ToDoDataModels.Add(new ToDoDataModel() { Id = i, Title = "待办事项" + i, Content = "待办事项:" + i, Status = 0, CreateDate = DateTime.Now, UpdateDate = DateTime.Now });
+                this.ToDoDataModels.Clear();
+                foreach (ToDoDto memoDto in response.Data)
+                {
+                    this.ToDoDataModels.Add(memoDto);
+                }
             }
         }
 

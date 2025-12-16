@@ -1,7 +1,11 @@
-﻿using MemoDesktop.ViewModels;
+﻿using MemoDesktop.Services;
+using MemoDesktop.Services.Implements;
+using MemoDesktop.ViewModels;
 using MemoDesktop.Views;
+using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
+using System.Net.Http;
 using System.Windows;
 
 namespace MemoDesktop
@@ -34,6 +38,37 @@ namespace MemoDesktop
             // 设置的个性化、系统设置、关于更多的页面和视图模型
             containerRegistry.RegisterForNavigation<SkinView, SkinViewModel>("SkinView");
             containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>("AboutView");
+
+            // 注册服务
+            containerRegistry.Register<IMemoApiService, MemoApiService>();
+            containerRegistry.Register<IToDoApiService, ToDoApiService>();
+
+            // ====================================== HttpClient注册开始 ========================================
+            // 第一步：创建并配置HTTP客户端实例
+            HttpClient httpClient = new HttpClient();
+
+            // 配置HTTP客户端的基本设置
+            // 注意：这里的地址需要与后端实际运行地址一致
+            httpClient.BaseAddress = new Uri("https://localhost:7084/");
+
+            // 设置超时时间（30秒）
+            httpClient.Timeout = TimeSpan.FromSeconds(30);
+
+            // 清除默认的Accept头
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+
+            // 添加Accept头，指定接收JSON格式的响应
+            httpClient.DefaultRequestHeaders.Accept.Add(
+                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+            // 可选：添加自定义请求头
+            httpClient.DefaultRequestHeaders.Add("X-Client", "MemoWpf");
+            httpClient.DefaultRequestHeaders.Add("X-Client-Version", "1.0.0");
+
+            // 第二步：将HTTP客户端注册为单例
+            // 整个应用程序生命周期内只使用一个HttpClient实例
+            containerRegistry.RegisterInstance<HttpClient>(httpClient);
+            // ====================================== HttpClient注册结束 ========================================
         }
     }
 }
