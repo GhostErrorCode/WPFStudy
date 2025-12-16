@@ -1,7 +1,9 @@
 ﻿using MemoDesktop.ViewModels;
 using MemoDesktop.Views;
+using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
+using System.Net.Http;
 using System.Windows;
 
 namespace MemoDesktop
