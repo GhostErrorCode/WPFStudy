@@ -23,10 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ApiResponses\" />
     <Folder Include="Assets\Icons\" />
     <Folder Include="Assets\Fonts\" />
-    <Folder Include="Services\Implements\" />
   </ItemGroup>
 
   <ItemGroup>

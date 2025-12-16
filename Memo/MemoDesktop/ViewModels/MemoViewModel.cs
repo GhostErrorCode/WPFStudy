@@ -1,4 +1,7 @@
-﻿using MemoDesktop.Models;
+﻿using MemoDesktop.ApiResponses;
+using MemoDesktop.Dtos.Memo;
+using MemoDesktop.Models;
+using MemoDesktop.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,8 +12,8 @@ namespace MemoDesktop.ViewModels
     public class MemoViewModel : BindableBase
     {
         // 字段和属性
-        private ObservableCollection<MemoDataModel> _memoDataModels;
-        public ObservableCollection<MemoDataModel> MemoDataModels
+        private ObservableCollection<MemoDto> _memoDataModels;
+        public ObservableCollection<MemoDto> MemoDataModels
         {
             get { return _memoDataModels; }
             set { _memoDataModels = value; RaisePropertyChanged(); }
@@ -26,26 +29,32 @@ namespace MemoDesktop.ViewModels
             set { _isRightDrawerOpen = value; RaisePropertyChanged(); }
         }
 
+        // 备忘录Api相关服务Service
+        private readonly IMemoApiService _memoApiService;
 
 
         // 构造函数
-        public MemoViewModel()
+        public MemoViewModel(IMemoApiService memoApiService)
         {
-            // 创建待办事项的测试数据
-            this.CreateMemoDataModels();
+            // 获取备忘录Api服务
+            this._memoApiService = memoApiService;
+            this.GetAllMemo();
 
             // 绑定添加待办事项Command方法
             this.AddMemoDataCommand = new DelegateCommand(AddMemoData);
         }
 
-        private void CreateMemoDataModels()
+        private async void GetAllMemo()
         {
-            // 初始化待办事项属性
-            this.MemoDataModels = new ObservableCollection<MemoDataModel>();
-            // 循环添加数据
-            for (int i = 0; i < 20; i++)
+            this.MemoDataModels = new ObservableCollection<MemoDto>();
+            ApiResponse<List<MemoDto>> response = await this._memoApiService.GetAllMemoAsync();
+            if (response.IsSuccess)
             {
-                this.MemoDataModels.Add(new MemoDataModel() { Id = i, Title = "备忘录标题" + i, Content = "备忘录内容:" + i, Status = 0, CreateDate = DateTime.Now, UpdateDate = DateTime.Now });
+                this.MemoDataModels.Clear();
+                foreach(MemoDto memoDto in response.Data)
+                {
+                    this.MemoDataModels.Add(memoDto);
+                }
             }
         }
 
