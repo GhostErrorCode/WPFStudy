@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 
-namespace MemoDesktop.Services.Implements
+namespace MemoDesktop.Services
 {
     /// <summary>
     /// API服务基类

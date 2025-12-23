@@ -1,4 +1,8 @@
-﻿using System;
+﻿using DryIoc;
+using MemoDesktop.Events;
+using MemoDesktop.Extensions;
+using MemoDesktop.Views.Components;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -20,9 +24,26 @@ namespace MemoDesktop.Views
      * */
     public partial class MemoMainView : Window
     {
-        public MemoMainView()
+        // 事件聚合器
+        private readonly IEventAggregator _eventAggregator;
+        // 预缓存加载动画窗体
+        private UpdateLoadingAnimation _updateLoadingAnimation;
+
+        public MemoMainView(IEventAggregator eventAggregator)
         {
             InitializeComponent();
+
+            // ===================================================================================================================
+            // 通过依赖注入获取到事件聚合器
+            this._eventAggregator = eventAggregator;
+            // 预创建并缓存LoadingAnimationView实例，避免重复创建
+            this._updateLoadingAnimation = new UpdateLoadingAnimation();
+            // 订阅加载动画的方法
+            this.SubscribeUpdateLoadingEvent();
+
+            // 订阅窗口关闭时的取消订阅方法
+            this.Unloaded += UnSubscribeUpdateLoadingEvent;
+            // ===================================================================================================================
 
             // 最小化按钮单击事件订阅窗口最小化方法
             ButtonWindowMin.Click += WindowMinimizeAsync;
@@ -68,6 +89,7 @@ namespace MemoDesktop.Views
         // 实现关闭窗口
         private void WindowClose(object sender, RoutedEventArgs e)
         {
+            // 结束程序
             this.Close();
         }
 
@@ -96,6 +118,38 @@ namespace MemoDesktop.Views
         private void CloseLeftMenu(object sender, SelectionChangedEventArgs e)
         {
             MemoMainViewDrawerHost.IsLeftDrawerOpen = false;
+        }
+
+        // 订阅加载动画事件
+        private void SubscribeUpdateLoadingEvent()
+        {
+            this._eventAggregator.GetEvent<UpdateLoadingEvent>().Subscribe(
+                HandleUpdateLoadingEventChanged,
+                Prism.Events.ThreadOption.UIThread,
+                keepSubscriberReferenceAlive:false);
+        }
+
+        // 订阅加载动画事件所需要的方法
+        private void HandleUpdateLoadingEventChanged(UpdateLoadingEventArgs args)
+        {
+            // IsOpen（DialogHost 的属性）	“弹窗架子” 的开关（开 = 显示，关 = 隐藏）	控制这个 “架子” 要不要出现在页面上
+            // 将主页面的DialogHost的IsOpen属性改成转递过来的参数IsOpen属性
+            MemoMainViewDialogHost.IsOpen = args.IsOpen;
+
+            // 判断MemoMainViewDialogHost.IsOpen是否是True
+            if (MemoMainViewDialogHost.IsOpen == true)
+            {
+                // 使用缓存的实例，只更新消息内容
+                this._updateLoadingAnimation.Message = args.Message;
+                // 展示一个加载的动画页面(通过缓存)
+                MemoMainViewDialogHost.DialogContent = this._updateLoadingAnimation;
+            }
+        }
+
+        // 取消订阅加载动画事件
+        private void UnSubscribeUpdateLoadingEvent(object sender, RoutedEventArgs e)
+        {
+            this._eventAggregator.GetEvent<UpdateLoadingEvent>().Unsubscribe(HandleUpdateLoadingEventChanged);
         }
     }
 }

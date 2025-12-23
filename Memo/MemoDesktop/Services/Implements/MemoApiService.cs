@@ -1,5 +1,6 @@
 ﻿using MemoDesktop.ApiResponses;
 using MemoDesktop.Dtos.Memo;
+using MemoDesktop.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;

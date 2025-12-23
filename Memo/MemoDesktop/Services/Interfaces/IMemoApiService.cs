@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MemoDesktop.Services
+namespace MemoDesktop.Services.Interfaces
 {
     /// <summary>
     /// 备忘录API服务接口
