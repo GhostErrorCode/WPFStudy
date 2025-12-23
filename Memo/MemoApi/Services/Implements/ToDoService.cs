@@ -8,7 +8,9 @@ using MemoApi.Results;
 using MemoApi.UnitOfWork;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace MemoApi.Services.Implements
 {

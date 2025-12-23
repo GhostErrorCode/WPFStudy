@@ -1,5 +1,5 @@
-﻿using MemoDesktop.Services;
-using MemoDesktop.Services.Implements;
+﻿using MemoDesktop.Services.Implements;
+using MemoDesktop.Services.Interfaces;
 using MemoDesktop.ViewModels;
 using MemoDesktop.Views;
 using Microsoft.Extensions.DependencyInjection;

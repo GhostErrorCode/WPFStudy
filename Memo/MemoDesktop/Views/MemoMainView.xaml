@@ -33,10 +33,11 @@
     <!-- 你的窗口内容 -->
 
 
-    <materialDesign:DialogHost DialogTheme="Inherit"
+    <materialDesign:DialogHost 
+                               x:Name="MemoMainViewDialogHost"
+                               DialogTheme="Inherit"
                                Identifier="RootDialog"
                                SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}">
-
 
         <materialDesign:DrawerHost x:Name="MemoMainViewDrawerHost" IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
             <materialDesign:DrawerHost.LeftDrawerContent>
