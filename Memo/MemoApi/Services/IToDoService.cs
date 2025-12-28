@@ -16,7 +16,7 @@ namespace MemoApi.Services
         public Task<ServiceResult<List<ToDoDto>>> GetToDoAllAsync();
 
         // 根据条件查询待办事项
-        // public Task<ServiceResult<List<ToDoDto>>> GetToDoByConditionAsync(SearchToDoDto searchToDoDto);
+        public Task<ServiceResult<List<ToDoDto>>> GetToDoByConditionAsync(string? toDoTitle = null, int? toDoStatus = null);
 
         // 更新待办事项
         public Task<ServiceResult<ToDoDto>> UpdateToDoAsync(UpdateToDoDto updateToDoDto);

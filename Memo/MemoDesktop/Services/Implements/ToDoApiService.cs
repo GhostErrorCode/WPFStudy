@@ -62,6 +62,21 @@ namespace MemoDesktop.Services.Implements
         }
 
         /// <summary>
+        /// 根据条件获取待办事项
+        /// </summary>
+        /// <returns>API响应结果</returns>
+        public async Task<ApiResponse<List<ToDoDto>>> GetToDoByConditionAsync(string? toDoTitle = null, int? toDoStatus = null)
+        {
+            // 构建请求URL
+            string requestUrl = $"{BasePath}/GetToDoByCondition?toDoTitle={toDoTitle}&toDoStatus={toDoStatus}";
+
+            // 发送GET请求
+            ApiResponse<List<ToDoDto>> response = await this.GetAsync<List<ToDoDto>>(requestUrl);
+
+            return response;
+        }
+
+        /// <summary>
         /// 创建待办事项
         /// </summary>
         /// <param name="createDto">创建DTO</param>
@@ -72,7 +87,7 @@ namespace MemoDesktop.Services.Implements
             string requestUrl = $"{BasePath}/AddToDo";
 
             // 发送POST请求
-            ApiResponse<ToDoDto> response = await this.PostAsync<ToDoDto>(requestUrl, createDto);
+            ApiResponse<ToDoDto> response = await this.PostAsync<ToDoDto, CreateToDoDto>(requestUrl, createDto);
 
             return response;
         }
@@ -88,7 +103,7 @@ namespace MemoDesktop.Services.Implements
             string requestUrl = $"{BasePath}/UpdateToDo";
 
             // 发送PUT请求
-            ApiResponse<ToDoDto> response = await this.PutAsync<ToDoDto>(requestUrl, updateDto);
+            ApiResponse<ToDoDto> response = await this.PutAsync<ToDoDto, UpdateToDoDto>(requestUrl, updateDto);
 
             return response;
         }

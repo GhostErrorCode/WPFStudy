@@ -25,7 +25,7 @@
         /// 待办事项的状态（转换为用户可读的文本）
         /// 0-待办，1-进行中，2-已完成
         /// </summary>
-        public string StatusText { get; set; } = string.Empty;
+        public int Status { get; set; } = 0;
 
         /// <summary>
         /// 待办事项的创建时间（格式化后的字符串）

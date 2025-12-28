@@ -14,6 +14,9 @@ namespace MemoApi.Services
         // 查询所有备忘录
         public Task<ServiceResult<List<MemoDto>>> GetMemoAllAsync();
 
+        // 根据条件查询备忘录
+        public Task<ServiceResult<List<MemoDto>>> GetMemoByConditionAsync(string? memoTitle = null);
+
         // 更新备忘录
         public Task<ServiceResult<MemoDto>> UpdateMemoAsync(UpdateMemoDto updateMemoDto);
 

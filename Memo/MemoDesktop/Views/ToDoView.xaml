@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:MemoDesktop.Views"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
@@ -12,17 +13,17 @@
         <materialDesign:DrawerHost IsRightDrawerOpen="{Binding IsRightDrawerOpen}">
             <materialDesign:DrawerHost.RightDrawerContent>
                 <DockPanel Width="300" LastChildFill="False">
-                    <TextBlock Text="添加待办" FontSize="20" FontWeight="Bold" DockPanel.Dock="Top" Padding="20"/>
+                    <TextBlock Text="添加/编辑待办事项" FontSize="20" FontWeight="Bold" DockPanel.Dock="Top" Padding="20"/>
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="20">
                         <TextBlock Text="状态: " VerticalAlignment="Center"/>
-                        <ComboBox Margin="8,0,0,0" Width="80">
-                            <ComboBoxItem>待办</ComboBoxItem>
-                            <ComboBoxItem>已完成</ComboBoxItem>
+                        <ComboBox Margin="8,0,0,0" Width="80" SelectedIndex="{Binding AddOrUpdateToDoData.Status}">
+                            <ComboBoxItem Content="待办" Tag="0"></ComboBoxItem>
+                            <ComboBoxItem Content="已完成" Tag="1"></ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
-                    <TextBox Margin="20,0,20,20" materialDesign:HintAssist.Hint="请输入待办标题..." DockPanel.Dock="Top"/>
-                    <TextBox Margin="20,0,20,20" materialDesign:HintAssist.Hint="请输出待办内容..." DockPanel.Dock="Top" MinHeight="100" TextWrapping="Wrap" VerticalContentAlignment="Top" />
-                    <Button Margin="20,0,20,0" Content="添加待办事项" DockPanel.Dock="Top" />
+                    <TextBox Text="{Binding AddOrUpdateToDoData.Title, Mode=TwoWay}" Margin="20,0,20,20" materialDesign:HintAssist.Hint="请输入待办标题..." DockPanel.Dock="Top"/>
+                    <TextBox Text="{Binding AddOrUpdateToDoData.Content, Mode=TwoWay}" Margin="20,0,20,20" materialDesign:HintAssist.Hint="请输出待办内容..." DockPanel.Dock="Top" MinHeight="100" TextWrapping="Wrap" VerticalContentAlignment="Top" />
+                    <Button Margin="20,0,20,0" Content="保存待办事项" DockPanel.Dock="Top" Cursor="Hand" Command="{Binding SaveToDoDataCommand}" />
                 </DockPanel>
             </materialDesign:DrawerHost.RightDrawerContent>
 
@@ -38,21 +39,32 @@
                     <!-- 查询输入框 -->
                     <!-- materialDesign:TextFieldAssist.HasClearButton="True，是否开启编辑时右侧清除按钮 -->
                     <TextBox
-                    Width="250"
-                    VerticalAlignment="Center"
-                    materialDesign:HintAssist.Hint="查询待办事项..."
-                    materialDesign:TextFieldAssist.HasClearButton="True"/>
+                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                        Width="250"
+                        VerticalAlignment="Center"
+                        materialDesign:HintAssist.Hint="查询待办事项..."
+                        materialDesign:TextFieldAssist.HasClearButton="True">
+                        <!-- 回车的按键事件 -->
+                        <TextBox.InputBindings>
+                            <KeyBinding
+                                Key="Enter"
+                                Command="{Binding SelectToDoDataByConditionCommand}"
+                                />
+                        </TextBox.InputBindings>
+                    </TextBox>
                     <!-- 筛选说明文本块 -->
                     <TextBlock
-                    Text="筛选: "
-                    Margin="30,8,2,0"
-                    VerticalAlignment="Center"/>
+                        Text="筛选: "
+                        Margin="30,8,2,0"
+                        VerticalAlignment="Center"/>
                     <!-- 筛选组合框 -->
-                    <ComboBox Width="100" Margin="0,8,0,0" VerticalAlignment="Center">
-                        <ComboBoxItem>全部</ComboBoxItem>
-                        <ComboBoxItem>待办</ComboBoxItem>
-                        <ComboBoxItem>已完成</ComboBoxItem>
-                    </ComboBox>
+                    <ComboBox Width="100"
+                              Margin="0,8,0,0"
+                              VerticalAlignment="Center"
+                              ItemsSource="{Binding SearchComboBox}"
+                              SelectedValue="{Binding SearchStatus}"
+                              DisplayMemberPath="DisplayName"
+                              SelectedValuePath="Value" />
                 </StackPanel>
 
                 <!-- 第一行的添加待办按钮 -->
@@ -63,7 +75,7 @@
                 <!-- 添加滚动条 -->
                 <ScrollViewer Grid.Row="1">
                     <!-- 第二行内容：ItemsControl -->
-                    <ItemsControl ItemsSource="{Binding ToDoDataModels}" HorizontalAlignment="Center" Margin="0,20,0,0">
+                    <ItemsControl ItemsSource="{Binding SelectedToDoDataCollection}" HorizontalAlignment="Center" Margin="0,20,0,0">
                         <!-- 先定义容器类型 -->
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -78,6 +90,95 @@
                                 <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=ExpandIn}">
                                     <!-- 分两行 -->
                                     <Grid Width="220" MinHeight="180" MaxHeight="250" Margin="10">
+                                        <!-- 设置一个鼠标左键弹起时的操作 -->
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                <!-- 
+                                                ================================================================================
+                                                ItemsControl 数据绑定层次结构说明
+                                                ================================================================================
+
+                                                1. ITEMSCONTROL 层级：
+                                                    - DataContext：从父容器继承，通常是 MainViewModel
+                                                    - ItemsSource：绑定到 MainViewModel.ToDoDataModels 集合
+                                                    - 作用：作为数据集合的容器，DataContext 保持为 MainViewModel
+
+                                                2. DATATEMPLATE 层级（关键转折点）：
+                                                    - DataContext：自动重置为 ItemsSource 集合中的当前项（单个 ToDoDataModel）
+                                                    - 原因：WPF 设计使然，让 DataTemplate 专注于单个数据项的展示
+                                                    - 结果：DataTemplate 内部无法直接访问 MainViewModel 中的命令和属性
+
+                                                3. 跨层绑定解决方案：
+                                                    - 通过 RelativeSource FindAncestor 查找 ItemsControl 祖先
+                                                    - 使用 ItemsControl 的 DataContext（MainViewModel）访问命令
+                                                    - 命令参数使用无路径 Binding 传递当前数据项（ToDoDataModel）
+
+                                                4. 绑定路径说明：
+                                                    Command="{Binding SelectedToDoDataCommand, 
+                                                            RelativeSource={RelativeSource Mode=FindAncestor, 
+                                                            AncestorType=ItemsControl}}"
+                                                    - 含义：向上查找 ItemsControl → 使用其 DataContext → 绑定 SelectedToDoDataCommand
+   
+                                                    CommandParameter="{Binding}"
+                                                    - 含义：绑定当前 DataContext（单个 ToDoDataModel 实例）
+                                                ================================================================================
+                                                
+                                                ================================================================================
+                                                【DATA CONTEXT 本质详解】
+                                                ================================================================================
+
+                                                【一、DATACONTEXT 是什么？】
+                                                DataContext 是 WPF 控件的"当前数据环境"，它可以是：
+                                                1. 一个简单的数据对象（如 ToDoDataModel 实例）
+                                                2. 一个 ViewModel（如 MainViewModel 实例）
+                                                3. 任何 .NET 对象
+
+                                                它本质上是：当前控件及其所有子控件的默认绑定源。
+
+                                                【二、DATACONTEXT 的层级关系】
+                                                ================================================================================
+                                                在 XAML 中，DataContext 像瀑布一样从上往下流动：
+
+                                                Window/UserControl → 设置 DataContext = MainViewModel（通过 ViewModelLocator）
+                                                    ↓ 继承
+                                                Grid/Panel 等容器 → 自动继承 DataContext = MainViewModel
+                                                    ↓ 继承
+                                                ItemsControl → 自动继承 DataContext = MainViewModel
+                                                    ↓ DataTemplate 创建时重置
+                                                DataTemplate 内部 → DataContext = 单个数据项（如 ToDoDataModel）
+
+                                                【三、如何知道谁的 DataContext 是 ViewModel？】
+                                                ================================================================================
+                                                原则：只要控件没有主动设置 DataContext，它就继承父容器的 DataContext。
+
+                                                判断方法：
+                                                1. 从外向内看：
+                                                   - 最外层（Window/UserControl）通常设置了 DataContext = ViewModel
+                                                   - 所有内部控件默认继承这个 DataContext
+
+                                                2. 特别需要注意的例外：
+                                                   - DataTemplate：会自动重置 DataContext 为当前数据项
+                                                   - ContentControl.ContentTemplate：同上
+                                                   - 任何显式设置了 DataContext 的控件
+
+                                                3. 在代码中确定的方法：
+                                                   ```csharp
+                                                   // 假设你有一个控件的引用
+                                                   object dataContext = control.DataContext;
+                                                   string typeName = dataContext.GetType().Name;
+                                                   // 如果 typeName 是 "MainViewModel"，那就是 ViewModel
+                                                -->
+
+                                                <!-- temTemplate里面的世界，跟外面的世界不是同一个老板，要跨级汇报就必须说清楚："找我的老大的老大"（DataContext.） -->
+                                                <!-- Binding DataContext.UpdateToDoDataCommand 所以这里必须加DataContext -->
+                                                <!-- 你找ItemsControl就像找书架，但命令在书架的管理员（DataContext）那里，所以必须说"书架的管理员.命令"（DataContext.UpdateToDoDataCommand） -->
+                                                <i:InvokeCommandAction
+                                                    Command="{Binding DataContext.SelectedToDoDataCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                        
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="*" />

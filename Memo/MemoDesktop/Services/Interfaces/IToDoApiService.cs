@@ -26,6 +26,12 @@ namespace MemoDesktop.Services.Interfaces
         public Task<ApiResponse<List<ToDoDto>>> GetAllToDoAsync();
 
         /// <summary>
+        /// 根据条件获取待办事项
+        /// </summary>
+        /// <returns>API响应结果</returns>
+        public Task<ApiResponse<List<ToDoDto>>> GetToDoByConditionAsync(string toDoTitle, int? toDoStatus = null);
+
+        /// <summary>
         /// 创建待办事项
         /// </summary>
         /// <param name="createDto">创建DTO</param>

@@ -93,7 +93,7 @@ namespace MemoDesktop.Services
         /// <param name="url">请求URL</param>
         /// <param name="data">请求数据</param>
         /// <returns>API响应结果</returns>
-        protected async Task<ApiResponse<T>> PostAsync<T>(string url, object data)
+        protected async Task<ApiResponse<T>> PostAsync<T, TData>(string url, TData data)
         {
             try
             {
@@ -139,7 +139,7 @@ namespace MemoDesktop.Services
         /// <param name="url">请求URL</param>
         /// <param name="data">请求数据</param>
         /// <returns>API响应结果</returns>
-        protected async Task<ApiResponse<T>> PutAsync<T>(string url, object data)
+        protected async Task<ApiResponse<T>> PutAsync<T, TData>(string url, TData data)
         {
             try
             {
@@ -239,16 +239,16 @@ namespace MemoDesktop.Services
                 if (serviceResult != null)
                 {
                     // 成功将ServiceResult<T>转换为ApiResponse<T>
-                    ApiResponse<T> apiResponse = new ApiResponse<T>
+                    /*ApiResponse<T> apiResponse = new ApiResponse<T>
                     {
                         IsSuccess = serviceResult.IsSuccess,
                         Data = serviceResult.Data,
                         ErrorCode = serviceResult.ErrorCode,
                         ErrorMessage = serviceResult.ErrorMessage,
                         Timestamp = serviceResult.Timestamp
-                    };
+                    };*/
 
-                    return apiResponse;
+                    return serviceResult;
                 }
                 else
                 {
