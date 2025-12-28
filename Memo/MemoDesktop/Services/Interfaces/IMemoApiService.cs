@@ -1,5 +1,6 @@
 ﻿using MemoDesktop.ApiResponses;
 using MemoDesktop.Dtos.Memo;
+using MemoDesktop.Dtos.ToDo;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,6 +24,12 @@ namespace MemoDesktop.Services.Interfaces
         /// </summary>
         /// <returns>API响应结果</returns>
         public Task<ApiResponse<List<MemoDto>>> GetAllMemoAsync();
+
+        /// <summary>
+        /// 根据条件获取备忘录
+        /// </summary>
+        /// <returns>API响应结果</returns>
+        public Task<ApiResponse<List<MemoDto>>> GetMemoByConditionAsync(string memoTitle);
 
         /// <summary>
         /// 创建备忘录

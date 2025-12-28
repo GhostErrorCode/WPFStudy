@@ -2,6 +2,7 @@
 using MemoApi.Dtos.ToDo;
 using MemoApi.Entities;
 using MemoApi.Enums;
+using MemoApi.Extensions;
 using MemoApi.Mappings;
 using MemoApi.Repositories;
 using MemoApi.Results;
@@ -80,6 +81,35 @@ namespace MemoApi.Services.Implements
             {
                 // 执行发生内部异常处理
                 return ServiceResult<List<ToDoDto>>.Fail($"查询所有待办事项失败,异常信息: {ex.Message}");
+            }
+        }
+
+        // 根据条件查询待办事项
+        public async Task<ServiceResult<List<ToDoDto>>> GetToDoByConditionAsync(string? toDoTitle = null, int? toDoStatus = null)
+        {
+            try
+            {
+                // 先设置一个永真条件，防止用户没有搜索
+                Expression<Func<ToDo, bool>> expression = (ToDo toDo) => true;
+
+                // 根据搜索条件动态添加过滤条件
+                // 是否搜索标题
+                if(!string.IsNullOrEmpty(toDoTitle)) { expression = expression.And<ToDo>((ToDo toDo) => toDo.Title.Contains(toDoTitle)); }
+                // 是否搜索待办事项状态
+                if (toDoStatus.HasValue) { expression = expression.And<ToDo>((ToDo toDo) => toDo.Status == toDoStatus); }
+
+                // 根据条件查询待办事项
+                List<ToDo> toDos = await this._toDoRepository.FindAsync(expression);
+                // 将查到的待办事项由 List<ToDo> 转成 List<ToDoDto>
+                List<ToDoDto> toDoDtos = ToDoMappings.ConvertToDoEntityCollectionToToDoDtoCollection(toDos);
+
+                // 返回结果和数据
+                return ServiceResult<List<ToDoDto>>.Success(toDoDtos);
+            }
+            catch (Exception ex)
+            {
+                // 执行发生内部异常处理
+                return ServiceResult<List<ToDoDto>>.Fail($"根据条件查询待办事项失败,异常信息: {ex.Message}");
             }
         }
 

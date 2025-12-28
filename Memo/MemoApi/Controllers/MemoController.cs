@@ -41,6 +41,14 @@ namespace MemoApi.Controllers
             return HandleServiceResult<List<MemoDto>>(getMemoAllResult);
         }
 
+        // 根据条件查询备忘录
+        [HttpGet("GetMemoByCondition")]
+        public async Task<ActionResult<List<MemoDto>>> GetMemoByCondition([FromQuery] string? memoTitle = null)
+        {
+            ServiceResult<List<MemoDto>> getMemoResultByCondition = await this._memoService.GetMemoByConditionAsync(memoTitle);
+            return HandleServiceResult<List<MemoDto>>(getMemoResultByCondition);
+        }
+
         // 修改相应备忘录
         [HttpPut("UpdateMemo")]
         public async Task<ActionResult<MemoDto>> UpdateMemo([FromBody] UpdateMemoDto updateMemoDto)
@@ -69,3 +77,10 @@ namespace MemoApi.Controllers
         }
     }
 }
+/*
+特性          参数来源	    HTTP方法	使用场景
+[FromQuery]   URL查询字符串 GET	搜索、  过滤、分页
+[FromBody]    请求体        POST/PUT	创建、更新数据
+[FromRoute]   URL路径       任意	    获取特定资源
+[FromForm]    表单数据      POST	    表单提交
+*/

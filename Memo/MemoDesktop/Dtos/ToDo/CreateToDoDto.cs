@@ -25,7 +25,7 @@ namespace MemoDesktop.Dtos.ToDo
         /// 待办事项初始状态
         /// 默认值为0，表示"待办"状态
         /// </summary>
-        [Range(0, 2, ErrorMessage = "状态值必须为0（待办）、1（进行中）或2（已完成）。")]
+        [Range(0, 1, ErrorMessage = "状态值必须为0（待办）、1（已完成）。")]
         public int Status { get; set; } = 0;
 
         // 注意：不包含 Id、CreateDate、UpdateDate 字段

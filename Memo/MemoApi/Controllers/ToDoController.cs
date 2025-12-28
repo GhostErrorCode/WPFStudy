@@ -34,8 +34,16 @@ namespace MemoApi.Controllers
         [HttpGet("GetToDoAll")]
         public async Task<ActionResult<List<ToDoDto>>> GetToDoAll()
         {
-            ServiceResult<List<ToDoDto>> toDoDtos = await this._toDoService.GetToDoAllAsync();
-            return HandleServiceResult<List<ToDoDto>>(toDoDtos);
+            ServiceResult<List<ToDoDto>> getToDoAllResult = await this._toDoService.GetToDoAllAsync();
+            return HandleServiceResult<List<ToDoDto>>(getToDoAllResult);
+        }
+
+        // 根据条件查询待办事项
+        [HttpGet("GetToDoByCondition")]
+        public async Task<ActionResult<List<ToDoDto>>> GetToDoByCondition([FromQuery] string? toDoTitle = null, [FromQuery] int? toDoStatus = null)
+        {
+            ServiceResult<List<ToDoDto>> getToDoResultByCondition = await this._toDoService.GetToDoByConditionAsync(toDoTitle, toDoStatus);
+            return HandleServiceResult<List<ToDoDto>>(getToDoResultByCondition);
         }
 
         // 修改相应待办事项

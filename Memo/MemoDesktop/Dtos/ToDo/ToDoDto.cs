@@ -1,41 +1,73 @@
-﻿namespace MemoDesktop.Dtos.ToDo
+﻿using System.ComponentModel;
+
+namespace MemoDesktop.Dtos.ToDo
 {
     /// <summary>
     /// 待办事项数据传输对象（用于查询返回）
     /// 此类定义了API接口返回给客户端的数据格式
     /// </summary>
-    public class ToDoDto
+    public class ToDoDto : BaseDto
     {
         /// <summary>
         /// 待办事项的唯一标识符
         /// </summary>
-        public int Id { get; set; }
+        private int _id;
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; OnPropertyChanged(); }
+        }
 
         /// <summary>
         /// 待办事项的标题
         /// </summary>
-        public string Title { get; set; } = string.Empty;
+        private string _title;
+        public string Title
+        {
+            get { return _title; }
+            set { _title = value; OnPropertyChanged(); }
+        }
 
         /// <summary>
         /// 待办事项的详细内容
         /// </summary>
-        public string Content { get; set; } = string.Empty;
+        private string _content;
+        public string Content
+        {
+            get { return _content; }
+            set { _content = value; OnPropertyChanged(); }
+        }
 
         /// <summary>
         /// 待办事项的状态（转换为用户可读的文本）
-        /// 0-待办，1-进行中，2-已完成
+        /// 0-待办，1-已完成
         /// </summary>
-        public string StatusText { get; set; } = string.Empty;
+        private int _status;
+        public int Status
+        {
+            get { return _status; }
+            set { _status = value; OnPropertyChanged(); }
+        }
 
         /// <summary>
         /// 待办事项的创建时间（格式化后的字符串）
         /// </summary>
-        public string CreateDateFormatted { get; set; } = string.Empty;
+        private string _createDataFormatted;
+        public string CreateDataFormatted
+        {
+            get { return _createDataFormatted; }
+            set { _createDataFormatted = value; OnPropertyChanged(); }
+        }
 
         /// <summary>
         /// 待办事项的最后修改时间（格式化后的字符串）
         /// </summary>
-        public string UpdateDateFormatted { get; set; } = string.Empty;
+        private string _updateDataFormatted;
+        public string UpdateDateFormatted
+        {
+            get { return _updateDataFormatted;  }
+            set { _updateDataFormatted = value; OnPropertyChanged(); }
+        }
 
         /// <summary>
         /// 计算属性：判断该事项是否为24小时内创建的

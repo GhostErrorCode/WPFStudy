@@ -30,7 +30,7 @@ namespace MemoDesktop.Dtos.ToDo
         /// <summary>
         /// 更新后的待办事项状态
         /// </summary>
-        [Range(0, 2, ErrorMessage = "状态值必须为0（待办）、1（进行中）或2（已完成）。")]
+        [Range(0, 1, ErrorMessage = "状态值必须为0（待办）、1（已完成）。")]
         public int Status { get; set; }
 
         /// <summary>

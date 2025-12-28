@@ -33,7 +33,7 @@ namespace MemoApi.Mappings
             toDoDto.Content = todoEntity.Content ?? String.Empty; // 处理可能为null的情况
 
             // 状态值转换：将数字状态转换为可读的文本
-            toDoDto.StatusText = ConvertStatusNumberToText(todoEntity.Status);
+            toDoDto.Status = todoEntity.Status;
 
             // 日期格式化：将DateTime对象转换为特定格式的字符串
             toDoDto.CreateDateFormatted = todoEntity.CreateDate.ToString("yyyy年MM月dd日 HH:mm:ss");
@@ -155,9 +155,6 @@ namespace MemoApi.Mappings
                     statusText = "待办";
                     break;
                 case 1:
-                    statusText = "进行中";
-                    break;
-                case 2:
                     statusText = "已完成";
                     break;
                 default:

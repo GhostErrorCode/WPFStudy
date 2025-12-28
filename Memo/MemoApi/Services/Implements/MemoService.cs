@@ -2,10 +2,12 @@
 using MemoApi.Dtos.ToDo;
 using MemoApi.Entities;
 using MemoApi.Enums;
+using MemoApi.Extensions;
 using MemoApi.Mappings;
 using MemoApi.Repositories;
 using MemoApi.Results;
 using MemoApi.UnitOfWork;
+using System.Linq.Expressions;
 
 namespace MemoApi.Services.Implements
 {
@@ -79,6 +81,32 @@ namespace MemoApi.Services.Implements
             }
         }
 
+        // 根据条件查询待办事项
+        public async Task<ServiceResult<List<MemoDto>>> GetMemoByConditionAsync(string? memoTitle = null)
+        {
+            try
+            {
+                // 先设置一个永真条件，防止用户没有搜索
+                Expression<Func<Memo, bool>> expression = (Memo memo) => true;
+
+                // 根据搜索条件动态添加过滤条件
+                // 是否搜索标题
+                if (!string.IsNullOrEmpty(memoTitle)) { expression = expression.And<Memo>((Memo memo) => memo.Title.Contains(memoTitle)); }
+
+                // 根据条件查询待办事项
+                List<Memo> memos = await this._memoRepository.FindAsync(expression);
+                // 将查到的待办事项由 List<Memo> 转成 List<MemoDto>
+                List<MemoDto> memoDtos = MemoMappings.ConvertMemoEntityCollectionToMemoDtoCollection(memos);
+
+                // 返回结果和数据
+                return ServiceResult<List<MemoDto>>.Success(memoDtos);
+            }
+            catch (Exception ex)
+            {
+                // 执行发生内部异常处理
+                return ServiceResult<List<MemoDto>>.Fail($"根据条件查询备忘录失败,异常信息: {ex.Message}");
+            }
+        }
 
         // 更新备忘录
         public async Task<ServiceResult<MemoDto>> UpdateMemoAsync(UpdateMemoDto updateMemoDto)
