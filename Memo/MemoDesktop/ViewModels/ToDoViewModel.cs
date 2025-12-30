@@ -6,7 +6,7 @@ using MemoDesktop.Models;
 using MemoDesktop.Models.ViewModels;
 using MemoDesktop.Services.Implements;
 using MemoDesktop.Services.Interfaces;
-using MemoDesktop.Utils;
+using MemoDesktop.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -55,7 +55,7 @@ namespace MemoDesktop.ViewModels
             {
                 if (_searchComboBox == null)
                 {
-                    _searchComboBox = ToDoStatusItemUtil.GetToDoStatusItems();
+                    _searchComboBox = ToDoStatusItemUtility.GetToDoStatusItems();
                 }
                 return _searchComboBox;
             }
@@ -191,7 +191,7 @@ namespace MemoDesktop.ViewModels
                     return;
                 }
                 // 不为空的话继续，先显示加载动画
-                this.ShowLoading();
+                this.ShowLoading("刷新待办事项...", "ToDoViewModel");
                 
                 // 用ID区分添加和修改
                 if(this._addOrUpdateToDoData.Id > 0)

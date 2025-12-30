@@ -57,7 +57,7 @@
                     </StackPanel>
 
                     <!-- 下方的ListBox菜单列表 -->
-                    <ListBox x:Name="LeftMenuListBox" ItemContainerStyle="{StaticResource LeftMenuBarStyle}" ItemsSource="{Binding MenuBars}" DockPanel.Dock="Top" Margin="0,30,0,0">
+                    <ListBox x:Name="LeftMenuListBox" ItemContainerStyle="{StaticResource ListBoxLeftMenuBarStyle}" ItemsSource="{Binding MenuBars}" DockPanel.Dock="Top" Margin="0,30,0,0">
                         <!-- 交互触发器：连接UI事件与ViewModel命令的桥梁 -->
                         <i:Interaction.Triggers>
                             <!-- 事件触发器：监听ListBox的SelectionChanged事件 -->
