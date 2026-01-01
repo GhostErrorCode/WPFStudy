@@ -13,6 +13,8 @@
                 <ResourceDictionary Source="/Styles/Controls/ListBoxStyles.xaml" />
                 <!-- 添加 Border 样式 -->
                 <ResourceDictionary Source="/Styles/Controls/BorderStyles.xaml" />
+                <!-- 添加转换器资源 -->
+                <ResourceDictionary Source="/Styles/Converters.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
