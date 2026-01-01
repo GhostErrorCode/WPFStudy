@@ -40,8 +40,8 @@ namespace MemoDesktop
             containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>("AboutView");
 
             // 注册服务
-            containerRegistry.Register<IMemoApiService, MemoApiService>();
-            containerRegistry.Register<IToDoApiService, ToDoApiService>();
+            containerRegistry.RegisterSingleton<IMemoApiService, MemoApiService>();
+            containerRegistry.RegisterSingleton<IToDoApiService, ToDoApiService>();
 
             // ====================================== HttpClient注册开始 ========================================
             // 第一步：创建并配置HTTP客户端实例

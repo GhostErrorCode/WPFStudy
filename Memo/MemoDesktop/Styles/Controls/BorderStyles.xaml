@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Border样式：根据待办事项状态改变自身背景色 -->
+    <!-- BasedOn="{StaticResource {x:Type Border}}不适用于继承基类控件样式 -->
+    <Style x:Key="BorderToDoStatusChangeBackground" TargetType="Border">
+        <!-- 让Border变成圆角 -->
+        <Setter Property="CornerRadius" Value="10" />
+        <Style.Triggers>
+            <!-- 当待办事项状态为0的时候，就是待办状态，背景色改成绿色 -->
+            <DataTrigger Binding="{Binding Status}" Value="0">
+                <Setter Property="Background" Value="#3CB371" />
+            </DataTrigger>
+            <!-- 当待办事项状态为1的时候，就是已完成状态，背景色改成蓝色 -->
+            <DataTrigger Binding="{Binding Status}" Value="1">
+                <Setter Property="Background" Value="#1E90FF" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

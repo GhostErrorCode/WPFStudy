@@ -72,6 +72,14 @@
 
                 <!-- ########################################################################################################## -->
                 
+                <!-- 显示搜索为空的时候提示信息 -->
+                <StackPanel Grid.Row="1" VerticalAlignment="Center" Visibility="{Binding SelectedToDoDataCollection.Count, Converter={StaticResource IntToVisibilityConverter}}">
+                    <!-- 提示图片 -->
+                    <Image Source="/MemoDesktop;component/Assets/Images/新之助.jpg" Width="120" Height="120"/>
+                    <!-- 提示文本 -->
+                    <TextBlock Text="未搜索到对应数据" Margin="0,10,0,0" FontSize="28" HorizontalAlignment="Center" />
+                </StackPanel>
+                
                 <!-- 添加滚动条 -->
                 <ScrollViewer Grid.Row="1">
                     <!-- 第二行内容：ItemsControl -->
@@ -186,14 +194,17 @@
 
                                         <!-- 右上角三点按钮 -->
                                         <materialDesign:PopupBox HorizontalAlignment="Right" Panel.ZIndex="1">
-                                            <Button Content="删除" />
+                                            <Button
+                                                Content="删除"
+                                                Command="{Binding DataContext.DeleteToDoDataCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}"
+                                                />
                                         </materialDesign:PopupBox>
 
                                         <!-- Border负责背景色和圆角 -->
                                         <Border
                                             Grid.RowSpan="2"
-                                            Background="Green"
-                                            CornerRadius="10" />
+                                            Style="{StaticResource BorderToDoStatusChangeBackground}" />
 
                                         <!-- 具体的数据项 -->
                                         <TextBlock Padding="10,10,10,10" Grid.Row="0" Text="{Binding Title}" FontWeight="Bold" />

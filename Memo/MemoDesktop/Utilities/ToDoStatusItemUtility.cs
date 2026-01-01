@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace MemoDesktop.Utils
+namespace MemoDesktop.Utilities
 {
-    public static class ToDoStatusItemUtil
+    public static class ToDoStatusItemUtility
     {
         // 初始化一个待办事项状态的列表
         public static ObservableCollection<ToDoStatusItem> GetToDoStatusItems()
