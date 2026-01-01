@@ -9,8 +9,10 @@
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:BundledTheme BaseTheme="Dark" PrimaryColor="DeepPurple" SecondaryColor="Lime" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
-                <!-- 添加菜单样式 -->
+                <!-- 添加 ListBox 样式 -->
                 <ResourceDictionary Source="/Styles/Controls/ListBoxStyles.xaml" />
+                <!-- 添加 Border 样式 -->
+                <ResourceDictionary Source="/Styles/Controls/BorderStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

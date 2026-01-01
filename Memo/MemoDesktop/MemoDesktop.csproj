@@ -26,6 +26,7 @@
     <Folder Include="Assets\Icons\" />
     <Folder Include="Assets\Fonts\" />
     <Folder Include="Styles\Modules\" />
+    <Folder Include="Views\Dialogs\" />
   </ItemGroup>
 
   <ItemGroup>

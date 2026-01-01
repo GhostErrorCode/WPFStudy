@@ -69,6 +69,7 @@ namespace MemoDesktop.ViewModels
             set { _searchStatus = value; RaisePropertyChanged(); }
         }
 
+
         // 添加选中待办事项Command
         public DelegateCommand<ToDoDto> SelectedToDoDataCommand { get; private set; }
         // 添加待办事项Command
@@ -77,6 +78,8 @@ namespace MemoDesktop.ViewModels
         public DelegateCommand SaveToDoDataCommand { get; private set; }
         // 带条件查询待办事项Command
         public DelegateCommand SelectToDoDataByConditionCommand {  get; private set; }
+        // 删除待办事项Command
+        public DelegateCommand<ToDoDto> DeleteToDoDataCommand { get; private set; }
 
 
 
@@ -102,9 +105,9 @@ namespace MemoDesktop.ViewModels
             this.SaveToDoDataCommand = new DelegateCommand(SaveToDoData);
             // 绑定带条件查询待办事项Command方法
             this.SelectToDoDataByConditionCommand = new DelegateCommand(GetToDoDataByCondition);
+            // 绑定删除待办事项Command方法
+            this.DeleteToDoDataCommand = new DelegateCommand<ToDoDto>(DeleteToDoData);
         }
-
-
 
         private async Task GetAllToDoData()
         {
@@ -287,6 +290,38 @@ namespace MemoDesktop.ViewModels
             finally
             {
                 // 隐藏加载动画
+                this.HideLoading();
+            }
+        }
+
+        // 删除待办事项
+        private async void DeleteToDoData(ToDoDto ToDo)
+        {
+            try
+            {
+                // 先判断待办事项是否为空
+                if(ToDo == null) { return; }
+                // 不为空的话继续，先显示加载动画
+                this.ShowLoading("删除待办事项...", "ToDoViewModel");
+
+                // 调用删除方法
+                ApiResponse<int> response = await this._toDoApiService.DeleteToDoAsync(ToDo.Id);
+
+                // 判断响应体是否成功（删除是否成功）
+                if (response.IsSuccess)
+                {
+                    // 从集合中获取删除到删除的待办事项ToDoDto
+                    ToDoDto? deleteToDoDto = SelectedToDoDataCollection.FirstOrDefault((ToDoDto toDoDto) => toDoDto.Id == ToDo.Id);
+                    // 判断是否找到了被删除的待办事项ToDoDto
+                    if(deleteToDoDto != null) { this.SelectedToDoDataCollection.Remove(deleteToDoDto); }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"删除待办事项异常：{ex.Message}");
+            }
+            finally
+            {
                 this.HideLoading();
             }
         }
