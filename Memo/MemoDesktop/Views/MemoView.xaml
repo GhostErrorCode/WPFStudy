@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:MemoDesktop.Views"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
@@ -12,17 +13,10 @@
         <materialDesign:DrawerHost IsRightDrawerOpen="{Binding IsRightDrawerOpen}">
             <materialDesign:DrawerHost.RightDrawerContent>
                 <DockPanel Width="300" LastChildFill="False">
-                    <TextBlock Text="添加备忘录" FontSize="20" FontWeight="Bold" DockPanel.Dock="Top" Padding="20"/>
-                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="20">
-                        <TextBlock Text="状态: " VerticalAlignment="Center"/>
-                        <ComboBox Margin="8,0,0,0" Width="80">
-                            <ComboBoxItem>待办</ComboBoxItem>
-                            <ComboBoxItem>已完成</ComboBoxItem>
-                        </ComboBox>
-                    </StackPanel>
-                    <TextBox Margin="20,0,20,20" materialDesign:HintAssist.Hint="请输入待办标题..." DockPanel.Dock="Top"/>
-                    <TextBox Margin="20,0,20,20" materialDesign:HintAssist.Hint="请输出待办内容..." DockPanel.Dock="Top" MinHeight="100" TextWrapping="Wrap" VerticalContentAlignment="Top" />
-                    <Button Margin="20,0,20,0" Content="添加待办事项" DockPanel.Dock="Top" />
+                    <TextBlock Text="添加/修改备忘录" FontSize="20" FontWeight="Bold" DockPanel.Dock="Top" Padding="20"/>
+                    <TextBox Margin="20,0,20,20" materialDesign:HintAssist.Hint="请输入备忘录标题..." DockPanel.Dock="Top" Text="{Binding AddOrUpdateMemoData.Title, Mode=TwoWay}" />
+                    <TextBox Margin="20,0,20,20" materialDesign:HintAssist.Hint="请输入备忘录内容..." DockPanel.Dock="Top" MinHeight="100" TextWrapping="Wrap" VerticalContentAlignment="Top" Text="{Binding AddOrUpdateMemoData.Content}" />
+                    <Button Margin="20,0,20,0" Content="保存备忘录" DockPanel.Dock="Top" Command="{Binding SaveMemoDataCommand}" Cursor="Hand" />
                 </DockPanel>
             </materialDesign:DrawerHost.RightDrawerContent>
 
@@ -37,11 +31,27 @@
                 <StackPanel Grid.Row="0" Margin="10,10,0,0" Orientation="Horizontal">
                     <!-- 查询输入框 -->
                     <!-- materialDesign:TextFieldAssist.HasClearButton="True，是否开启编辑时右侧清除按钮 -->
+                    <!--
+                    模式	        触发时机	                    典型用途
+                    Default	        默认值，不同控件不同	        TextBox：LostFocus；CheckBox：PropertyChanged
+                    PropertyChanged	实时更新，每次输入都触发	    搜索框、实时验证、即时计算
+                    LostFocus	    控件失去焦点时更新	            表单输入（默认）
+                    Explicit	    手动调用 UpdateSource() 时更新	需要按钮确认的输入
+                    -->
                     <TextBox
+                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                         Width="250"
                         VerticalAlignment="Center"
                         materialDesign:HintAssist.Hint="查询待办事项..."
-                        materialDesign:TextFieldAssist.HasClearButton="True"/>
+                        materialDesign:TextFieldAssist.HasClearButton="True">
+                        <!-- 搜索框的回车事件 -->
+                        <TextBox.InputBindings>
+                            <KeyBinding
+                                Key="Enter"
+                                Command="{Binding SelectMemoDataByConditionCommand}"
+                                />
+                        </TextBox.InputBindings>
+                    </TextBox>
                 </StackPanel>
 
                 <!-- 第一行的添加待办按钮 -->
@@ -49,9 +59,17 @@
 
                 <!-- ########################################################################################################## -->
 
+                <!-- 显示搜索为空的时候提示信息 -->
+                <StackPanel Grid.Row="1" VerticalAlignment="Center" Visibility="{Binding SelectedMemoDataCollection.Count, Converter={StaticResource IntToVisibilityConverter}}">
+                    <!-- 提示图片 -->
+                    <Image Source="/MemoDesktop;component/Assets/Images/新之助.jpg" Width="120" Height="120"/>
+                    <!-- 提示文本 -->
+                    <TextBlock Text="未搜索到对应数据" Margin="0,10,0,0" FontSize="28" HorizontalAlignment="Center" />
+                </StackPanel>
+
                 <!-- 第二行内容：ItemsControl -->
                 <ScrollViewer Grid.Row="1">
-                    <ItemsControl ItemsSource="{Binding MemoDataModels}" HorizontalAlignment="Center" Margin="0,20,0,0">
+                    <ItemsControl ItemsSource="{Binding SelectedMemoDataCollection}" HorizontalAlignment="Center" Margin="0,20,0,0">
                         <!-- 先定义容器类型 -->
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -66,6 +84,16 @@
                                 <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=ExpandIn}">
                                     <!-- 分两行 -->
                                     <Grid Width="220" MinHeight="180" MaxHeight="250" Margin="10">
+                                        <!-- 设置一个鼠标左键弹起时的操作 -->
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                <i:InvokeCommandAction
+                                                    Command="{Binding DataContext.SelectedMemoDataCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                        
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="*" />
@@ -73,13 +101,17 @@
 
                                         <!-- 右上角三点按钮 -->
                                         <materialDesign:PopupBox HorizontalAlignment="Right" Panel.ZIndex="1">
-                                            <Button Content="删除" />
+                                            <Button
+                                                Content="删除"
+                                                Command="{Binding DataContext.DeleteMemoDataCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}"
+                                                />
                                         </materialDesign:PopupBox>
 
                                         <!-- Border负责背景色和圆角 -->
                                         <Border
                                             Grid.RowSpan="2"
-                                            Background="Green"
+                                            Background="#1E90FF"
                                             CornerRadius="10" />
 
                                         <!-- 具体的数据项 -->
