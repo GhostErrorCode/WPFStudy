@@ -1,5 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 using MemoDesktop.Models;
+using MemoDesktop.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -55,7 +56,6 @@ namespace MemoDesktop.ViewModels
 
             // 左侧菜单列表按钮订阅对应方法
             this.NavigateCommand = new DelegateCommand<MenuBarModel>(Navigate);
-            _regionManager = regionManager;
 
             // 获取区域管理器
             this._regionManager = regionManager;
