@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="MemoDesktop.Views.Dialogs.AddMemoDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MemoDesktop.Views.Dialogs"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Width="450" Height="300">
+    <Grid>
+        <!-- 分三行 -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 第一行的标题 -->
+        <TextBlock
+            Grid.Row="0"
+            Text="添加备忘录"
+            FontWeight="Bold"
+            FontSize="20"
+            Padding="20,10,20,10"
+            />
+
+        <!-- 第二行的内容区 -->
+        <DockPanel Grid.Row="1" LastChildFill="False">
+
+            <!-- 备忘录标题 -->
+            <TextBox
+                Margin="20,0,20,20"
+                materialDesign:HintAssist.Hint="请输入备忘录标题..."
+                DockPanel.Dock="Top"
+                />
+
+            <!-- 备忘录内容 -->
+            <TextBox
+                Margin="20,0,20,0"
+                MinHeight="100"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                VerticalContentAlignment="Top"
+                materialDesign:HintAssist.Hint="请输入备忘录标题..."
+                DockPanel.Dock="Top"
+                />
+        </DockPanel>
+
+        <!-- 第三行的按钮区域 -->
+        <StackPanel Margin="10,10,10,10" Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
+            <Button Content="取消" Margin="0,0,10,0" Style="{StaticResource MaterialDesignOutlinedButton}" />
+            <Button Content="确认" />
+        </StackPanel>
+    </Grid>
+</UserControl>

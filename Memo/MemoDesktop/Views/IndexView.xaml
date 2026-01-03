@@ -179,13 +179,14 @@
                         FontSize="20"
                         DockPanel.Dock="Right"
                         VerticalAlignment="Top"
-                        Style="{StaticResource MaterialDesignFloatingActionSecondaryButton}">
+                        Style="{StaticResource MaterialDesignFloatingActionSecondaryButton}"
+                        Command="{Binding AddToDoCommand}">
                         <materialDesign:PackIcon Kind="Add" />
                     </Button>
                 </DockPanel>
                 
                 <!-- listBox数据 -->
-                <ListBox ItemsSource="{Binding ToDoDataModels}" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch">
+                <ListBox ItemsSource="{Binding ToDoCollection}" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch">
                     <!-- 使用数据模板 -->
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -227,13 +228,14 @@
                         FontSize="20"
                         DockPanel.Dock="Right"
                         VerticalAlignment="Top"
-                        Style="{StaticResource MaterialDesignFloatingActionSecondaryButton}">
+                        Style="{StaticResource MaterialDesignFloatingActionSecondaryButton}"
+                        Command="{Binding AddMemoCommand}">
                         <materialDesign:PackIcon Kind="Add" />
                     </Button>
                 </DockPanel>
 
                 <!-- listBox数据 -->
-                <ListBox ItemsSource="{Binding MemoDataModels}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <ListBox ItemsSource="{Binding MemoCollection}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                     <!-- 使用数据模板 -->
                     <ListBox.ItemTemplate>
                         <DataTemplate>

@@ -2,7 +2,9 @@
 using MemoDesktop.Services.Implements;
 using MemoDesktop.Services.Interfaces;
 using MemoDesktop.ViewModels;
+using MemoDesktop.ViewModels.Dialogs;
 using MemoDesktop.Views;
+using MemoDesktop.Views.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
@@ -53,6 +55,9 @@ namespace MemoDesktop
             containerRegistry.RegisterSingleton<IMemoApiService, MemoApiService>();
             containerRegistry.RegisterSingleton<IToDoApiService, ToDoApiService>();
 
+            // 注册对话框
+            containerRegistry.RegisterDialog<AddToDoDialog, AddToDoDialogViewModel>("AddToDoDialog");
+            containerRegistry.RegisterDialog<AddMemoDialog, AddMemoDialogViewModel>("AddMemoDialog");
             // ====================================== HttpClient注册开始 ========================================
             // 第一步：创建并配置HTTP客户端实例
             HttpClient httpClient = new HttpClient();
