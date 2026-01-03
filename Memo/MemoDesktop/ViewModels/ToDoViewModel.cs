@@ -183,7 +183,7 @@ namespace MemoDesktop.ViewModels
             this.IsRightDrawerOpen = true;
         }
 
-        // 修改待办事项方法
+        // 添加/修改待办事项后的保存方法
         private async void SaveToDoData()
         {
             try
@@ -272,9 +272,9 @@ namespace MemoDesktop.ViewModels
                     // 先清除集合内所有数据
                     this.SelectedToDoDataCollection.Clear();
                     // 将响应里的Data拿出来，存入 ToDoDataModels 集合内
-                    foreach (ToDoDto memoDto in response.Data)
+                    foreach (ToDoDto toDoDto in response.Data)
                     {
-                        this.SelectedToDoDataCollection.Add(memoDto);
+                        this.SelectedToDoDataCollection.Add(toDoDto);
                     }
                 }
                 else

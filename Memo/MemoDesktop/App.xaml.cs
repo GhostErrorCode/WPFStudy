@@ -1,7 +1,10 @@
-﻿using MemoDesktop.Services.Implements;
+﻿using MemoDesktop.Constants;
+using MemoDesktop.Services.Implements;
 using MemoDesktop.Services.Interfaces;
 using MemoDesktop.ViewModels;
+using MemoDesktop.ViewModels.Dialogs;
 using MemoDesktop.Views;
+using MemoDesktop.Views.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
@@ -21,6 +24,15 @@ namespace MemoDesktop
             // 通过依赖注入容器解析并返回主窗口实例
             MemoMainView mainWindow = Container.Resolve<MemoMainView>();
             return mainWindow;
+        }
+
+        // OnInitialized() 是 PrismApplication 的生命周期方法，在应用程序初始化完成后调用。这是 Prism 框架推荐的执行启动逻辑的地方。
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            // 配置默认首页
+            Container.Resolve<IRegionManager>().RequestNavigate(RegionNames.MainViewRegionName,"IndexView");
         }
 
         // 注册应用程序中使用的各种类型（服务、视图等）
@@ -43,6 +55,9 @@ namespace MemoDesktop
             containerRegistry.RegisterSingleton<IMemoApiService, MemoApiService>();
             containerRegistry.RegisterSingleton<IToDoApiService, ToDoApiService>();
 
+            // 注册对话框
+            containerRegistry.RegisterDialog<AddToDoDialog, AddToDoDialogViewModel>("AddToDoDialog");
+            containerRegistry.RegisterDialog<AddMemoDialog, AddMemoDialogViewModel>("AddMemoDialog");
             // ====================================== HttpClient注册开始 ========================================
             // 第一步：创建并配置HTTP客户端实例
             HttpClient httpClient = new HttpClient();

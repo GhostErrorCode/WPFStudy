@@ -4,32 +4,57 @@
     /// 备忘录数据传输对象（用于查询返回）
     /// 此类定义了API接口返回给客户端的数据格式
     /// </summary>
-    public class MemoDto
+    public class MemoDto : BaseDto
     {
         /// <summary>
         /// 备忘录的唯一标识符
         /// </summary>
-        public int Id { get; set; }
+        private int _id;
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; OnPropertyChanged(); }
+        }
 
         /// <summary>
         /// 备忘录的标题
         /// </summary>
-        public string Title { get; set; } = string.Empty;
+        private string _title;
+        public string Title
+        {
+            get { return _title; }
+            set { _title = value; OnPropertyChanged(); }
+        }
 
         /// <summary>
         /// 备忘录的详细内容
         /// </summary>
-        public string Content { get; set; } = string.Empty;
+        private string _content;
+        public string Content
+        {
+            get { return _content; }
+            set { _content = value; OnPropertyChanged(); }
+        }
 
         /// <summary>
         /// 备忘录的创建时间（格式化后的字符串）
         /// </summary>
-        public string CreateDateFormatted { get; set; } = string.Empty;
+        private string _createDataFormatted;
+        public string CreateDataFormatted
+        {
+            get { return _createDataFormatted; }
+            set { _createDataFormatted = value; OnPropertyChanged(); }
+        }
 
         /// <summary>
         /// 备忘录的最后修改时间（格式化后的字符串）
         /// </summary>
-        public string UpdateDateFormatted { get; set; } = string.Empty;
+        private string _updateDataFormatted;
+        public string UpdateDateFormatted
+        {
+            get { return _updateDataFormatted; }
+            set { _updateDataFormatted = value; OnPropertyChanged(); }
+        }
 
     }
 }
