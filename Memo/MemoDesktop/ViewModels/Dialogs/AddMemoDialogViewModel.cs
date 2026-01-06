@@ -1,5 +1,9 @@
-﻿using System;
+﻿using ControlzEx.Standard;
+using MaterialDesignThemes.Wpf;
+using MemoDesktop.Services.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 
 namespace MemoDesktop.ViewModels.Dialogs
@@ -18,8 +22,9 @@ namespace MemoDesktop.ViewModels.Dialogs
     /// 使用场景：对话框ViewModel必须实现的接口（如AddMemoDialogViewModel）
     /// 注意：这是对话框本身实现的接口，用于响应调用者的请求
     /// </summary>
-    public class AddMemoDialogViewModel : IDialogAware
+    public class AddMemoDialogViewModel : IDialogHostAware
     {
+        /*
         /// <summary>
         /// 请求关闭对话框事件
         /// 对话框ViewModel通过触发此事件来请求关闭对话框
@@ -58,6 +63,45 @@ namespace MemoDesktop.ViewModels.Dialogs
         public void OnDialogOpened(IDialogParameters parameters)
         {
 
+        }
+        */
+        public string DialogHostName { get ; set ; }
+        public DelegateCommand SaveCommand { get; set; }
+        public DelegateCommand CancelCommand { get; set; }
+
+        public AddMemoDialogViewModel()
+        {
+            this.SaveCommand = new DelegateCommand(Save);
+            this.CancelCommand = new DelegateCommand(Cancel);
+        }
+
+        private void Save()
+        {
+            if (DialogHost.IsDialogOpen(DialogHostName))
+            {
+                DialogParameters param = new DialogParameters();
+
+                DialogResult dialogResult = new DialogResult()
+                {
+                    Result = ButtonResult.OK,
+                    Parameters = param
+                };
+                // DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
+                DialogHost.Close(DialogHostName, dialogResult);
+            }
+        }
+
+        private void Cancel()
+        {
+            if (DialogHost.IsDialogOpen(DialogHostName))
+            {
+                DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.Cancel));
+            }
+        }
+
+        public void OnDialogOpened(IDialogParameters parameters)
+        {
+            
         }
     }
 }

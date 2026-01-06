@@ -54,10 +54,18 @@ namespace MemoDesktop
             // 注册服务
             containerRegistry.RegisterSingleton<IMemoApiService, MemoApiService>();
             containerRegistry.RegisterSingleton<IToDoApiService, ToDoApiService>();
+            containerRegistry.RegisterSingleton<IDialogHostService, DialogHostService>();
 
             // 注册对话框
-            containerRegistry.RegisterDialog<AddToDoDialog, AddToDoDialogViewModel>("AddToDoDialog");
-            containerRegistry.RegisterDialog<AddMemoDialog, AddMemoDialogViewModel>("AddMemoDialog");
+            // View
+            containerRegistry.Register<FrameworkElement, AddToDoDialog>("AddToDoDialog");
+            containerRegistry.Register<FrameworkElement, AddMemoDialog>("AddMemoDialog");
+            containerRegistry.Register<FrameworkElement, MsgDialog>("MsgDialog");
+            // ViewModel
+            containerRegistry.Register<AddToDoDialogViewModel>();
+            containerRegistry.Register<AddMemoDialogViewModel>();
+            containerRegistry.Register<MsgDialogViewModel>();
+
             // ====================================== HttpClient注册开始 ========================================
             // 第一步：创建并配置HTTP客户端实例
             HttpClient httpClient = new HttpClient();

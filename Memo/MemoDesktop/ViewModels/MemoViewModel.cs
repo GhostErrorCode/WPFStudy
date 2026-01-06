@@ -4,6 +4,7 @@ using MemoDesktop.Dtos.Memo;
 using MemoDesktop.Dtos.ToDo;
 using MemoDesktop.Extensions;
 using MemoDesktop.Models;
+using MemoDesktop.Services.Implements;
 using MemoDesktop.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -65,15 +66,18 @@ namespace MemoDesktop.ViewModels
         private readonly IMemoApiService _memoApiService;
         // 事件聚合器
         private readonly IEventAggregator _eventAggregator;
+        // 自定义对话服务
+        private readonly IDialogHostService _dialogHostService;
 
         // 构造函数
-        public MemoViewModel(IMemoApiService memoApiService, IEventAggregator eventAggregator) : base(eventAggregator)
+        public MemoViewModel(IMemoApiService memoApiService, IEventAggregator eventAggregator, IDialogHostService dialogHostService) : base(eventAggregator)
         {
             // 获取备忘录Api服务
             this._memoApiService = memoApiService;
             // 获取全局事件聚合器
             this._eventAggregator = eventAggregator;
-
+            // 获取自定义对话服务
+            this._dialogHostService = dialogHostService;
 
 
             // 绑定添加备忘录Command方法
@@ -276,6 +280,11 @@ namespace MemoDesktop.ViewModels
         {
             try
             {
+                // 先弹出个删除提示对话框
+                IDialogResult dialogResult = await this._dialogHostService.ShowMsgDialog("温馨提示", $"确认删除备忘录\"{memo.Title}\"?");
+                // 如果返回的是取消，就直接return，结束当前方法
+                if (dialogResult.Result != ButtonResult.OK) { return; }
+
                 // 先判断备忘录是否为空
                 if (memo == null) { return; }
                 // 不为空的话继续，先显示加载动画
