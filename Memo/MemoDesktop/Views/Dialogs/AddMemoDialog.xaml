@@ -49,8 +49,8 @@
 
         <!-- 第三行的按钮区域 -->
         <StackPanel Margin="10,10,10,10" Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
-            <Button Content="取消" Margin="0,0,10,0" Style="{StaticResource MaterialDesignOutlinedButton}" />
-            <Button Content="确认" />
+            <Button Content="取消" Margin="0,0,10,0" Style="{StaticResource MaterialDesignOutlinedButton}" Command="{Binding CancelCommand}"/>
+            <Button Content="确认" Command="{Binding SaveCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>

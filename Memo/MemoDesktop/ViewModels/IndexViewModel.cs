@@ -3,6 +3,7 @@ using MaterialDesignThemes.Wpf;
 using MemoDesktop.Dtos.Memo;
 using MemoDesktop.Dtos.ToDo;
 using MemoDesktop.Models;
+using MemoDesktop.Services.Interfaces;
 using MemoDesktop.Views.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -45,11 +46,11 @@ namespace MemoDesktop.ViewModels
 
         // =================== Defined Field Start ===================================================================
         // Prism中的对话服务 IDialogService
-        private readonly IDialogService _dialogService;
+        private readonly IDialogHostService _dialogService;
         // =================== Defined Field End ===================================================================
 
         // 构造函数
-        public IndexViewModel(IDialogService dialogService)
+        public IndexViewModel(IDialogHostService dialogService)
         {
             // 初始化任务栏
             this.CreateTaskBars();
@@ -78,14 +79,14 @@ namespace MemoDesktop.ViewModels
         private void AddToDo()
         {
             // 显示对话框
-            this._dialogService.ShowDialog("AddToDoDialog"); 
+            this._dialogService.ShowDialog("AddToDoDialog", null);
         }
 
         // 添加备忘录方法
         private void AddMemo()
         {
             // 显示对话框
-            this._dialogService.ShowDialog("AddMemoDialog");
+            this._dialogService.ShowDialog("AddMemoDialog", null);
         }
     }
 }
