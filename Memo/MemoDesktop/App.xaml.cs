@@ -60,9 +60,11 @@ namespace MemoDesktop
             // View
             containerRegistry.Register<FrameworkElement, AddToDoDialog>("AddToDoDialog");
             containerRegistry.Register<FrameworkElement, AddMemoDialog>("AddMemoDialog");
+            containerRegistry.Register<FrameworkElement, MsgDialog>("MsgDialog");
             // ViewModel
             containerRegistry.Register<AddToDoDialogViewModel>();
             containerRegistry.Register<AddMemoDialogViewModel>();
+            containerRegistry.Register<MsgDialogViewModel>();
 
             // ====================================== HttpClient注册开始 ========================================
             // 第一步：创建并配置HTTP客户端实例

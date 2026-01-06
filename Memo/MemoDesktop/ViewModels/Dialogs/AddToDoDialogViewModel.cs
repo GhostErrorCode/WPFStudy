@@ -93,7 +93,7 @@ namespace MemoDesktop.ViewModels.Dialogs
         {
             if (DialogHost.IsDialogOpen(DialogHostName))
             {
-                DialogHost.Close(DialogHostName);
+                DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.Cancel));
             }
         }
 

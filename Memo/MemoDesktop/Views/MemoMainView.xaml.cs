@@ -1,6 +1,8 @@
 ﻿using DryIoc;
+using DryIoc.FastExpressionCompiler.LightExpression;
 using MemoDesktop.Events;
 using MemoDesktop.Extensions;
+using MemoDesktop.Services.Interfaces;
 using MemoDesktop.Views.Components;
 using System;
 using System.Collections.Generic;
@@ -28,14 +30,19 @@ namespace MemoDesktop.Views
         private readonly IEventAggregator _eventAggregator;
         // 预缓存加载动画窗体
         private UpdateLoadingAnimation _updateLoadingAnimation;
+        // 自定义对话服务
+        private readonly IDialogHostService _dialogHostService;
 
-        public MemoMainView(IEventAggregator eventAggregator)
+        public MemoMainView(IEventAggregator eventAggregator, IDialogHostService dialogHostService)
         {
             InitializeComponent();
 
             // ===================================================================================================================
             // 通过依赖注入获取到事件聚合器
             this._eventAggregator = eventAggregator;
+            // 获取自定义对话服务
+            this._dialogHostService = dialogHostService;
+
             // 预创建并缓存LoadingAnimationView实例，避免重复创建
             this._updateLoadingAnimation = new UpdateLoadingAnimation();
             // 订阅加载动画的方法
@@ -87,9 +94,13 @@ namespace MemoDesktop.Views
         }
 
         // 实现关闭窗口
-        private void WindowClose(object sender, RoutedEventArgs e)
+        private async void WindowClose(object sender, RoutedEventArgs e)
         {
             // 结束程序
+            // 结束程序前的提示框
+            IDialogResult dialogResult = await this._dialogHostService.ShowMsgDialog("温馨提示", "确认退出?");
+            if(dialogResult.Result != ButtonResult.OK) { return; }
+
             this.Close();
         }
 

@@ -116,7 +116,7 @@ namespace MemoDesktop.Services.Implements
 
             // 8. 真正显示对话框
             // 大白话：现在一切准备就绪，在指定"舞台"上正式打开对话框！
-            return (IDialogResult)await DialogHost.Show(dialogContent, viewModelAware.DialogHostName, dialogOpenedEventHandler);
+            return (IDialogResult) await DialogHost.Show(dialogContent, viewModelAware.DialogHostName, dialogOpenedEventHandler);
         }
 
         private object GetViewModelFromContainer(string viewName)
@@ -126,6 +126,7 @@ namespace MemoDesktop.Services.Implements
             {
                 case "AddToDoDialog": return this._containerExtension.Resolve<AddToDoDialogViewModel>();
                 case "AddMemoDialog": return this._containerExtension.Resolve<AddToDoDialogViewModel>();
+                case "MsgDialog": return this._containerExtension.Resolve<MsgDialogViewModel>();
             }
             return null;
         }
