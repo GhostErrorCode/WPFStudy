@@ -32,6 +32,7 @@
             <TextBox
                 Margin="20,0,20,20"
                 materialDesign:HintAssist.Hint="请输入备忘录标题..."
+                Text="{Binding AddOrUpdateMemo.Title}"
                 DockPanel.Dock="Top"
                 />
 
@@ -43,6 +44,7 @@
                 TextWrapping="Wrap"
                 VerticalContentAlignment="Top"
                 materialDesign:HintAssist.Hint="请输入备忘录标题..."
+                Text="{Binding AddOrUpdateMemo.Content}"
                 DockPanel.Dock="Top"
                 />
         </DockPanel>
