@@ -7,6 +7,7 @@ using MemoDesktop.Dtos.ToDo;
 using MemoDesktop.Models;
 using MemoDesktop.Services.Interfaces;
 using MemoDesktop.Views.Dialogs;
+using Prism.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -45,6 +46,12 @@ namespace MemoDesktop.ViewModels
         public DelegateCommand AddToDoCommand { get; private set; }
         // 添加备忘录Command
         public DelegateCommand AddMemoCommand { get; private set; }
+        // 编辑待办事项Command
+        public DelegateCommand<ToDoDto> EditToDoCommand { get; private set; }
+        // 编辑备忘录Command
+        public DelegateCommand<MemoDto> EditMemoCommand { get; private set; }
+        // 完成待办事项Command
+        public DelegateCommand<ToDoDto> ToDoCompletedCommand { get; private set; }
         // =================== Defined Command End =====================================================================
 
 
@@ -70,6 +77,12 @@ namespace MemoDesktop.ViewModels
             this.AddToDoCommand = new DelegateCommand(AddToDo);
             // 添加备忘录Command初始化化方法
             this.AddMemoCommand = new DelegateCommand(AddMemo);
+            // 编辑待办事项Command方法
+            this.EditToDoCommand = new DelegateCommand<ToDoDto>(EditToDo);
+            // 编辑备忘录Command方法
+            this.EditMemoCommand = new DelegateCommand<MemoDto>(EditMemo);
+            // 完成待办事项Command方法
+            this.ToDoCompletedCommand = new DelegateCommand<ToDoDto>(ToDoCompleted);
 
             // 初始化内部字段(依赖注入)
             this._dialogHostService = dialogHostService;
@@ -100,12 +113,15 @@ namespace MemoDesktop.ViewModels
                 // 判断返回结果是否为ButtonResult.OK
                 if (dialogResult.Result == ButtonResult.OK)
                 {
+                    // 显示加载动画
+                    this.ShowLoading("正在添加待办事项...", "IndexViewModel");
                     // 接收返回的参数值
                     ToDoDto toDoDto = dialogResult.Parameters.GetValue<ToDoDto>("Value");
                     // 判断是修改待办事项还是添加待办事项
                     if (toDoDto.Id > 0)
                     {
                         // 修改待办事项
+                        // ===== 此if分支已废弃=====
                     }
                     else
                     {
@@ -128,7 +144,12 @@ namespace MemoDesktop.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"添加/修改待办事项异常：{ex.Message}");
+                Debug.WriteLine($"添加待办事项异常：{ex.Message}");
+            }
+            finally
+            {
+                // 隐藏加载动画
+                this.HideLoading();
             }
         }
 
@@ -143,12 +164,15 @@ namespace MemoDesktop.ViewModels
                 // 判断返回结果是否为ButtonResult.OK
                 if (dialogResult.Result == ButtonResult.OK)
                 {
+                    // 显示加载动画
+                    this.ShowLoading("正在添加备忘录...", "IndexViewModel");
                     // 接收返回的参数值
                     MemoDto memoDto = dialogResult.Parameters.GetValue<MemoDto>("Value");
                     // 判断是修改备忘录还是添加备忘录
                     if (memoDto.Id > 0)
                     {
                         // 修改备忘录
+                        // ===== 此if分支已废弃=====
                     }
                     else
                     {
@@ -171,7 +195,153 @@ namespace MemoDesktop.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"添加/修改待办事项异常：{ex.Message}");
+                Debug.WriteLine($"添加备忘录异常：{ex.Message}");
+            }
+            finally
+            {
+                // 隐藏加载动画
+                this.HideLoading();
+            }
+        }
+
+        // 编辑待办事项方法
+        private async void EditToDo(ToDoDto toDoDto)
+        {
+            try
+            {
+                // 准备传入对话框的参数
+                DialogParameters dialogParameters = new DialogParameters();
+                // 先判断传入的值是否为NULL
+                if (toDoDto == null)
+                {
+                    return;
+                }
+                else
+                {
+                    // toDoDto不为NULL贼赋值给参数
+                    dialogParameters.Add("Value", toDoDto);
+                }
+
+                // 显示对话框并接收返回结果
+                IDialogResult dialogResult = await this._dialogHostService.ShowDialog("AddToDoDialog", dialogParameters);
+                // 判断返回结果是否为ButtonResult.OK
+                if (dialogResult.Result == ButtonResult.OK)
+                {
+                    // 显示加载动画
+                    this.ShowLoading("正在修改待办事项...", "IndexViewModel");
+                    // 接收对话框返回的修改后的待办事项
+                    ToDoDto editToDo = dialogResult.Parameters.GetValue<ToDoDto>("Value");
+                    // 开始调用待办事项服务接口修改方法
+                    ApiResponse<ToDoDto> editToDoResponse = await this._toDoApiService.UpdateToDoAsync(ToDoDtoConverter.ConvertToDoDtoToUpdateToDoDto(editToDo));
+                    // 判断后端返回修改待办事项后的状态
+                    if (editToDoResponse.IsSuccess)
+                    {
+                        // 如果返回的是成功标识，在前端的结果集中找到对应的待办事项并修改
+                        ToDoDto toDoByToDoCollection = this.ToDoCollection.FirstOrDefault((ToDoDto toDo) => toDo.Id == editToDo.Id);
+                        // 如果找到了就更新他
+                        if(toDoByToDoCollection != null)
+                        {
+                            toDoByToDoCollection.Status = editToDo.Status;
+                            toDoByToDoCollection.Title = editToDo.Title;
+                            toDoByToDoCollection.Content = editToDo.Content;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"修改待办事项异常：{ex.Message}");
+            }
+            finally
+            {
+                // 隐藏加载动画
+                this.HideLoading();
+            }
+        }
+
+        // 编辑备忘录方法
+        private async void EditMemo(MemoDto memoDto)
+        {
+            try
+            {
+                // 准备传入对话框的参数
+                DialogParameters dialogParameters = new DialogParameters();
+                // 先判断传入的值是否为NULL
+                if (memoDto == null)
+                {
+                    return;
+                }
+                else
+                {
+                    // toDoDto不为NULL贼赋值给参数
+                    dialogParameters.Add("Value", memoDto);
+                }
+
+                // 显示对话框并接收返回结果
+                IDialogResult dialogResult = await this._dialogHostService.ShowDialog("AddMemoDialog", dialogParameters);
+                // 判断返回结果是否为ButtonResult.OK
+                if (dialogResult.Result == ButtonResult.OK)
+                {
+                    // 显示加载动画
+                    this.ShowLoading("正在修改备忘录...", "IndexViewModel");
+                    // 接收对话框返回的修改后的待办事项
+                    MemoDto editMemo = dialogResult.Parameters.GetValue<MemoDto>("Value");
+                    // 开始调用待办事项服务接口修改方法
+                    ApiResponse<MemoDto> editMemoResponse = await this._memoApiService.UpdateMemoAsync(MemoDtoConverter.ConvertMemoDtoToUpdateMemoDto(editMemo));
+                    // 判断后端返回修改待办事项后的状态
+                    if (editMemoResponse.IsSuccess)
+                    {
+                        // 如果返回的是成功标识，在前端的结果集中找到对应的待办事项并修改
+                        MemoDto memoByMemoCollection = this.MemoCollection.FirstOrDefault((MemoDto memo) => memo.Id == editMemo.Id);
+                        // 如果找到了就更新他
+                        if (memoByMemoCollection != null)
+                        {
+                            memoByMemoCollection.Title = editMemo.Title;
+                            memoByMemoCollection.Content = editMemo.Content;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"修改待办事项异常：{ex.Message}");
+            }
+            finally
+            {
+                // 隐藏加载动画
+                this.HideLoading();
+            }
+        }
+
+        // 完成备忘录方法
+        private async void ToDoCompleted(ToDoDto toDoDto)
+        {
+            try
+            {
+                // 显示加载的对话框
+                this.ShowLoading($"待办事项\"{toDoDto.Title}\"已完成,刷新中...", "IndexViewModel");
+                // 完成（状态更新）待办事项
+                ApiResponse<ToDoDto> apiResponse = await this._toDoApiService.UpdateToDoAsync(ToDoDtoConverter.ConvertToDoDtoToUpdateToDoDto(toDoDto));
+                // 判断是否修改成功
+                if (apiResponse.IsSuccess)
+                {
+                    // 修改成功话就从当前待办事项集合中移除
+                    ToDoDto toDoByToDoCollection = this.ToDoCollection.FirstOrDefault((ToDoDto toDo) => toDo.Id == toDoDto.Id);
+                    // 如果找到了，就从集合中移除它
+                    if(toDoByToDoCollection != null)
+                    {
+                        this.ToDoCollection.Remove(toDoByToDoCollection);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"完成待办事项异常：{ex.Message}");
+            }
+            finally
+            {
+                // 隐藏加载动画
+                this.HideLoading();
             }
         }
     }

@@ -3,4 +3,6 @@
                     xmlns:converters="clr-namespace:MemoDesktop.Converters">
     <!-- 根据数据量判断是否显示空数据提示信息 -->
     <converters:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
+    <!-- 根据待办事项状态（int类型）转换为前端的bool类型 -->
+    <converters:IntToBoolConverter x:Key="IntToBoolConverter" />
 </ResourceDictionary>

@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using MemoDesktop.Dtos.Memo;
 using MemoDesktop.Dtos.ToDo;
 using MemoDesktop.Services.Interfaces;
 using System;
@@ -126,7 +127,14 @@ namespace MemoDesktop.ViewModels.Dialogs
             if (parameters.ContainsKey("Value"))
             {
                 // 如果有这个值就赋值给AddOrUpdateToDo
-                this.AddOrUpdateToDo = parameters.GetValue<ToDoDto>("Value");
+                // 为了防止点击取消时，对话框的更改也会影响到前端，所以这里先NEW个新实例
+                this.AddOrUpdateToDo = new ToDoDto()
+                {
+                    Id = parameters.GetValue<ToDoDto>("Value").Id,
+                    Title = parameters.GetValue<ToDoDto>("Value").Title,
+                    Content = parameters.GetValue<ToDoDto>("Value").Content,
+                    Status = parameters.GetValue<ToDoDto>("Value").Status
+                };
             }
             else
             {

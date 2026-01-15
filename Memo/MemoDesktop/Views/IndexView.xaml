@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MemoDesktop.Views"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -187,12 +188,26 @@
                 
                 <!-- listBox数据 -->
                 <ListBox ItemsSource="{Binding ToDoCollection}" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch">
+                    <!-- 给左侧待办事项的ListBox添加一个双击事件，用来编辑已有的待办事项 -->
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction
+                                Command="{Binding EditToDoCommand}"
+                                CommandParameter="{Binding Path=SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <!-- 使用数据模板 -->
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <!-- DockPanel用于排列左侧数据和右侧按钮 -->
                             <DockPanel MaxHeight="80" LastChildFill="True">
-                                <ToggleButton DockPanel.Dock="Right" />
+                                <ToggleButton
+                                    DockPanel.Dock="Right"
+                                    IsChecked="{Binding Status, Converter={StaticResource IntToBoolConverter}}"
+                                    Command="{Binding DataContext.ToDoCompletedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"
+                                    CommandParameter="{Binding}"
+                                    />
                                 <StackPanel>
                                     <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="16" />
                                     <TextBlock Text="{Binding Content}" Opacity="0.5" Margin="0,5,0,0" />
@@ -236,6 +251,15 @@
 
                 <!-- listBox数据 -->
                 <ListBox ItemsSource="{Binding MemoCollection}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <!-- 给右侧备忘录的ListBox添加一个双击事件，用来编辑已有的备忘录 -->
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction
+                                Command="{Binding EditMemoCommand}"
+                                CommandParameter="{Binding Path=SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <!-- 使用数据模板 -->
                     <ListBox.ItemTemplate>
                         <DataTemplate>

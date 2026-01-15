@@ -127,7 +127,13 @@ namespace MemoDesktop.ViewModels.Dialogs
             if (parameters.ContainsKey("Value"))
             {
                 // 如果有这个值就赋值给AddOrUpdateToDo
-                this.AddOrUpdateMemo = parameters.GetValue<MemoDto>("Value");
+                // 为了防止点击取消时，对话框的更改也会影响到前端，所以这里先NEW个新实例
+                this.AddOrUpdateMemo = new MemoDto()
+                {
+                    Id = parameters.GetValue<MemoDto>("Value").Id,
+                    Title = parameters.GetValue<MemoDto>("Value").Title,
+                    Content = parameters.GetValue<MemoDto>("Value").Content
+                };
             }
             else
             {
