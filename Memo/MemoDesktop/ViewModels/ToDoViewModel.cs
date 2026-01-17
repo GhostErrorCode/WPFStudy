@@ -4,7 +4,6 @@ using MemoDesktop.Dtos.Memo;
 using MemoDesktop.Dtos.ToDo;
 using MemoDesktop.Extensions;
 using MemoDesktop.Models;
-using MemoDesktop.Models.ViewModels;
 using MemoDesktop.Services.Implements;
 using MemoDesktop.Services.Interfaces;
 using MemoDesktop.Utilities;

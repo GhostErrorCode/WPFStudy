@@ -41,7 +41,7 @@
             无默认交互：纯展示型控件（无选中、点击等默认交互），如需交互可派生或扩展（如ListBox、ListView）。
          -->
         <!-- ItemsControl核心用法 -->
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding TaskBarModels}">
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding TaskBar.TaskBars}">
             <!-- <ItemsControl.ItemsPanel> 是 ItemsControl 控件的专属属性，核心作用是为 ItemsControl 指定承载所有数据项的布局容器模板（ItemsPanelTemplate） —— 它是连接 ItemsControl 和 ItemsPanelTemplate 的 “桥梁”，决定了 ItemsControl 内部所有数据项的整体排布规则。 -->
             <!-- <ItemsControl.ItemsPanel> 就是 ItemsControl 的 “布局设置入口”，你通过这个入口告诉控件：“请用 StackPanel/UniformGrid/WrapPanel 等布局容器来摆放我的所有数据项 -->
             <!-- 1. 单个数据项的模板（MaterialDesign样式） -->
@@ -187,7 +187,7 @@
                 </DockPanel>
                 
                 <!-- listBox数据 -->
-                <ListBox ItemsSource="{Binding ToDoCollection}" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch">
+                <ListBox ItemsSource="{Binding Summary.ToDoList}" ScrollViewer.VerticalScrollBarVisibility="Hidden" HorizontalContentAlignment="Stretch">
                     <!-- 给左侧待办事项的ListBox添加一个双击事件，用来编辑已有的待办事项 -->
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDoubleClick">
@@ -204,7 +204,11 @@
                             <DockPanel MaxHeight="80" LastChildFill="True">
                                 <ToggleButton
                                     DockPanel.Dock="Right"
+                                    Content="{materialDesign:PackIcon Kind=Check,Size=21}"
                                     IsChecked="{Binding Status, Converter={StaticResource IntToBoolConverter}}"
+                                    Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                                    Foreground="White"
+                                    ToolTip="此待办事项已完成"
                                     Command="{Binding DataContext.ToDoCompletedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"
                                     CommandParameter="{Binding}"
                                     />
@@ -250,7 +254,7 @@
                 </DockPanel>
 
                 <!-- listBox数据 -->
-                <ListBox ItemsSource="{Binding MemoCollection}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <ListBox ItemsSource="{Binding Summary.MemoList}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                     <!-- 给右侧备忘录的ListBox添加一个双击事件，用来编辑已有的备忘录 -->
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDoubleClick">

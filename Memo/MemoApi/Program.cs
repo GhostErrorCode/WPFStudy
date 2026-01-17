@@ -85,6 +85,7 @@ namespace MemoApi
             builder.Services.AddScoped<IToDoService, ToDoService>();
             builder.Services.AddScoped<IMemoService, MemoService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ISummaryService, SummaryService>();
 
             // 5. ×¢²áAPI¿ØÖÆÆ÷
             builder.Services.AddControllers();

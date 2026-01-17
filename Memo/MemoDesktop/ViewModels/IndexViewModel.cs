@@ -2,10 +2,12 @@
 using MaterialDesignThemes.Wpf;
 using MemoDesktop.ApiResponses;
 using MemoDesktop.Converters;
+using MemoDesktop.Dtos.Dashboard;
 using MemoDesktop.Dtos.Memo;
 using MemoDesktop.Dtos.ToDo;
 using MemoDesktop.Models;
 using MemoDesktop.Services.Interfaces;
+using MemoDesktop.ViewModels.Dashboard;
 using MemoDesktop.Views.Dialogs;
 using Prism.Dialogs;
 using System;
@@ -21,6 +23,7 @@ namespace MemoDesktop.ViewModels
     {
         // 字段及属性
         // 定义任务栏项（动态）
+        
         private ObservableCollection<TaskBarModel> _taskBarModels;
         public ObservableCollection<TaskBarModel> TaskBarModels
         {
@@ -39,6 +42,23 @@ namespace MemoDesktop.ViewModels
         {
             get { return _memoCollection; }
             set { _memoCollection = value; RaisePropertyChanged(); }
+        }
+
+
+        // 定义汇总数据的ViewModel
+        private SummaryViewModel _summary;
+        public SummaryViewModel Summary
+        {
+            get { return _summary; }
+            set { _summary = value; RaisePropertyChanged(); }
+        }
+
+        // 定义首页汇总栏的ViewModel
+        private TaskBarViewModel _taskBar;
+        public TaskBarViewModel TaskBar
+        {
+            get { return _taskBar; }
+            set { _taskBar = value; RaisePropertyChanged(); }
         }
 
         // =================== Defined Command Start ===================================================================
@@ -64,13 +84,15 @@ namespace MemoDesktop.ViewModels
         private readonly IMemoApiService _memoApiService;
         // 待办事项服务层
         private readonly IToDoApiService _toDoApiService;
+        // 汇总数据服务层
+        private readonly ISummaryApiService _summaryApiService;
         // =================== Defined Field End ===================================================================
 
         // 构造函数
-        public IndexViewModel(IDialogHostService dialogHostService, IEventAggregator eventAggregator, IMemoApiService memoApiService, IToDoApiService toDoApiService) : base(eventAggregator)
+        public IndexViewModel(IDialogHostService dialogHostService, IEventAggregator eventAggregator, IMemoApiService memoApiService, IToDoApiService toDoApiService, ISummaryApiService summaryApiService) : base(eventAggregator)
         {
             // 初始化任务栏
-            this.CreateTaskBars();
+            // this.CreateTaskBars();
 
             // 初始化Command
             // 添加待办事项Command初始化方法
@@ -89,11 +111,17 @@ namespace MemoDesktop.ViewModels
             this._eventAggregator = eventAggregator;
             this._memoApiService = memoApiService;
             this._toDoApiService = toDoApiService;
+            this._summaryApiService = summaryApiService;
+
+            // 初始化属性
+            this.Summary = new SummaryViewModel(this._eventAggregator);
+            this.TaskBar = new TaskBarViewModel(this._eventAggregator);
         }
 
         // 创建任务项
-        private void CreateTaskBars()
+        private async Task InitIndex()
         {
+            /*
             this.ToDoCollection = new ObservableCollection<ToDoDto>();
             this.MemoCollection = new ObservableCollection<MemoDto>();
             this.TaskBarModels = new ObservableCollection<TaskBarModel>();
@@ -101,6 +129,38 @@ namespace MemoDesktop.ViewModels
             TaskBarModels.Add(new TaskBarModel() { Icon = "ClockCheckOutline", Title = "已完成", Content = "999999", Color = "#FF1ECA3A", Target = "" });
             TaskBarModels.Add(new TaskBarModel() { Icon = "ChartLineVariant", Title = "完成率", Content = "100%", Color = "#FF02C6DC", Target = "" });
             TaskBarModels.Add(new TaskBarModel() { Icon = "PlaylistStar", Title = "备忘录", Content = "999999", Color = "#FFFFA000", Target = "" });
+            */
+            try
+            {
+                // 显示加载动画
+                this.ShowLoading("初始化首页中...", "IndexViewModel");
+                // 先从后端拿出来汇总后的数据
+                ApiResponse<SummaryDto> apiResponse = await this._summaryApiService.GetSummaryAsync();
+                // 验证
+                if (apiResponse.IsSuccess)
+                {
+                    // 更新子ViewModel
+                    this.Summary.LoadFromDto(apiResponse.Data);
+                }
+                else
+                {
+                    // 如果后端返回失败的话，就再获取一次
+                    apiResponse = await this._summaryApiService.GetSummaryAsync();
+                    // 更新下子ViewModel
+                    this.Summary.LoadFromDto(apiResponse.Data);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"初始化首页异常：{ex.Message}");
+            }
+            finally
+            {
+                // 隐藏加载动画
+                this.HideLoading();
+            }
+
         }
 
         // 添加待办事项方法
@@ -132,7 +192,7 @@ namespace MemoDesktop.ViewModels
                         if (addToDoResponse.IsSuccess)
                         {
                             // 将添加成功的待办事项放到集合中
-                            this.ToDoCollection.Add(addToDoResponse.Data);
+                            this.Summary.AddToDo(addToDoResponse.Data);
                         }
                         else
                         {
@@ -183,7 +243,7 @@ namespace MemoDesktop.ViewModels
                         if (addMemoResponse.IsSuccess)
                         {
                             // 将添加成功的备忘录放到集合中
-                            this.MemoCollection.Add(addMemoResponse.Data);
+                            this.Summary.AddMemo(addMemoResponse.Data);
                         }
                         else
                         {
@@ -236,6 +296,9 @@ namespace MemoDesktop.ViewModels
                     // 判断后端返回修改待办事项后的状态
                     if (editToDoResponse.IsSuccess)
                     {
+                        // 调用Summary的修改待办事项方法
+                        this.Summary.EditToDo(editToDoResponse.Data);
+                        /*
                         // 如果返回的是成功标识，在前端的结果集中找到对应的待办事项并修改
                         ToDoDto toDoByToDoCollection = this.ToDoCollection.FirstOrDefault((ToDoDto toDo) => toDo.Id == editToDo.Id);
                         // 如果找到了就更新他
@@ -245,6 +308,7 @@ namespace MemoDesktop.ViewModels
                             toDoByToDoCollection.Title = editToDo.Title;
                             toDoByToDoCollection.Content = editToDo.Content;
                         }
+                        */
                     }
                 }
             }
@@ -291,6 +355,9 @@ namespace MemoDesktop.ViewModels
                     // 判断后端返回修改待办事项后的状态
                     if (editMemoResponse.IsSuccess)
                     {
+                        // 调用Summary的修改待办事项方法
+                        this.Summary.EditMemo(editMemoResponse.Data);
+                        /*
                         // 如果返回的是成功标识，在前端的结果集中找到对应的待办事项并修改
                         MemoDto memoByMemoCollection = this.MemoCollection.FirstOrDefault((MemoDto memo) => memo.Id == editMemo.Id);
                         // 如果找到了就更新他
@@ -299,6 +366,7 @@ namespace MemoDesktop.ViewModels
                             memoByMemoCollection.Title = editMemo.Title;
                             memoByMemoCollection.Content = editMemo.Content;
                         }
+                        */
                     }
                 }
             }
@@ -325,6 +393,9 @@ namespace MemoDesktop.ViewModels
                 // 判断是否修改成功
                 if (apiResponse.IsSuccess)
                 {
+                    // 调用Summary的修改待办事项方法
+                    this.Summary.EditToDo(apiResponse.Data);
+                    /*
                     // 修改成功话就从当前待办事项集合中移除
                     ToDoDto toDoByToDoCollection = this.ToDoCollection.FirstOrDefault((ToDoDto toDo) => toDo.Id == toDoDto.Id);
                     // 如果找到了，就从集合中移除它
@@ -332,6 +403,7 @@ namespace MemoDesktop.ViewModels
                     {
                         this.ToDoCollection.Remove(toDoByToDoCollection);
                     }
+                    */
                 }
             }
             catch (Exception ex)
@@ -343,6 +415,17 @@ namespace MemoDesktop.ViewModels
                 // 隐藏加载动画
                 this.HideLoading();
             }
+        }
+
+        // 重写父类OnNavigatedTo方法，用于导航到此ViewModel中时需要什么操作
+        public override async void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            // 调用父类方法（如果父类有操作）
+            base.OnNavigatedTo(navigationContext);
+
+            // 自己写的操作，需要做什么事儿
+            // 初始化首页
+            await this.InitIndex();
         }
     }
 }

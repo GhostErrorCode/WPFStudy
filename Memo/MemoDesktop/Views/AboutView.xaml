@@ -7,6 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Text="关于作者" FontSize="50" FontWeight="Bold" />
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="说明：" FontSize="50" FontWeight="Bold" />
+            <TextBlock Text="1.本软件仅用于学习，所有颜色效果均以Dark主题为主，不考虑Light主题" FontSize="28" FontWeight="Bold" />
+        </StackPanel>
     </Grid>
 </UserControl>
