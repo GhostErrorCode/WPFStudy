@@ -45,10 +45,10 @@ namespace MemoDesktop.ViewModels.Dashboard
             this.TaskBars.Add(new TaskBarModel() { Icon = "ChartLineVariant", Title = "完成率", Color = "#FF9800", Target = "" });
             this.TaskBars.Add(new TaskBarModel() { Icon = "PlaylistStar", Title = "备忘录", Color = "#9C27B0", Target = "" });
             */
-            this.TaskBars.Add(new TaskbarItemViewModel(new TaskBarModel() { Icon = "ClockFast", Title = "汇总", Color = "#3F51B5", Target = "" }));
-            this.TaskBars.Add(new TaskbarItemViewModel(new TaskBarModel() { Icon = "ClockCheckOutline", Title = "已完成", Color = "#4CAF50", Target = "" }));
+            this.TaskBars.Add(new TaskbarItemViewModel(new TaskBarModel() { Icon = "ClockFast", Title = "汇总", Color = "#3F51B5", Target = "ToDoView" }));
+            this.TaskBars.Add(new TaskbarItemViewModel(new TaskBarModel() { Icon = "ClockCheckOutline", Title = "已完成", Color = "#4CAF50", Target = "ToDoView" }));
             this.TaskBars.Add(new TaskbarItemViewModel(new TaskBarModel() { Icon = "ChartLineVariant", Title = "完成率", Color = "#FF9800", Target = "" }));
-            this.TaskBars.Add(new TaskbarItemViewModel(new TaskBarModel() { Icon = "PlaylistStar", Title = "备忘录", Color = "#9C27B0", Target = "" }));
+            this.TaskBars.Add(new TaskbarItemViewModel(new TaskBarModel() { Icon = "PlaylistStar", Title = "备忘录", Color = "#9C27B0", Target = "MemoView" }));
 
             // 订阅首页汇总数据更新事件
             this._eventAggregator.SummaryChangedEventSubscribe(this.OnSummaryChanged);

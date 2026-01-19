@@ -21,7 +21,7 @@
         <TextBlock
             Grid.Row="0"
             Margin="10,10,0,0"
-            Text="你好，幽灵！今天是2025年12月6日 星期六"
+            Text="{Binding IndexTitle}"
             FontSize="22" />
         
         <!-- 第二行 -->
@@ -62,7 +62,16 @@
                         Margin="10"
                         Background="{Binding Color}"
                         CornerRadius="10">
-
+                        
+                        <!-- Border点击事件，用于实现首页跳转功能 -->
+                        <Border.InputBindings>
+                            <MouseBinding
+                                MouseAction="LeftClick"
+                                Command="{Binding DataContext.IndexTaskBarItemNavigateCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ItemsControl}}}"
+                                CommandParameter="{Binding}"
+                                />
+                        </Border.InputBindings>
+                        
                         <!-- 为此Border定义专属样式 -->
                         <Border.Style>
                             <Style TargetType="Border">

@@ -1,12 +1,14 @@
 ﻿using MahApps.Metro.Controls;
 using MaterialDesignThemes.Wpf;
 using MemoDesktop.ApiResponses;
+using MemoDesktop.Constants;
 using MemoDesktop.Converters;
 using MemoDesktop.Dtos.Dashboard;
 using MemoDesktop.Dtos.Memo;
 using MemoDesktop.Dtos.ToDo;
 using MemoDesktop.Models;
 using MemoDesktop.Services.Interfaces;
+using MemoDesktop.Utilities;
 using MemoDesktop.ViewModels.Dashboard;
 using MemoDesktop.Views.Dialogs;
 using Prism.Dialogs;
@@ -16,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace MemoDesktop.ViewModels
 {
@@ -30,20 +33,14 @@ namespace MemoDesktop.ViewModels
             get { return _taskBarModels; } 
             set { _taskBarModels = value; RaisePropertyChanged(); }
         }
-        // 定义待办事项和备忘录的数据
-        private ObservableCollection<ToDoDto> _toDoCollection;
-        public ObservableCollection<ToDoDto> ToDoCollection
-        {
-            get { return _toDoCollection; }
-            set { _toDoCollection = value; RaisePropertyChanged(); }
-        }
-        private ObservableCollection<MemoDto> _memoCollection;
-        public ObservableCollection<MemoDto> MemoCollection
-        {
-            get { return _memoCollection; }
-            set { _memoCollection = value; RaisePropertyChanged(); }
-        }
 
+        // 首页的提示信息
+        private string _indexTitle = $"欢迎回来！今天是{DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss")}";
+        public string IndexTitle
+        {
+            get { return _indexTitle; }
+            set { _indexTitle  = value; RaisePropertyChanged(); }
+        }
 
         // 定义汇总数据的ViewModel
         private SummaryViewModel _summary;
@@ -72,6 +69,8 @@ namespace MemoDesktop.ViewModels
         public DelegateCommand<MemoDto> EditMemoCommand { get; private set; }
         // 完成待办事项Command
         public DelegateCommand<ToDoDto> ToDoCompletedCommand { get; private set; }
+        // 首页任务栏导航Command
+        public DelegateCommand<TaskbarItemViewModel> IndexTaskBarItemNavigateCommand { get; private set; }
         // =================== Defined Command End =====================================================================
 
 
@@ -86,10 +85,12 @@ namespace MemoDesktop.ViewModels
         private readonly IToDoApiService _toDoApiService;
         // 汇总数据服务层
         private readonly ISummaryApiService _summaryApiService;
+        // 全局区域导航
+        private readonly IRegionManager _regionManager;
         // =================== Defined Field End ===================================================================
 
         // 构造函数
-        public IndexViewModel(IDialogHostService dialogHostService, IEventAggregator eventAggregator, IMemoApiService memoApiService, IToDoApiService toDoApiService, ISummaryApiService summaryApiService) : base(eventAggregator)
+        public IndexViewModel(IDialogHostService dialogHostService, IEventAggregator eventAggregator, IMemoApiService memoApiService, IToDoApiService toDoApiService, ISummaryApiService summaryApiService, IRegionManager regionManager) : base(eventAggregator)
         {
             // 初始化任务栏
             // this.CreateTaskBars();
@@ -105,6 +106,8 @@ namespace MemoDesktop.ViewModels
             this.EditMemoCommand = new DelegateCommand<MemoDto>(EditMemo);
             // 完成待办事项Command方法
             this.ToDoCompletedCommand = new DelegateCommand<ToDoDto>(ToDoCompleted);
+            // // 首页任务栏导航Command方法
+            this.IndexTaskBarItemNavigateCommand = new DelegateCommand<TaskbarItemViewModel>(IndexTaskBarItemNavigate);
 
             // 初始化内部字段(依赖注入)
             this._dialogHostService = dialogHostService;
@@ -112,6 +115,7 @@ namespace MemoDesktop.ViewModels
             this._memoApiService = memoApiService;
             this._toDoApiService = toDoApiService;
             this._summaryApiService = summaryApiService;
+            this._regionManager = regionManager;
 
             // 初始化属性
             this.Summary = new SummaryViewModel(this._eventAggregator);
@@ -119,7 +123,7 @@ namespace MemoDesktop.ViewModels
         }
 
         // 创建任务项
-        private async Task InitIndex()
+        private async void InitIndex()
         {
             /*
             this.ToDoCollection = new ObservableCollection<ToDoDto>();
@@ -417,15 +421,67 @@ namespace MemoDesktop.ViewModels
             }
         }
 
+        // 首页任务栏导航方法
+        private void IndexTaskBarItemNavigate(TaskbarItemViewModel taskbarItemViewModel)
+        {
+            // 如果任务栏的Target是空，则直接return，无需导航
+            if (string.IsNullOrWhiteSpace(taskbarItemViewModel.Target)) { return; }
+
+            // 如果任务栏的Target不为空，则开始准备导航
+            // 初始化导航参数
+            NavigationParameters navigationParameters = new NavigationParameters();
+            // 判断任务栏标题是什么,全部待办事项，已完成的待办事项，备忘录页面
+            if(taskbarItemViewModel.Title == "已完成")
+            {
+                // 这里是点击的已完成的待办事项，需要传入一个参数
+                navigationParameters.Add("ToDoStatus", 1);
+            }
+            // 导航
+            this._regionManager.Regions[RegionNames.MainViewRegionName].RequestNavigate(taskbarItemViewModel.Target, navigationParameters);
+        }
+
+        // 刷新首页提示信息的方法
+        private void UpdateIndexTitle()
+        {
+            // 初始化首页提示信息
+            // this.IndexTitle = $"欢迎回来！今天是{DateTimeUtility.CurrentDateTime}";
+
+            // 计时器开始运行，每秒更新一次当前的日期和时间
+            DispatcherTimer timer = new DispatcherTimer();
+            // 设置计时器间隔为1秒（1000毫秒）
+            timer.Interval = TimeSpan.FromSeconds(1);
+            // 注册Tick事件处理程序
+            // 使用lambda表达式简化事件处理器的定义
+            // 每次计时器触发时（每秒一次）：
+            // 1. 获取当前系统时间
+            // 2. 格式化时间字符串
+            // 3. 更新CurrentDateTime属性值
+            // 4. 自动触发TimeChanged事件通知所有订阅者
+            timer.Tick += (sender, e) => this.IndexTitle = $"欢迎回来！今天是{DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss")}";
+            // 启动计时器，开始每秒更新时间
+            timer.Start();
+        }
+
+
         // 重写父类OnNavigatedTo方法，用于导航到此ViewModel中时需要什么操作
-        public override async void OnNavigatedTo(NavigationContext navigationContext)
+        public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             // 调用父类方法（如果父类有操作）
             base.OnNavigatedTo(navigationContext);
 
             // 自己写的操作，需要做什么事儿
             // 初始化首页
-            await this.InitIndex();
+            this.InitIndex();
+            // 获取当前日期时间以便显示
+            this.UpdateIndexTitle();
         }
+
+        /*
+        public void Dispose()
+        {
+            // 用于取消事件订阅，防止内存泄露
+            DateTimeUtility.TimeChanged -= OnTimeChanged;
+        }
+        */
     }
 }
