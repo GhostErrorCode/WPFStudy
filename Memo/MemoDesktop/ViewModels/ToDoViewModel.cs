@@ -361,7 +361,8 @@ namespace MemoDesktop.ViewModels
                 // 自己写的操作，需要做什么事儿
                 // 获取全部待办事项
                 // 等待加载完整后进一步操作
-                this.GetAllToDoData();
+                this.SearchStatus = null;
+                _ = this.GetAllToDoData();
             }
         }
     }

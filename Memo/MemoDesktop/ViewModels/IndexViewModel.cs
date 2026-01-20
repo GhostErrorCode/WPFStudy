@@ -6,6 +6,7 @@ using MemoDesktop.Converters;
 using MemoDesktop.Dtos.Dashboard;
 using MemoDesktop.Dtos.Memo;
 using MemoDesktop.Dtos.ToDo;
+using MemoDesktop.Extensions;
 using MemoDesktop.Models;
 using MemoDesktop.Services.Interfaces;
 using MemoDesktop.Utilities;
@@ -314,6 +315,7 @@ namespace MemoDesktop.ViewModels
                         }
                         */
                     }
+                    if(editToDoResponse.Data.Status == 1) { this._eventAggregator.MessageEventPublish($"待办事项 {editToDoResponse.Data.Title} 已完成!"); }
                 }
             }
             catch (Exception ex)
@@ -409,6 +411,7 @@ namespace MemoDesktop.ViewModels
                     }
                     */
                 }
+                this._eventAggregator.MessageEventPublish($"待办事项 {apiResponse.Data.Title} 已完成!");
             }
             catch (Exception ex)
             {

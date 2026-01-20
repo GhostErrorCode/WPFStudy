@@ -67,8 +67,8 @@
                                 <i:InvokeCommandAction
                                     Command="{Binding NavigateCommand}" 
                                     CommandParameter="{Binding SelectedItem, ElementName=LeftMenuListBox}"/>
-                                    <!-- 关键：将ListBox当前选中的对象作为参数传递给命令 -->
-                                    <!-- Command="{Binding MenuItemClickedCommand}" 绑定到要执行的命令 -->
+                                <!-- 关键：将ListBox当前选中的对象作为参数传递给命令 -->
+                                <!-- Command="{Binding MenuItemClickedCommand}" 绑定到要执行的命令 -->
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <!-- 定义数据模板，需要显示图标和菜单名称 -->
@@ -86,12 +86,20 @@
                 </DockPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
 
-            <DockPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                
+                <!-- 消息提示容器 -->
+                <materialDesign:Snackbar x:Name="MainSnackbar" Panel.ZIndex="1" MessageQueue="{materialDesign:MessageQueue}" />
                 <materialDesign:ColorZone x:Name="ColorZoneTilteBar"
                                           Padding="12"
                                           materialDesign:ElevationAssist.Elevation="Dp0"
                                           DockPanel.Dock="Top"
                                           Mode="Dark"
+                                          Grid.Row="0"
                                           >
                     <DockPanel LastChildFill="False">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Left">
@@ -182,9 +190,10 @@
                 <!-- 导航区域 -->
                 <ContentControl
                     prism:RegionManager.RegionName="{x:Static constants:RegionNames.MainViewRegionName}"
+                    Grid.Row="1"
                     VerticalContentAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"/>
-            </DockPanel>
+                </Grid>
         </materialDesign:DrawerHost>
     </materialDesign:DialogHost>
 </Window>
