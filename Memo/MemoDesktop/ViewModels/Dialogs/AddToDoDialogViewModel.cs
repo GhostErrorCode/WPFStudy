@@ -1,4 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
+using MemoDesktop.Dtos.Memo;
+using MemoDesktop.Dtos.ToDo;
 using MemoDesktop.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -20,7 +22,7 @@ namespace MemoDesktop.ViewModels.Dialogs
     /// 使用场景：对话框ViewModel必须实现的接口（如AddMemoDialogViewModel）
     /// 注意：这是对话框本身实现的接口，用于响应调用者的请求
     /// </summary>
-    public class AddToDoDialogViewModel : IDialogHostAware
+    public class AddToDoDialogViewModel : BindableBase, IDialogHostAware
     {
         /*
         /// <summary>
@@ -64,9 +66,23 @@ namespace MemoDesktop.ViewModels.Dialogs
         }
         */
 
+        // 要显示在那个容器的名称
         public string DialogHostName { get; set; }
+
+        // 保存命令
         public DelegateCommand SaveCommand { get; set; }
+        // 取消命令
         public DelegateCommand CancelCommand { get; set; }
+
+        // 添加/编辑对话框时存储的对象
+        private ToDoDto _addOrUpdateToDo;
+        public ToDoDto AddOrUpdateToDo
+        {
+            get { return _addOrUpdateToDo; }
+            set { _addOrUpdateToDo = value; RaisePropertyChanged(); }
+        }
+
+
 
         public AddToDoDialogViewModel()
         {
@@ -76,9 +92,17 @@ namespace MemoDesktop.ViewModels.Dialogs
 
         private void Save()
         {
+            // 先判断下用户输入的内容，标题和内容不能为空
+            if (string.IsNullOrWhiteSpace(this._addOrUpdateToDo.Title) || string.IsNullOrWhiteSpace(this._addOrUpdateToDo.Content)) { return; }
+
+            // 先判断是否有对话框打开着，有打开着的对话框才运行关闭
             if (DialogHost.IsDialogOpen(DialogHostName))
             {
+                // 定义对话框参数并赋值
                 DialogParameters param = new DialogParameters();
+                param.Add("Value", this._addOrUpdateToDo);
+
+                // 定义对话框结果集
                 DialogResult dialogResult = new DialogResult()
                 {
                     Result = ButtonResult.OK,
@@ -99,7 +123,24 @@ namespace MemoDesktop.ViewModels.Dialogs
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-
+            // 用来接收编辑待办事项的数据
+            if (parameters.ContainsKey("Value"))
+            {
+                // 如果有这个值就赋值给AddOrUpdateToDo
+                // 为了防止点击取消时，对话框的更改也会影响到前端，所以这里先NEW个新实例
+                this.AddOrUpdateToDo = new ToDoDto()
+                {
+                    Id = parameters.GetValue<ToDoDto>("Value").Id,
+                    Title = parameters.GetValue<ToDoDto>("Value").Title,
+                    Content = parameters.GetValue<ToDoDto>("Value").Content,
+                    Status = parameters.GetValue<ToDoDto>("Value").Status
+                };
+            }
+            else
+            {
+                // 如果没有找到那个值，就初始化
+                this.AddOrUpdateToDo = new ToDoDto();
+            }
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace MemoDesktop.Models.ViewModels
+namespace MemoDesktop.Models
 {
     public  class ToDoStatusItem
     {

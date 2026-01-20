@@ -19,7 +19,7 @@
         <!-- 第一行的标题 -->
         <TextBlock
             Grid.Row="0"
-            Text="添加待办事项"
+            Text="添加/修改待办事项"
             FontWeight="Bold"
             FontSize="20"
             Padding="20,10,20,10"
@@ -30,7 +30,7 @@
             <!-- 待办事项状态 -->
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="20,10,20,10">
                 <TextBlock Text="状态：" VerticalAlignment="Center"/>
-                <ComboBox Margin="8,0,0,0" Width="80">
+                <ComboBox Margin="8,0,0,0" Width="80" SelectedValue="{Binding AddOrUpdateToDo.Status}" SelectedValuePath="Tag">
                     <ComboBoxItem Content="待办" Tag="0"></ComboBoxItem>
                     <ComboBoxItem Content="已完成" Tag="1"></ComboBoxItem>
                 </ComboBox>
@@ -40,6 +40,7 @@
             <TextBox
                 Margin="20,0,20,20"
                 materialDesign:HintAssist.Hint="请输入待办事项标题..."
+                Text="{Binding AddOrUpdateToDo.Title}"
                 DockPanel.Dock="Top"
                 />
 
@@ -51,6 +52,7 @@
                 TextWrapping="Wrap"
                 VerticalContentAlignment="Top"
                 materialDesign:HintAssist.Hint="请输入待办事项标题..."
+                Text="{Binding AddOrUpdateToDo.Content}"
                 DockPanel.Dock="Top"
                 />
         </DockPanel>

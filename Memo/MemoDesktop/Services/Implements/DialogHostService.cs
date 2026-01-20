@@ -125,7 +125,7 @@ namespace MemoDesktop.Services.Implements
             switch (viewName)
             {
                 case "AddToDoDialog": return this._containerExtension.Resolve<AddToDoDialogViewModel>();
-                case "AddMemoDialog": return this._containerExtension.Resolve<AddToDoDialogViewModel>();
+                case "AddMemoDialog": return this._containerExtension.Resolve<AddMemoDialogViewModel>();
                 case "MsgDialog": return this._containerExtension.Resolve<MsgDialogViewModel>();
             }
             return null;

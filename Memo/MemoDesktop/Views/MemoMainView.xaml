@@ -67,8 +67,8 @@
                                 <i:InvokeCommandAction
                                     Command="{Binding NavigateCommand}" 
                                     CommandParameter="{Binding SelectedItem, ElementName=LeftMenuListBox}"/>
-                                    <!-- 关键：将ListBox当前选中的对象作为参数传递给命令 -->
-                                    <!-- Command="{Binding MenuItemClickedCommand}" 绑定到要执行的命令 -->
+                                <!-- 关键：将ListBox当前选中的对象作为参数传递给命令 -->
+                                <!-- Command="{Binding MenuItemClickedCommand}" 绑定到要执行的命令 -->
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <!-- 定义数据模板，需要显示图标和菜单名称 -->
@@ -86,12 +86,21 @@
                 </DockPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
 
-            <DockPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                
+                <!-- 消息提示容器 -->
+                <materialDesign:Snackbar x:Name="MainSnackbar" Panel.ZIndex="1" MessageQueue="{materialDesign:MessageQueue}" />
                 <materialDesign:ColorZone x:Name="ColorZoneTilteBar"
                                           Padding="12"
                                           materialDesign:ElevationAssist.Elevation="Dp0"
                                           DockPanel.Dock="Top"
-                                          Mode="PrimaryMid">
+                                          Mode="Dark"
+                                          Grid.Row="0"
+                                          >
                     <DockPanel LastChildFill="False">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Left">
                             <ToggleButton x:Name="MenuToggleButton"
@@ -136,15 +145,37 @@
                                 </Image.Clip>
                             </Image>
                             <!-- 缩小按钮 -->
-                            <Button x:Name="ButtonWindowMin" Style="{StaticResource MaterialDesignFlatMidBgButton}">
+                            <!-- <Buttonx:Name="ButtonWindowMin" Style="{StaticResource MaterialDesignFlatMidBgButton}"> -->
+                            <Button 
+                                x:Name="ButtonWindowMin"
+                                Width="40"
+                                Height="25"
+                                Margin="10,0,0,0"
+                                Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
+                                Style="{StaticResource MaterialDesignToolButton}" Cursor="Hand"
+                                >
                                 <materialDesign:PackIcon Kind="WindowMinimize" />
                             </Button>
                             <!-- 放大按钮 -->
-                            <Button x:Name="ButtonWindowMax" Style="{StaticResource MaterialDesignFlatMidBgButton}">
+                            <Button
+                                x:Name="ButtonWindowMax"
+                                Margin="5,0,0,0"
+                                Width="40"
+                                Height="25"
+                                Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
+                                Style="{StaticResource MaterialDesignToolButton}"
+                                >
                                 <materialDesign:PackIcon Kind="WindowMaximize" />
                             </Button>
                             <!-- 关闭按钮 -->
-                            <Button x:Name="ButtonWindowClose" Style="{StaticResource MaterialDesignFlatMidBgButton}">
+                            <Button
+                                Width="40"
+                                Height="25"
+                                x:Name="ButtonWindowClose"
+                                Margin="5,0,0,0"
+                                Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
+                                Style="{StaticResource MaterialDesignToolButton}" Cursor="Hand"
+                                >
                                 <materialDesign:PackIcon Kind="WindowClose" />
                             </Button>
                         </StackPanel>
@@ -159,9 +190,10 @@
                 <!-- 导航区域 -->
                 <ContentControl
                     prism:RegionManager.RegionName="{x:Static constants:RegionNames.MainViewRegionName}"
+                    Grid.Row="1"
                     VerticalContentAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"/>
-            </DockPanel>
+                </Grid>
         </materialDesign:DrawerHost>
     </materialDesign:DialogHost>
 </Window>

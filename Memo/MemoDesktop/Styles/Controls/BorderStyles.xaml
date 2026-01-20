@@ -8,11 +8,11 @@
         <Style.Triggers>
             <!-- 当待办事项状态为0的时候，就是待办状态，背景色改成绿色 -->
             <DataTrigger Binding="{Binding Status}" Value="0">
-                <Setter Property="Background" Value="#3CB371" />
+                <Setter Property="Background" Value="#1E90FF" />
             </DataTrigger>
             <!-- 当待办事项状态为1的时候，就是已完成状态，背景色改成蓝色 -->
             <DataTrigger Binding="{Binding Status}" Value="1">
-                <Setter Property="Background" Value="#1E90FF" />
+                <Setter Property="Background" Value="#3CB371" />
             </DataTrigger>
         </Style.Triggers>
     </Style>

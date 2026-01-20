@@ -4,7 +4,6 @@ using MemoDesktop.Dtos.Memo;
 using MemoDesktop.Dtos.ToDo;
 using MemoDesktop.Extensions;
 using MemoDesktop.Models;
-using MemoDesktop.Models.ViewModels;
 using MemoDesktop.Services.Implements;
 using MemoDesktop.Services.Interfaces;
 using MemoDesktop.Utilities;
@@ -21,7 +20,7 @@ namespace MemoDesktop.ViewModels
     {
         // 字段和属性
         // 用于显示待办事项的集合
-        private ObservableCollection<ToDoDto> _selectedToDoDataCollection;
+        private ObservableCollection<ToDoDto> _selectedToDoDataCollection = new ObservableCollection<ToDoDto>();
         public ObservableCollection<ToDoDto> SelectedToDoDataCollection
         {
             get { return _selectedToDoDataCollection; }
@@ -49,21 +48,23 @@ namespace MemoDesktop.ViewModels
             set { _searchText = value; RaisePropertyChanged(); }
         }
         // 搜索组合框
-        private ObservableCollection<ToDoStatusItem> _searchComboBox;
+        private ObservableCollection<ToDoStatusItem> _searchComboBox = ToDoStatusItemUtility.GetToDoStatusItems();
         public ObservableCollection<ToDoStatusItem> SearchComboBox
         {
             get
             {
+                /*
                 if (_searchComboBox == null)
                 {
                     _searchComboBox = ToDoStatusItemUtility.GetToDoStatusItems();
                 }
+                */
                 return _searchComboBox;
             }
             set { _searchComboBox = value; RaisePropertyChanged(); }
         }
         // 搜索组合框选中的值
-        private int? _searchStatus;
+        private int? _searchStatus = null;
         public int? SearchStatus
         {
             get { return _searchStatus; }
@@ -127,9 +128,10 @@ namespace MemoDesktop.ViewModels
             {
                 // ===== 执行业务逻辑 =====
                 // 模拟等待时间
-                // await Task.Delay(10000);
+                // await Task.Delay(1000);
                 // 初始化ObservableCollection对象
-                this.SelectedToDoDataCollection = new ObservableCollection<ToDoDto>();
+                
+                // this.SelectedToDoDataCollection = new ObservableCollection<ToDoDto>();
                 // 通过服务层请求获取全部的待办事项数据
                 ApiResponse<List<ToDoDto>> response = await this._toDoApiService.GetAllToDoAsync();
                 // 判断是否获取成功
@@ -340,15 +342,28 @@ namespace MemoDesktop.ViewModels
 
 
         // 重写父类OnNavigatedTo方法，用于导航到此ViewModel中时需要什么操作
-        public override async void OnNavigatedTo(NavigationContext navigationContext)
+        public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             // 调用父类方法（如果父类有操作）
             base.OnNavigatedTo(navigationContext);
 
-            // 自己写的操作，需要做什么事儿
-            // 获取全部待办事项
-            // 等待加载完整后进一步操作
-            await this.GetAllToDoData();
+            // 判断导航之后有没有传入参数，如果有参数，就按照参数显示数据
+            if (navigationContext.Parameters.ContainsKey("ToDoStatus"))
+            {
+                // 如果有待办事项状态的参数，就根据状态来显示数据
+                this.SearchStatus = navigationContext.Parameters.GetValue<int>("ToDoStatus");
+                // 
+                // 调用条件查询数据的方法
+                this.GetToDoDataByCondition();
+            }
+            else
+            {
+                // 自己写的操作，需要做什么事儿
+                // 获取全部待办事项
+                // 等待加载完整后进一步操作
+                this.SearchStatus = null;
+                _ = this.GetAllToDoData();
+            }
         }
     }
 }

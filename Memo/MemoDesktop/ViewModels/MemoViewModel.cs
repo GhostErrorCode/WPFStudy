@@ -109,7 +109,7 @@ namespace MemoDesktop.ViewModels
             {
                 // ===== 执行业务逻辑 =====
                 // 模拟等待时间
-                // await Task.Delay(10000);
+                // await Task.Delay(1000);
                 // 初始化ObservableCollection对象
                 this.SelectedMemoDataCollection = new ObservableCollection<MemoDto>();
                 // 通过服务层请求获取全部的备忘录数据
@@ -313,14 +313,15 @@ namespace MemoDesktop.ViewModels
         }
 
         // 重写父类OnNavigatedTo方法，用于导航到此ViewModel中时需要什么操作
-        public override async void OnNavigatedTo(NavigationContext navigationContext)
+        public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             // 调用父类方法（如果父类有操作）
             base.OnNavigatedTo(navigationContext);
 
             // 自己写的操作，需要做什么事儿
             // 获取全部备忘录
-            await this.GetAllMemo();
+            _ = this.GetAllMemo();
+            // _ 是 discard（弃元）操作符，表示不关系Task返回什么，我只需要调用完这个方法就行了
         }
     }
 }

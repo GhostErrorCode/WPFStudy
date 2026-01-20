@@ -55,6 +55,7 @@ namespace MemoDesktop
             containerRegistry.RegisterSingleton<IMemoApiService, MemoApiService>();
             containerRegistry.RegisterSingleton<IToDoApiService, ToDoApiService>();
             containerRegistry.RegisterSingleton<IDialogHostService, DialogHostService>();
+            containerRegistry.RegisterSingleton<ISummaryApiService, SummaryApiService>();
 
             // 注册对话框
             // View

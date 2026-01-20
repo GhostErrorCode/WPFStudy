@@ -50,6 +50,12 @@ namespace MemoDesktop.Views
 
             // 订阅窗口关闭时的取消订阅方法
             this.Unloaded += UnSubscribeUpdateLoadingEvent;
+
+            // 订阅消息提示方法
+            this._eventAggregator.MessageEventSubscribe(message =>
+            {
+                MainSnackbar.MessageQueue.Enqueue(message);
+            });
             // ===================================================================================================================
 
             // 最小化按钮单击事件订阅窗口最小化方法

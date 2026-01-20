@@ -1,4 +1,4 @@
-﻿using MemoDesktop.Models.ViewModels;
+﻿using MemoDesktop.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
