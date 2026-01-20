@@ -6,10 +6,16 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\Icons\Memo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Images\Login.jpg" />
     <None Remove="Assets\Images\新之助.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Icons\Memo.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,12 +29,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\Icons\" />
     <Folder Include="Assets\Fonts\" />
     <Folder Include="Styles\Modules\" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\Images\Login.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\Images\新之助.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
