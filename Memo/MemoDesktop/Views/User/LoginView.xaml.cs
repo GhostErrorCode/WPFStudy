@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MemoDesktop.Events;
+using MemoDesktop.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -18,9 +20,15 @@ namespace MemoDesktop.Views.User
     /// </summary>
     public partial class LoginView : UserControl
     {
-        public LoginView()
+        public LoginView(IEventAggregator eventAggregator)
         {
             InitializeComponent();
+
+            // 订阅登录页面的消息提示器
+            eventAggregator.MessageEventSubscribe("Login", (MessageEventArgs messageEventArgs) =>
+            {
+                LoginSnackbar.MessageQueue.Enqueue(messageEventArgs.Message);
+            });
         }
     }
 }

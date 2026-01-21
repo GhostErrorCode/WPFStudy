@@ -1,4 +1,5 @@
 ﻿using MemoDesktop.Constants;
+using MemoDesktop.Models;
 using MemoDesktop.Services.Implements;
 using MemoDesktop.Services.Interfaces;
 using MemoDesktop.ViewModels;
@@ -21,11 +22,36 @@ namespace MemoDesktop
     public partial class App : PrismApplication
     {
         // 程序的入口,需要返回一个Window窗口类型，负责创建应用程序的主窗口
+        // 主窗口实例
+        private MemoMainView _mainWindow;
+
         protected override Window CreateShell()
         {
             // 通过依赖注入容器解析并返回主窗口实例
             MemoMainView mainWindow = Container.Resolve<MemoMainView>();
             return mainWindow;
+        }
+
+        // 注销功能
+        public static void LoginOut(IContainerProvider container)
+        {
+            // 隐藏掉当前的窗口
+            Current.MainWindow.Visibility = Visibility.Hidden;
+            // 先弹出登录页面对话框，登录成功后才会跳转到主页面
+            // 弹出登录对话框
+            container.Resolve<IDialogService>().ShowDialog("LoginView", callback =>
+            {
+                if (callback.Result != ButtonResult.OK)
+                {
+                    // 如果点击的不是OK，则关闭程序
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    // 登录成功
+                    Current.MainWindow.Visibility = Visibility.Visible;
+                }
+            });
         }
 
         // OnInitialized() 是 PrismApplication 的生命周期方法，在应用程序初始化完成后调用。这是 Prism 框架推荐的执行启动逻辑的地方。
@@ -42,10 +68,13 @@ namespace MemoDesktop
                 }
                 else
                 {
-                    // 登录成功的话就显示主页面
-                    base.OnInitialized();
                     // 配置默认首页
                     Container.Resolve<IRegionManager>().RequestNavigate(RegionNames.MainViewRegionName, "IndexView");
+                    // 初始化主页面配置
+                    IConfigureService? configureService = App.Current.MainWindow.DataContext as IConfigureService;
+                    if(configureService != null) { configureService.Configure(); }
+                    // 登录成功的话就显示主页面
+                    base.OnInitialized();
                 }
             });
         }
@@ -72,6 +101,9 @@ namespace MemoDesktop
             containerRegistry.RegisterSingleton<IDialogHostService, DialogHostService>();
             containerRegistry.RegisterSingleton<ISummaryApiService, SummaryApiService>();
             containerRegistry.RegisterSingleton<IUserApiService, UserApiService>();
+
+            // 注册Model
+            containerRegistry.RegisterSingleton<UserInfo>();
 
             // 注册对话框
             // View

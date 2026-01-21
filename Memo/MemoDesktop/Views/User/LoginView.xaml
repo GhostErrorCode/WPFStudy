@@ -34,7 +34,10 @@
         
         <!-- 第一列内容：图片 -->
         <Image Grid.Column="0" Source="pack://application:,,,/MemoDesktop;component/Assets/Images/Login.jpg" Margin="20"/>
-        
+
+        <!-- 消息提示容器 跨两列-->
+        <md:Snackbar x:Name="LoginSnackbar" Grid.ColumnSpan="2" Panel.ZIndex="1" MessageQueue="{md:MessageQueue}" />
+
         <!-- 第二列内容 -->
         <md:Transitioner Grid.Column="1" SelectedIndex="{Binding SelectedIndex}">
             <md:TransitionerSlide>

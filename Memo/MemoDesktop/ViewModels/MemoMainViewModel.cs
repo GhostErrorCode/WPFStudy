@@ -10,7 +10,7 @@ namespace MemoDesktop.ViewModels
 {
     // 主页面的视图模型
     // 继承Prism MVVM模式的BindableBase
-    public class MemoMainViewModel : BindableBase
+    public class MemoMainViewModel : BindableBase, IConfigureService
     {
         // 定义菜单栏列表项（动态）
         // 在 ViewModel 中暴露给 View 进行绑定的任何可变集合，99%的情况都应该使用 ObservableCollection<T>。List<T> 通常用于方法内部或作为数据源的临时载体
@@ -30,6 +30,8 @@ namespace MemoDesktop.ViewModels
 
         // 前进按钮
         public DelegateCommand GoForwardCommand { get; private set; }
+        // 登出按钮
+        public DelegateCommand LoginOutCommand { get; private set; }
 
         // 依赖注入获取区域管理器
         private IRegionManager _regionManager;
@@ -37,7 +39,16 @@ namespace MemoDesktop.ViewModels
         // 导航日志（用来保存历史记录）
         private IRegionNavigationJournal _navigationJournal;
 
+        // 当前登录的用户数据
+        private readonly UserInfo _userInfo;
 
+        // 当前登录的用户昵称
+        private string _userName;
+        public string UserName
+        {
+            get { return _userName; }
+            set { _userName = value; RaisePropertyChanged(); }
+        }
         /// <summary>
         /// 构造函数：通过依赖注入获取 IRegionManager
         /// 
@@ -48,7 +59,7 @@ namespace MemoDesktop.ViewModels
         /// 4. 这是构造函数注入（Constructor Injection）模式
         /// </summary>
         /// <param name="regionManager">Prism 自动注入的区域管理器实例</param>
-        public MemoMainViewModel(IRegionManager regionManager)
+        public MemoMainViewModel(IRegionManager regionManager, UserInfo userInfo, IContainerProvider container)
         {
             // 实例化菜单列表
             this.MenuBars = new ObservableCollection<MenuBarModel>();
@@ -71,6 +82,15 @@ namespace MemoDesktop.ViewModels
                 ExecuteGoForward,   // 执行前进的方法
                 CanExecuteGoForward // 判断能否前进的方法
             );
+            // 获取当前登录的用户信息
+            this._userInfo = userInfo;
+            this.UserName = this._userInfo.UserName;
+
+            // 注销命令
+            this.LoginOutCommand = new DelegateCommand(() =>
+            {
+                App.LoginOut(container);
+            });
         }
 
         // 创建动态的菜单栏
@@ -156,6 +176,12 @@ namespace MemoDesktop.ViewModels
             // 告诉按钮重新检查能否执行
             GoBackCommand.RaiseCanExecuteChanged();
             GoForwardCommand.RaiseCanExecuteChanged();
+        }
+
+        // 更新当前用户数据
+        public void Configure()
+        {
+            this.UserName = this._userInfo.UserName;
         }
     }
 }
