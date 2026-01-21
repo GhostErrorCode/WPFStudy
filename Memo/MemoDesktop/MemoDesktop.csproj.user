@@ -5,6 +5,10 @@
   </PropertyGroup>
   <PropertyGroup>
     <ActiveDebugProfile>MemoDesktop</ActiveDebugProfile>
+    <_LastSelectedProfileId>D:\Project\WPF\Memo\MemoDesktop\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Views\AboutView.xaml.cs">

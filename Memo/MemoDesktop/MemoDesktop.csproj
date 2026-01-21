@@ -7,6 +7,20 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Assets\Icons\Memo.ico</ApplicationIcon>
+
+	<!-- 【修复1】添加运行时标识符，这是独立部署的关键 -->
+	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	<!-- 如果你需要支持32位系统，可以改为 win-x86，或使用下面的复合标识符 -->
+	<!-- <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers> -->
+
+	<!-- 【修复2】显式启用独立部署（自包含） -->
+	<SelfContained>true</SelfContained>
+
+	<!-- 【修复3】禁用程序集剪裁，防止Prism、MaterialDesign等依赖反射的库被错误裁剪 -->
+	<PublishTrimmed>false</PublishTrimmed>
+
+	<!-- 【修复4】可选：不生成单文件，便于调试。发布成功后可以再改为 true -->
+	<PublishSingleFile>false</PublishSingleFile>
   </PropertyGroup>
 
   <ItemGroup>
