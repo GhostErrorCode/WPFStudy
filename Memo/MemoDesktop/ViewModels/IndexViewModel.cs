@@ -36,7 +36,7 @@ namespace MemoDesktop.ViewModels
         }
 
         // 首页的提示信息
-        private string _indexTitle = $"欢迎回来！今天是{DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss")}";
+        private string _indexTitle = string.Empty;
         public string IndexTitle
         {
             get { return _indexTitle; }
@@ -88,10 +88,12 @@ namespace MemoDesktop.ViewModels
         private readonly ISummaryApiService _summaryApiService;
         // 全局区域导航
         private readonly IRegionManager _regionManager;
+        // 当前登录的用户数据
+        private readonly UserInfo _userInfo;
         // =================== Defined Field End ===================================================================
 
         // 构造函数
-        public IndexViewModel(IDialogHostService dialogHostService, IEventAggregator eventAggregator, IMemoApiService memoApiService, IToDoApiService toDoApiService, ISummaryApiService summaryApiService, IRegionManager regionManager) : base(eventAggregator)
+        public IndexViewModel(IDialogHostService dialogHostService, IEventAggregator eventAggregator, IMemoApiService memoApiService, IToDoApiService toDoApiService, ISummaryApiService summaryApiService, IRegionManager regionManager, UserInfo userInfo) : base(eventAggregator)
         {
             // 初始化任务栏
             // this.CreateTaskBars();
@@ -117,6 +119,7 @@ namespace MemoDesktop.ViewModels
             this._toDoApiService = toDoApiService;
             this._summaryApiService = summaryApiService;
             this._regionManager = regionManager;
+            this._userInfo = userInfo;
 
             // 初始化属性
             this.Summary = new SummaryViewModel(this._eventAggregator);
@@ -411,7 +414,7 @@ namespace MemoDesktop.ViewModels
                     }
                     */
                 }
-                this._eventAggregator.MessageEventPublish($"待办事项 {apiResponse.Data.Title} 已完成!");
+                this._eventAggregator.MessageEventPublish("Main", $"待办事项 {apiResponse.Data.Title} 已完成!");
             }
             catch (Exception ex)
             {
@@ -447,7 +450,7 @@ namespace MemoDesktop.ViewModels
         private void UpdateIndexTitle()
         {
             // 初始化首页提示信息
-            // this.IndexTitle = $"欢迎回来！今天是{DateTimeUtility.CurrentDateTime}";
+            this.IndexTitle = $"欢迎回来 {this._userInfo.UserName}！今天是{DateTime.Now.ToString("yyyy年MM月dd日  dddd  HH:mm")}";
 
             // 计时器开始运行，每秒更新一次当前的日期和时间
             DispatcherTimer timer = new DispatcherTimer();
@@ -460,7 +463,7 @@ namespace MemoDesktop.ViewModels
             // 2. 格式化时间字符串
             // 3. 更新CurrentDateTime属性值
             // 4. 自动触发TimeChanged事件通知所有订阅者
-            timer.Tick += (sender, e) => this.IndexTitle = $"欢迎回来！今天是{DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss")}";
+            timer.Tick += (sender, e) => this.IndexTitle = $"欢迎回来 { this._userInfo.UserName }！今天是{DateTime.Now.ToString("yyyy年MM月dd日  dddd  HH:mm")}";
             // 启动计时器，开始每秒更新时间
             timer.Start();
         }

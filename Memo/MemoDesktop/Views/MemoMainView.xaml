@@ -54,7 +54,7 @@
                             </Image.Clip>
                         </Image>
                         <!-- 名称显示区域 -->
-                        <TextBlock Margin="0,10,0,0" Text="幽灵" HorizontalAlignment="Center" />
+                        <TextBlock Margin="0,10,0,0" Text="{Binding UserName}" HorizontalAlignment="Center" />
                     </StackPanel>
 
                     <!-- 下方的ListBox菜单列表 -->
@@ -66,7 +66,7 @@
                                 <!-- Prism行为：将触发的事件转换为对ViewModel中命令的调用 -->
                                 <i:InvokeCommandAction
                                     Command="{Binding NavigateCommand}" 
-                                    CommandParameter="{Binding SelectedItem, ElementName=LeftMenuListBox}"/>
+                                    CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"/>
                                 <!-- 关键：将ListBox当前选中的对象作为参数传递给命令 -->
                                 <!-- Command="{Binding MenuItemClickedCommand}" 绑定到要执行的命令 -->
                             </i:EventTrigger>
@@ -93,7 +93,7 @@
                 </Grid.RowDefinitions>
                 
                 <!-- 消息提示容器 -->
-                <materialDesign:Snackbar x:Name="MainSnackbar" Panel.ZIndex="1" MessageQueue="{materialDesign:MessageQueue}" />
+                <materialDesign:Snackbar x:Name="MainSnackbar" Grid.Row="0" Panel.ZIndex="1" MessageQueue="{materialDesign:MessageQueue}" />
                 <materialDesign:ColorZone x:Name="ColorZoneTilteBar"
                                           Padding="12"
                                           materialDesign:ElevationAssist.Elevation="Dp0"
@@ -136,14 +136,24 @@
 
                         <!-- 右边的头像、缩小、放大、关闭按钮 -->
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                            <!-- 头像 -->
-                            <!-- 嵌入资源使用以下路径    /项目名;component/路径 -->
-                            <Image Source="/MemoDesktop;component/Assets/Images/新之助.jpg" Width="35" Height="35">
-                                <Image.Clip>
-                                    <!-- 使用EllipseGeometry进行圆形裁剪 -->
-                                    <EllipseGeometry Center="17.5,17.5" RadiusX="17.5" RadiusY="17.5"/>
-                                </Image.Clip>
-                            </Image>
+                            <materialDesign:PopupBox>
+                                <materialDesign:PopupBox.ToggleContent>
+                                    <!-- 头像 -->
+                                    <!-- 嵌入资源使用以下路径    /项目名;component/路径 -->
+                                    <Image Source="/MemoDesktop;component/Assets/Images/新之助.jpg" Width="35" Height="35">
+                                        <Image.Clip>
+                                            <!-- 使用EllipseGeometry进行圆形裁剪 -->
+                                            <EllipseGeometry Center="17.5,17.5" RadiusX="17.5" RadiusY="17.5"/>
+                                        </Image.Clip>
+                                    </Image>
+                                </materialDesign:PopupBox.ToggleContent>
+
+                                <!-- 按钮区域 -->
+                                <StackPanel Orientation="Vertical">
+                                    <Button Command="{Binding LoginOutCommand}" Content="注销当前用户" />
+                                </StackPanel>
+                            </materialDesign:PopupBox>
+                            
                             <!-- 缩小按钮 -->
                             <!-- <Buttonx:Name="ButtonWindowMin" Style="{StaticResource MaterialDesignFlatMidBgButton}"> -->
                             <Button 

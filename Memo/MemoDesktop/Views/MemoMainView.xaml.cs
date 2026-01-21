@@ -52,9 +52,9 @@ namespace MemoDesktop.Views
             this.Unloaded += UnSubscribeUpdateLoadingEvent;
 
             // 订阅消息提示方法
-            this._eventAggregator.MessageEventSubscribe(message =>
+            this._eventAggregator.MessageEventSubscribe("Main",message =>
             {
-                MainSnackbar.MessageQueue.Enqueue(message);
+                MainSnackbar.MessageQueue.Enqueue(message.Message);
             });
             // ===================================================================================================================
 

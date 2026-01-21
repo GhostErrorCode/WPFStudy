@@ -1,0 +1,112 @@
+﻿<UserControl x:Class="MemoDesktop.Views.User.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MemoDesktop.Views.User"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:pass="clr-namespace:MemoDesktop.Extensions"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <!-- 登录界面的样式 -->
+    <prism:Dialog.WindowStyle>
+        <!-- 登录界面的样式 -->
+        <Style TargetType="Window">
+            <!-- 设置登录界面的长宽 -->
+            <Setter Property="Width" Value="600" />
+            <Setter Property="Height" Value="350" />
+            <!-- 不允许调整窗体大小 -->
+            <Setter Property="ResizeMode" Value="NoResize" />
+            <!-- 启动的时候让窗体位于屏幕中间 -->
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
+            <!-- 窗体标题 -->
+            <Setter Property="Title" Value="{Binding Title}" />
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <Grid>
+        <!-- 分两列 -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        
+        <!-- 第一列内容：图片 -->
+        <Image Grid.Column="0" Source="pack://application:,,,/MemoDesktop;component/Assets/Images/Login.jpg" Margin="20"/>
+
+        <!-- 消息提示容器 跨两列-->
+        <md:Snackbar x:Name="LoginSnackbar" Grid.ColumnSpan="2" Panel.ZIndex="1" MessageQueue="{md:MessageQueue}" />
+
+        <!-- 第二列内容 -->
+        <md:Transitioner Grid.Column="1" SelectedIndex="{Binding SelectedIndex}">
+            <md:TransitionerSlide>
+                <StackPanel Orientation="Vertical" Margin="15" VerticalAlignment="Center">
+                    <TextBlock
+                        Text="欢迎使用!"
+                        FontSize="22"
+                        FontWeight="Bold"
+                        Margin="0,10,0,0"
+                        />
+                    <!-- 用户输入框 -->
+                    <TextBox Margin="0,20,0,0" md:HintAssist.Hint="请输入用户名" Text="{Binding Account, Mode=TwoWay}" />
+                    <!-- 密码输入框 -->
+                    <!-- pass:PasswordExtension.Password="{Binding Password}" 通过附加属性去跟ViewModel绑定 -->
+                    <PasswordBox Margin="0,10,0,0" md:HintAssist.Hint="请输入密码..." pass:PasswordExtension.Password="{Binding Password,Mode=TwoWay}">
+                        <!-- Interaction.Behaviors - 附加属性 (Attached Property) -->
+                        <i:Interaction.Behaviors>
+                            <pass:PasswordBehavior />
+                        </i:Interaction.Behaviors>
+                    </PasswordBox>
+                    <!-- 登录按钮 -->
+                    <Button Content="登录系统" Margin="0,20,0,0" Command="{Binding LoginCommand}"/>
+
+                    <!-- 注册账户和忘记密码 -->
+                    <DockPanel Margin="0,20,0,0" LastChildFill="False">
+                        <TextBlock Text="注册账户" DockPanel.Dock="Left" Focusable="True" Cursor="Hand">
+                            <TextBlock.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" Command="{Binding GoRegisterCommand}" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Text="忘记密码?" DockPanel.Dock="Right" />
+                    </DockPanel>
+                </StackPanel>
+            </md:TransitionerSlide>
+
+            <!-- 第二个注册页面 -->
+            <md:TransitionerSlide>
+                <StackPanel Orientation="Vertical" Margin="15" VerticalAlignment="Center">
+                    <TextBlock
+                        Text="注册账户"
+                        FontSize="22"
+                        FontWeight="Bold"
+                        Margin="0,10,0,0"
+                        />
+                    <!-- 用户输入框 -->
+                    <TextBox Margin="0,20,0,0" md:HintAssist.Hint="请输入用户名" Text="{Binding RegisterUserDto.Account}" />
+                    <!-- 昵称输入框 -->
+                    <TextBox Margin="0,10,0,0" md:HintAssist.Hint="请输入昵称" Text="{Binding RegisterUserDto.UserName}" />
+                    <!-- 密码输入框 -->
+                    <!-- pass:PasswordExtension.Password="{Binding Password}" 通过附加属性去跟ViewModel绑定 -->
+                    <PasswordBox Margin="0,10,0,0" md:HintAssist.Hint="请输入密码..." pass:PasswordExtension.Password="{Binding RegisterUserDto.Password, Mode=TwoWay}">
+                        <!-- Interaction.Behaviors - 附加属性 (Attached Property) -->
+                        <i:Interaction.Behaviors>
+                            <pass:PasswordBehavior />
+                        </i:Interaction.Behaviors>
+                    </PasswordBox>
+                    <!-- 密码确认框 -->
+                    <!-- pass:PasswordExtension.Password="{Binding Password}" 通过附加属性去跟ViewModel绑定 -->
+                    <PasswordBox Margin="0,10,0,0" md:HintAssist.Hint="请再次输入密码..." pass:PasswordExtension.Password="{Binding RegisterUserDto.ConfirmPassword, Mode=TwoWay}">
+                        <!-- Interaction.Behaviors - 附加属性 (Attached Property) -->
+                        <i:Interaction.Behaviors>
+                            <pass:PasswordBehavior />
+                        </i:Interaction.Behaviors>
+                    </PasswordBox>
+                    <!-- 注册按钮 -->
+                    <Button Content="注册账户" Margin="0,20,0,0" Command="{Binding RegisterCommand}"/>
+                    <Button Content="返回登录" Margin="0,10,0,0" Command="{Binding ReturnLoginCommand}"/>
+                </StackPanel>
+            </md:TransitionerSlide>
+        </md:Transitioner>
+    </Grid>
+</UserControl>
