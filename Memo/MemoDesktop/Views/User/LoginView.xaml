@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:MemoDesktop.Views.User"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:pass="clr-namespace:MemoDesktop.Extensions"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <!-- 登录界面的样式 -->
@@ -42,11 +44,17 @@
                 Margin="0,10,0,0"
                 />
             <!-- 用户输入框 -->
-            <TextBox Margin="0,20,0,0" md:HintAssist.Hint="请输入用户名" />
+            <TextBox Margin="0,20,0,0" md:HintAssist.Hint="请输入用户名" Text="{Binding Account}" />
             <!-- 密码输入框 -->
-            <PasswordBox Margin="0,10,0,0" md:HintAssist.Hint="请输入密码..." />
+            <!-- pass:PasswordExtension.Password="{Binding Password}" 通过附加属性去跟ViewModel绑定 -->
+            <PasswordBox Margin="0,10,0,0" md:HintAssist.Hint="请输入密码..." pass:PasswordExtension.Password="{Binding Password}">
+                <!-- Interaction.Behaviors - 附加属性 (Attached Property) -->
+                <i:Interaction.Behaviors>
+                    <pass:PasswordBehavior />
+                </i:Interaction.Behaviors>
+            </PasswordBox>
             <!-- 登录按钮 -->
-            <Button Content="登录系统" Margin="0,20,0,0"/>
+            <Button Content="登录系统" Margin="0,20,0,0" Command="{Binding LoginCommand}"/>
             
             <!-- 注册账户和忘记密码 -->
             <DockPanel Margin="0,20,0,0" LastChildFill="False">
