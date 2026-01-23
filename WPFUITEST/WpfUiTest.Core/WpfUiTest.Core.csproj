@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Entities\" />
+    <Folder Include="Data\DbContexts\" />
+    <Folder Include="Services\" />
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
+</Project>
