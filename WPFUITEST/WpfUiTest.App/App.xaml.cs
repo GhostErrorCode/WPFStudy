@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ using System.IO;
 using System.Text;
 using System.Windows;
 using WpfUiTest.App.Views;
+using WpfUiTest.Core.Data.DbContexts;
 
 namespace WpfUiTest.App
 {
@@ -146,6 +148,19 @@ namespace WpfUiTest.App
                     // 注册MainWindow为单例的原因：WPF应用通常只有一个主窗口，单例能避免重复创建多个主窗口实例
                     services.AddSingleton<MainWindow>();
 
+                    // 注册数据库上下文
+                    // 数据库路径串
+                    // string dbDir = context.Configuration.GetConnectionString("DefaultConnection") ?? "DataBase/WpfUiTest.db;Cache=Shared";
+                    // 创建数据库目录
+                    string dbDir = Path.Combine(AppContext.BaseDirectory, context.Configuration.GetConnectionString("DefaultDir") ?? "DataBase"); // 拼接相对路径目录
+                    dbDir = Path.GetFullPath(dbDir); // 转成真实路径（解决../解析）
+                    Directory.CreateDirectory(dbDir); // 确保目录存在
+                    // 注册数据库上下文
+                    services.AddDbContext<ApplicationDbContext>(options =>
+                        options.UseSqlite($"Data Source={Path.Combine(AppContext.BaseDirectory,
+                        context.Configuration.GetConnectionString("DefaultConnection") ?? "DataBase/WpfUiTest.db;Cache=Shared")}"),
+                        ServiceLifetime.Singleton);
+
                     // ========== 后续扩展：各类服务注册示例（带注释说明） ==========
                     // 1. 数据库上下文注册（EF Core）：通常用AddDbContext，生命周期默认Scoped
                     // AddDbContext<ApplicationDbContext>：注册数据库上下文，连接数据库的核心对象
@@ -187,6 +202,18 @@ namespace WpfUiTest.App
 
             try
             {
+                // 自动创建数据库（如果不存在）
+                using (IServiceScope scope = ApplicationHost.Services.CreateScope())
+                {
+                    ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                    // 方法1：直接创建数据库（不推荐用于生产）
+                    // dbContext.Database.EnsureCreated();
+
+                    // 方法2：使用迁移创建数据库（推荐）
+                    dbContext.Database.Migrate();
+                }
+
                 // StartAsync: 异步启动主机，开始托管所有已注册的服务
                 // 此方法会触发所有后台服务的启动
                 await ApplicationHost.StartAsync();

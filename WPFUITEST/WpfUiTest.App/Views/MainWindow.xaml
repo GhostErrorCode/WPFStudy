@@ -9,7 +9,12 @@
                  ExtendsContentIntoTitleBar="True"
                  WindowBackdropType="Mica"
                  WindowCornerPreference="Round"
-                 Title="MainWindow" Height="450" Width="800">
+                 Title="WpfUiTest"
+                 Width="1450"
+                 Height="802"
+                 MinWidth="900"
+                 MinHeight="500"
+                 >
     <Grid>
         
     </Grid>

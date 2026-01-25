@@ -12,7 +12,7 @@ x86/       # 排除 x86 输出目录
 [Aa][Rr][Mm]64/
 [Dd]ebug/
 [Rr]elease/
-wpfui/
+WPFUI/
 MaterialDesignInXamlToolkit/
 ArchUnitOfWork/
 *.exe
