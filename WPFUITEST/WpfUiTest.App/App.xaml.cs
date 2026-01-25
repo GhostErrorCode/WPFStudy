@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
+using System.CodeDom;
 using System.Configuration;
 using System.Data;
 using System.IO;
@@ -12,6 +13,10 @@ using System.Text;
 using System.Windows;
 using WpfUiTest.App.Views;
 using WpfUiTest.Core.Data.DbContexts;
+using WpfUiTest.Core.Data.Repositories.Implements;
+using WpfUiTest.Core.Data.Repositories.Interfaces;
+using WpfUiTest.Core.Data.UnitOfWork.Implements;
+using WpfUiTest.Core.Data.UnitOfWork.Interfaces;
 
 namespace WpfUiTest.App
 {
@@ -160,6 +165,22 @@ namespace WpfUiTest.App
                         options.UseSqlite($"Data Source={Path.Combine(AppContext.BaseDirectory,
                         context.Configuration.GetConnectionString("DefaultConnection") ?? "DataBase/WpfUiTest.db;Cache=Shared")}"),
                         ServiceLifetime.Singleton);
+
+                    // 注册工作单元
+                    services.AddSingleton<IUnitOfWork, UnitOfWork>();
+
+                    // 注册仓储
+                    services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));  // 泛型类需要这样注册
+                    services.AddSingleton<IUserRepository, UserRepository>();
+                    services.AddSingleton<IToDoRepository, ToDoRepository>();
+                    services.AddSingleton<IMemoRepository, MemoRepository>();
+
+                    // 注册页面
+
+                    // 注册ViewModel
+
+                    // 注册服务
+
 
                     // ========== 后续扩展：各类服务注册示例（带注释说明） ==========
                     // 1. 数据库上下文注册（EF Core）：通常用AddDbContext，生命周期默认Scoped

@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using WpfUiTest.Core.Data.DbContexts;
+using WpfUiTest.Core.Data.UnitOfWork.Interfaces;
 
 namespace WpfUiTest.Core.Data.UnitOfWork.Implements
 {
@@ -15,7 +16,7 @@ namespace WpfUiTest.Core.Data.UnitOfWork.Implements
     //   3. 实现显式事务控制
     //   4. 确保资源正确释放
     // 生命周期：Scoped（一次HTTP请求），确保一次业务操作使用同一个工作单元
-    public class UnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         // 私有只读字段：数据库上下文
         // 访问修饰符：private readonly
