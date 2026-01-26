@@ -149,7 +149,7 @@ namespace WpfUiTest.Core.Services.Implements
             catch(Exception ex)
             {
                 this._logger.LogError("注册失败: 用户注册时出现系统内部异常\n异常信息: {ex}", ex);
-                return ServiceResult<bool>.Failure("注册失败，系统内部错误，请稍后重试");
+                return ServiceResult<bool>.Failure("注册失败: 系统内部错误，请稍后重试");
             }
         }
         // 用户登出方法
