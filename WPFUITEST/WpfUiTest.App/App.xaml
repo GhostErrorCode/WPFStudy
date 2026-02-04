@@ -32,6 +32,17 @@
                 <ui:ControlsDictionary />
                 <vio:ThemesDictionary Theme="Light" />
                 <vio:ControlsDictionary />
+                
+                <!-- 自定义样式、资源等-->
+                <ResourceDictionary Source="/Resources/Styles/Controls/UiTitleBar.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Controls/Border.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Controls/UiImage.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Controls/TextBlock.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Controls/StackPanel.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Controls/UiTextBox.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Controls/UiPasswordBox.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Controls/UiButton.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

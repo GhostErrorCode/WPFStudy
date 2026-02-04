@@ -11,7 +11,9 @@ using System.Data;
 using System.IO;
 using System.Text;
 using System.Windows;
+using WpfUiTest.App.ViewModels.User;
 using WpfUiTest.App.Views;
+using WpfUiTest.App.Views.User;
 using WpfUiTest.Core.Data.DbContexts;
 using WpfUiTest.Core.Data.Repositories.Implements;
 using WpfUiTest.Core.Data.Repositories.Interfaces;
@@ -153,6 +155,7 @@ namespace WpfUiTest.App
                     // 注册MainWindow为单例的原因：WPF应用通常只有一个主窗口，单例能避免重复创建多个主窗口实例
                     services.AddSingleton<MainWindow>();
 
+
                     // 注册数据库上下文
                     // 数据库路径串
                     // string dbDir = context.Configuration.GetConnectionString("DefaultConnection") ?? "DataBase/WpfUiTest.db;Cache=Shared";
@@ -176,8 +179,10 @@ namespace WpfUiTest.App
                     services.AddSingleton<IMemoRepository, MemoRepository>();
 
                     // 注册页面
+                    services.AddSingleton<UserView>();
 
                     // 注册ViewModel
+                    services.AddSingleton<UserViewModel>();
 
                     // 注册服务
 
@@ -241,10 +246,9 @@ namespace WpfUiTest.App
 
                 // GetRequiredService: 从服务容器中获取MainWindow服务实例
                 // 如果服务未注册，此方法会抛出InvalidOperationException异常
-                MainWindow mainWindow = ApplicationHost.Services.GetRequiredService<MainWindow>();
-
+                UserView loginView = this.ApplicationHost.Services.GetRequiredService<UserView>();
                 // Show: 显示主窗口，启动WPF应用程序的用户界面
-                mainWindow.Show();
+                loginView.Show();
                 // Log.Information: 记录应用程序成功启动的日志
                 Log.Information("应用程序启动成功! 主窗口已显示");
                 

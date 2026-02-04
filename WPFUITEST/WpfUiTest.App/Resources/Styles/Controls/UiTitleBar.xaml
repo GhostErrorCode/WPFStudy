@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <!-- 注册登录页面的标题栏样式 -->
+    <Style x:Key="UserViewUITitleBarStyle" TargetType="{x:Type ui:TitleBar}" BasedOn="{StaticResource {x:Type ui:TitleBar}}">
+        <!-- 隐藏最小化按钮 -->
+        <Setter Property="ShowMinimize" Value="False" />
+        <!-- 隐藏最大化按钮 -->
+        <Setter Property="ShowMaximize" Value="False" />
+        <!-- 禁止最大化应用 -->
+        <Setter Property="CanMaximize" Value="False" />
+        <!-- 双击应用图标可关闭程序 -->
+        <Setter Property="CloseWindowByDoubleClickOnIcon" Value="True" />
+    </Style>
+</ResourceDictionary>

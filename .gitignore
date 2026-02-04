@@ -13,6 +13,7 @@ x86/       # 排除 x86 输出目录
 [Dd]ebug/
 [Rr]elease/
 WPFUI/
+WpfUiControls/
 MaterialDesignInXamlToolkit/
 ArchUnitOfWork/
 *.exe

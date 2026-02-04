@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <!-- 用户登录注册页面的左侧图片样式 -->
+    <Style x:Key="UserLeftUIImageStyle" TargetType="{x:Type ui:Image}" BasedOn="{StaticResource {x:Type ui:Image}}">
+        <!-- 图片拉伸：UniformToFill=填满区域且不变形（推荐） -->
+        <Setter Property="Stretch" Value="Fill" />
+        <!-- 禁止图片被压缩（DownOnly是只放大不缩小） -->
+        <Setter Property="StretchDirection" Value="Both" />
+    </Style>
+</ResourceDictionary>
