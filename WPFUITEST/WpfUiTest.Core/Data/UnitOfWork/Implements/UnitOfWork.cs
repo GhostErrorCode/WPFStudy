@@ -61,7 +61,6 @@ namespace WpfUiTest.Core.Data.UnitOfWork.Implements
         //   - context: DbContext - 数据库上下文实例
         // 设计原则：依赖注入，从外部接收依赖项
         // 参数验证：确保传入的context不为null，避免空引用异常
-        /*
         public UnitOfWork(ApplicationDbContext applicationDbContext)
         {
             // 参数验证：使用if语句检查context是否为null
@@ -79,7 +78,7 @@ namespace WpfUiTest.Core.Data.UnitOfWork.Implements
             this._currentTransaction = null;  // 初始没有活跃事务
         }
 
-
+        /*
         // 实现接口方法：获取仓储实例
         // 作用：获取或创建指定实体类型的仓储实例
         // 泛型约束：where TEntity : class - TEntity必须是引用类型

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:behavior="clr-namespace:WpfUiTest.Shared.Behaviors;assembly=WpfUiTest.Shared"
         xmlns:local="clr-namespace:WpfUiTest.App.Views.User"
         mc:Ignorable="d"
         ExtendsContentIntoTitleBar="True"
@@ -17,7 +18,7 @@
     ExtendsContentIntoTitleBar: 控制窗口内容是否延伸到系统默认的标题栏区域
     WindowBackdropType: 背景视觉效果
     WindowCornerPreference: 窗口的边角样式
-    =================================================-->
+    ================================================= -->
     <Grid>
         <!-- 主页面分成两行 -->
         <Grid.RowDefinitions>
@@ -63,10 +64,10 @@
                 <ui:Card>
                     <StackPanel Orientation="Vertical">
                         <!-- 注册用户 -->
-                        <ui:TextBox PlaceholderText="请输入账户..." Style="{StaticResource UserInputUiTextBoxStyle}" />
-                        <ui:TextBox PlaceholderText="请输入昵称..." Style="{StaticResource UserInputUiTextBoxStyle}" />
-                        <ui:PasswordBox PlaceholderText="请输入密码..." Style="{StaticResource UiPasswordBoxStyle}" />
-                        <ui:PasswordBox PlaceholderText="请再次输入密码..." Style="{StaticResource UiPasswordBoxStyle}" />
+                        <ui:TextBox Text="{Binding UserRegisterViewModel.Account}" PlaceholderText="请输入账户..." Style="{StaticResource InputUiTextBoxStyle}" />
+                        <ui:TextBox Text="{Binding UserRegisterViewModel.UserName}" PlaceholderText="请输入昵称..." Style="{StaticResource InputUiTextBoxStyle}" />
+                        <ui:PasswordBox behavior:PasswordBoxBindingBehavior.Password="{Binding UserRegisterViewModel.Password,Mode=TwoWay}" PlaceholderText="请输入密码..." Style="{StaticResource UiPasswordBoxStyle}" />
+                        <ui:PasswordBox behavior:PasswordBoxBindingBehavior.Password="{Binding UserRegisterViewModel.ConfirmPassword,Mode=TwoWay}" PlaceholderText="请再次输入密码..." Style="{StaticResource UiPasswordBoxStyle}" />
                     </StackPanel>
                     <!-- 卡片页脚 -->
                     <ui:Card.Footer>
@@ -91,12 +92,13 @@
                                 HorizontalAlignment="Stretch"
                                 Icon="{ui:SymbolIcon Symbol=PersonAdd24}"
                                 Content="注册"
+                                Command="{Binding UserRegisterCommand}"
                                 Style="{StaticResource PrimaryUiButtonStyle}"/>
                         </Grid>
                     </ui:Card.Footer>
                 </ui:Card>
             </StackPanel>
-            
+
             <!-- 登录页面 -->
             <StackPanel
                 x:Name="LoginView"
@@ -108,8 +110,9 @@
                 <ui:Card>
                     <StackPanel Orientation="Vertical">
                         <!-- 登录用户 -->
-                        <ui:TextBox PlaceholderText="请输入账户..." Style="{StaticResource UserInputUiTextBoxStyle}" />
-                        <ui:PasswordBox PlaceholderText="请输入密码..." Style="{StaticResource UiPasswordBoxStyle}" />
+                        <ui:TextBox Text="{Binding UserLoginViewModel.Account}" PlaceholderText="请输入账户..." Style="{StaticResource InputUiTextBoxStyle}" />
+                        <ui:PasswordBox behavior:PasswordBoxBindingBehavior.Password="{Binding UserLoginViewModel.Password,Mode=TwoWay}" PlaceholderText="请输入密码..." Style="{StaticResource UiPasswordBoxStyle}" />
+                        <CheckBox IsChecked="{Binding UserLoginViewModel.IsRememberMe}" Content="记住我" Style="{StaticResource CheckBoxStyle}"/>
                     </StackPanel>
                     <!-- 卡片页脚 -->
                     <ui:Card.Footer>
@@ -130,15 +133,20 @@
                                 Style="{StaticResource SecondaryUiButtonStyle}" />
                             <!-- 登录按钮 -->
                             <ui:Button
+                                x:Name="LoginButton"
                                 Grid.Column="1"
                                 HorizontalAlignment="Stretch"
                                 Icon="{ui:SymbolIcon Symbol=Key24}"
                                 Content="登录"
+                                Command="{Binding UserLoginCommand}"
                                 Style="{StaticResource PrimaryUiButtonStyle}"/>
                         </Grid>
                     </ui:Card.Footer>
                 </ui:Card>
             </StackPanel>
         </Grid>
+        
+        <!-- 第三行 弹窗区域 Z值给大点，确保它永远是最上层-->
+        <ui:SnackbarPresenter x:Name="UserSnackbarPresenter" Grid.Row="1" Panel.ZIndex="10" />
     </Grid>
 </ui:FluentWindow>

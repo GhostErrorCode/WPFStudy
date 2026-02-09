@@ -42,6 +42,7 @@
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiTextBox.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiPasswordBox.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiButton.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Controls/CheckBox.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

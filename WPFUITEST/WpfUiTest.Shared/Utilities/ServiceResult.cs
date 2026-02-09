@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace WpfUiTest.Shared.Utilities
 {
@@ -74,6 +77,17 @@ namespace WpfUiTest.Shared.Utilities
                 Message = message,
                 Timestamp = DateTimeUtility.NowNoMilliseconds()
             };
+        }
+
+        // 对外输出JSON格式
+        public string ToJson()
+        {
+            return JsonSerializer.Serialize(this, new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, // 允许中文
+            });
         }
     }
 }

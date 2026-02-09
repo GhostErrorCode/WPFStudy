@@ -8,7 +8,7 @@
 
     <!-- 注册登录普通输入框样式 ui:TextBox -->
     <Style
-        x:Key="UserInputUiTextBoxStyle"
+        x:Key="InputUiTextBoxStyle"
         TargetType="{x:Type ui:TextBox}"
         BasedOn="{StaticResource {x:Type ui:TextBox}}">
         <!-- 长宽与外边距 -->

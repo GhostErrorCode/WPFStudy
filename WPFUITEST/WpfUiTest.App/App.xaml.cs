@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +12,7 @@ using System.Data;
 using System.IO;
 using System.Text;
 using System.Windows;
+using Wpf.Ui;
 using WpfUiTest.App.ViewModels.User;
 using WpfUiTest.App.Views;
 using WpfUiTest.App.Views.User;
@@ -19,6 +21,8 @@ using WpfUiTest.Core.Data.Repositories.Implements;
 using WpfUiTest.Core.Data.Repositories.Interfaces;
 using WpfUiTest.Core.Data.UnitOfWork.Implements;
 using WpfUiTest.Core.Data.UnitOfWork.Interfaces;
+using WpfUiTest.Core.Services.Implements;
+using WpfUiTest.Core.Services.Interfaces;
 
 namespace WpfUiTest.App
 {
@@ -183,8 +187,13 @@ namespace WpfUiTest.App
 
                     // 注册ViewModel
                     services.AddSingleton<UserViewModel>();
+                    services.AddSingleton<UserRegisterViewModel>();
+                    services.AddSingleton<UserLoginViewModel>();
 
                     // 注册服务
+                    services.AddSingleton<ISnackbarService, SnackbarService>();  // 注册提示信息框
+                    services.AddSingleton<IMessenger, WeakReferenceMessenger>();  // 消息提示器（弱引用）
+                    services.AddSingleton<IUserService, UserService>();
 
 
                     // ========== 后续扩展：各类服务注册示例（带注释说明） ==========

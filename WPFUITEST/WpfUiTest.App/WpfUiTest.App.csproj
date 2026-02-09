@@ -27,15 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\Colors\Themes\" />
-    <Folder Include="Resources\Converters\" />
-    <Folder Include="Resources\Icons\" />
-    <Folder Include="Resources\Styles\Specific\" />
-    <Folder Include="Resources\Styles\Modules\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2" />
@@ -55,6 +46,14 @@
     <PackageReference Include="WPF-UI" Version="4.2.0" />
     <PackageReference Include="WPF-UI.Tray" Version="4.2.0" />
     <PackageReference Include="WPF-UI.Violeta" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\Colors\Themes\" />
+    <Folder Include="Resources\Converters\" />
+    <Folder Include="Resources\Icons\" />
+    <Folder Include="Resources\Styles\Modules\" />
+    <Folder Include="Resources\Styles\Specific\" />
   </ItemGroup>
 
   <ItemGroup>

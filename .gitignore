@@ -16,6 +16,7 @@ WPFUI/
 WpfUiControls/
 MaterialDesignInXamlToolkit/
 ArchUnitOfWork/
+MVVM-Samples/
 *.exe
 # *.dll
 *.lib
