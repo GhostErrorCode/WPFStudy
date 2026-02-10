@@ -15,6 +15,7 @@ using System.Windows;
 using Wpf.Ui;
 using WpfUiTest.App.ViewModels.User;
 using WpfUiTest.App.Views;
+using WpfUiTest.App.Views.Main;
 using WpfUiTest.App.Views.User;
 using WpfUiTest.Core.Data.DbContexts;
 using WpfUiTest.Core.Data.Repositories.Implements;
@@ -157,7 +158,7 @@ namespace WpfUiTest.App
                     // AddSingleton<T>：注册「单例生命周期」服务
                     // 生命周期说明：整个应用程序运行期间，DI容器只会创建一个该服务的实例，所有地方获取的都是同一个
                     // 注册MainWindow为单例的原因：WPF应用通常只有一个主窗口，单例能避免重复创建多个主窗口实例
-                    services.AddSingleton<MainWindow>();
+                    services.AddSingleton<MainView>();
 
 
                     // 注册数据库上下文

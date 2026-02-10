@@ -11,6 +11,7 @@ using Wpf.Ui.Controls;
 using WpfUiTest.App.ViewModels.Enums;
 using WpfUiTest.Shared.Enums;
 using WpfUiTest.Shared.Extensions;
+using WpfUiTest.Shared.Messages;
 using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.App.ViewModels.User
@@ -154,7 +155,10 @@ namespace WpfUiTest.App.ViewModels.User
                     // 展示弹窗
                     this._messenger.ShowSuccess(SnackbarTarget.UserView, loginResult.Message, "登录成功! 欢迎回来!");
 
-                    // 打开主窗口...
+                    // 延迟打开主窗口
+                    await Task.Delay(2000);
+                    // 发送打开主窗口的消息（UserView已订阅，会自动执行打开主页面并关闭自己）
+                    this._messenger.Send(new LoginSuccessMessage());
                 }
                 // 如果结果不为空但登录失败
                 else if(loginResult != null && !loginResult.IsSuccess)

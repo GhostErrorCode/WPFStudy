@@ -11,7 +11,7 @@
         WindowBackdropType="Mica"
         WindowCornerPreference="Round"
         WindowStartupLocation="CenterScreen"
-        Title="UserView" Height="450" Width="800"
+        Title="UserView" Height="500" Width="850"
         MinHeight="450" MinWidth="800"
         MaxHeight="560" MaxWidth="940">
     <!-- ===============================================

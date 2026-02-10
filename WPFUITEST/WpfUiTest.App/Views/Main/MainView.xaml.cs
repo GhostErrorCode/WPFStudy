@@ -1,6 +1,4 @@
-﻿using BCrypt.Net;
-using CommunityToolkit.Mvvm.Messaging.Messages;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -13,14 +11,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Wpf.Ui.Controls;
 
-namespace WpfUiTest.App.Views
+namespace WpfUiTest.App.Views.Main
 {
     /// <summary>
-    /// MainWindow.xaml 的交互逻辑
+    /// MainView.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : FluentWindow
+    public partial class MainView : FluentWindow
     {
-        public MainWindow()
+        public MainView()
         {
             InitializeComponent();
         }

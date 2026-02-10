@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -15,6 +16,7 @@ using System.Windows.Shapes;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using WpfUiTest.App.ViewModels.User;
+using WpfUiTest.App.Views.Main;
 using WpfUiTest.Shared.Enums;
 using WpfUiTest.Shared.Messages;
 
@@ -28,9 +30,11 @@ namespace WpfUiTest.App.Views.User
         // 字段 属性
         // IMessenger 消息转发
         private readonly IMessenger _messenger;
+        // IServiceProvider 服务
+        private readonly IServiceProvider _serviceProvider;
 
         // 依赖注入获取对应ViewModel
-        public UserView(UserViewModel userViewModel, IMessenger messenger)
+        public UserView(UserViewModel userViewModel, IMessenger messenger, IServiceProvider serviceProvider)
         {
             InitializeComponent();
 
@@ -38,11 +42,26 @@ namespace WpfUiTest.App.Views.User
             this.DataContext = userViewModel;
             // 初始化服务(依赖注入)
             this._messenger = messenger;
+            this._serviceProvider = serviceProvider;
 
             /// <summary>
             /// 窗体Loaded事件：页面加载完成后订阅指定令牌的SnackBar消息
             /// Loaded事件触发时机：窗体可视化并布局完成后，确保控件已初始化（避免操作空控件）
             /// </summary>
+
+            // 订阅登录成功后打开主页面
+            this.Loaded += (Object s, RoutedEventArgs e) =>
+            {
+                this._messenger.Register<LoginSuccessMessage>(this, (Object a, LoginSuccessMessage b) =>
+                {
+                    // 打开主页面
+                    this._serviceProvider.GetRequiredService<MainView>().Show();
+                    // 关闭当前页面
+                    this.Close();
+                });
+            };
+            
+            // 订阅定向SnackBar投放
             this.Loaded += (Object s, RoutedEventArgs e) =>
             {
                 // 订阅IMessenger消息：
@@ -91,6 +110,9 @@ namespace WpfUiTest.App.Views.User
                     this,                  // 订阅者实例（和注册时一致）
                     SnackbarTarget.UserView.ToString()
                     ); // 令牌值（和注册时一致）
+
+                // 注销订阅的登录成功后打开主页面
+                this._messenger.Unregister<LoginSuccessMessage>(this);
             };
 
         }
@@ -98,7 +120,7 @@ namespace WpfUiTest.App.Views.User
 }
 
 /*
-构造函数：初始化数据、注册服务
+    构造函数：初始化数据、注册服务
     Loaded：设置UI控件、绑定事件、加载数据
     ContentRendered：启动动画、延迟加载
     Activated：刷新数据、检查状态
