@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <!-- UserView放图片的Border样式 -->
+    <Style x:Key="UserLeftImageBorderStyle" TargetType="{x:Type Border}">
+        <!-- 垂直拉伸、水平拉伸 -->
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <!-- 设置外边距 -->
+        <Setter Property="Margin" Value="20,20,20,20" />
+        <!-- 设置为圆角边框 -->
+        <!-- 圆角大小 -->
+        <Setter Property="CornerRadius" Value="15"/>
+        <!-- 裁剪溢出内容 -->
+        <Setter Property="ClipToBounds" Value="True"/>
+    </Style>
+</ResourceDictionary>

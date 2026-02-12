@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    
+    <!-- 1. 登录视图动画：淡入+向左滑动（0.3秒） -->
+    <Storyboard x:Key="LoginViewAnimation">
+        <DoubleAnimation Storyboard.TargetName="LoginView"
+                         Storyboard.TargetProperty="Opacity"
+                         From="0" To="1" Duration="0:0:0.3"/>
+        <DoubleAnimation Storyboard.TargetName="LoginView"
+                         Storyboard.TargetProperty="RenderTransform.(TranslateTransform.X)"
+                         From="400" To="0" Duration="0:0:0.3"/>
+    </Storyboard>
+
+    <!-- 2. 注册视图动画：淡入+向左滑动（0.3秒） -->
+    <Storyboard x:Key="RegisterViewAnimation">
+        <DoubleAnimation Storyboard.TargetName="RegisterView"
+                         Storyboard.TargetProperty="Opacity"
+                         From="0" To="1" Duration="0:0:0.3"/>
+        <DoubleAnimation Storyboard.TargetName="RegisterView"
+                         Storyboard.TargetProperty="RenderTransform.(TranslateTransform.X)"
+                         From="400" To="0" Duration="0:0:0.3"/>
+    </Storyboard>
+</ResourceDictionary>

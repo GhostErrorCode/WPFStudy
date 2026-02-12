@@ -1,0 +1,120 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:enum="clr-namespace:WpfUiTest.App.ViewModels.Enums"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <!-- 注册页面StackPanel容器基本样式 -->
+    <Style
+        x:Key="RegisterStackPanelStyle"
+        TargetType="StackPanel">
+        <!-- 垂直排序 -->
+        <Setter Property="Orientation" Value="Vertical" />
+        <!-- 初始透明 -->
+        <Setter Property="Opacity" Value="0"/>
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <!-- 变换原点居中 -->
+        <!-- 大白话：设置控件中心点，后续动画操作以中心点为基准，平移用处不大，主要用于旋转等操作 -->
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <!-- 初始向右偏移50px -->
+                <TranslateTransform X="400"/>
+            </Setter.Value>
+        </Setter>
+        <!-- 外边距 -->
+        <Setter Property="Margin" Value="5,20,15,5" />
+        <!-- 进入和离开动画 -->
+        <Style.Triggers>
+            <!-- 当ViewModel的SelectedViewType变为Login时 -->
+            <DataTrigger Binding="{Binding SelectedUserViewType}" Value="{x:Static enum:UserViewType.Register}">
+                <!-- 1. 先将面板设为可见 -->
+                <Setter Property="Visibility" Value="Visible"/>
+                <!-- 2. 触发入场动画 -->
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <!-- 400 -> 0：从右向左滑入 -->
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                         From="400" To="0" Duration="0:0:0.5">
+                                <!-- 缓动函数 -->
+                                <DoubleAnimation.EasingFunction>
+                                    <!-- 平滑的加速或减速。最通用自然。 -->
+                                    <CubicEase EasingMode="EaseInOut" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <!-- 0 -> 1：淡入 -->
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                         From="0" To="1" Duration="0:0:0.5"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+                <!-- 3. (可选) 触发离场动画（当切换到Register时） -->
+                <DataTrigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <!-- 0 -> -400：向左滑出 -->
+                            <!-- 可简写 RenderTransform.X -->
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                         From="0" To="-400" Duration="0:0:0.5"/>
+                            <!-- 1 -> 0：淡出 -->
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                         From="1" To="0" Duration="0:0:0.5"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.ExitActions>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- 登录页面StackPanel容器基本样式 -->
+    <Style
+        x:Key="LoginStackPanelStyle"
+        TargetType="StackPanel">
+        <!-- 垂直排序 -->
+        <Setter Property="Orientation" Value="Vertical" />
+        <!-- 初始透明 -->
+        <Setter Property="Opacity" Value="0"/>
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <!-- 变换原点居中 -->
+        <!-- 大白话：设置控件中心点，后续动画操作以中心点为基准，平移用处不大，主要用于旋转等操作 -->
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <!-- 初始向右偏移50px -->
+                <TranslateTransform X="400"/>
+            </Setter.Value>
+        </Setter>
+        <!-- 外边距 -->
+        <Setter Property="Margin" Value="5,20,15,5" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding SelectedUserViewType}" Value="{x:Static enum:UserViewType.Login}">
+                <Setter Property="Visibility" Value="Visible"/>
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                         From="400" To="0" Duration="0:0:0.5">
+                                <!-- 缓动函数 -->
+                                <DoubleAnimation.EasingFunction>
+                                    <!-- 平滑的加速或减速。最通用自然。 -->
+                                    <CubicEase EasingMode="EaseInOut" />
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                         From="0" To="1" Duration="0:0:0.5"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+                <DataTrigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                         From="0" To="-400" Duration="0:0:0.5"/>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                         From="1" To="0" Duration="0:0:0.5"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.ExitActions>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

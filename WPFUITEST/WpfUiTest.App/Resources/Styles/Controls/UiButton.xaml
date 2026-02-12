@@ -1,0 +1,50 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <!-- 先把Icon控件单独拿出来，这里有个大坑，Icon只有一个实例，导致第一个控件设置后，第二个控件再设置就会把第一个控件的实例抢走，导致第一个控件的Icon就没了 -->
+    <!-- 共享实例设置为False -->
+    <!-- 默认按钮Icon -->
+    <ui:SymbolIcon x:Key="IconRadioButton24" Symbol="RadioButton24" x:Shared="False"/>
+
+    <!-- 外观为主要的按钮 -->
+    <Style
+        x:Key="PrimaryUiButtonStyle"
+        TargetType="{x:Type ui:Button}"
+        BasedOn="{StaticResource {x:Type ui:Button}}">
+        <!-- 限制最大和最小高宽，并提供默认高宽 -->
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="MinWidth" Value="50" />
+        <Setter Property="MaxHeight" Value="200" />
+        <Setter Property="MaxWidth" Value="400" />
+        <Setter Property="Height" Value="35" />
+        <!-- 外观设置 -->
+        <Setter Property="Appearance" Value="Primary" />
+        <!-- 图标（可自定义） -->
+        <Setter Property="Icon" Value="{StaticResource IconRadioButton24}" />
+        <!-- 外边距 -->
+        <Setter Property="Margin" Value="5,5,5,5" />
+        <!-- 默认文本 -->
+        <Setter Property="Content" Value="PrimaryButton" />
+    </Style>
+
+    <!-- 外观为中等(次要)的按钮 -->
+    <Style
+        x:Key="SecondaryUiButtonStyle"
+        TargetType="{x:Type ui:Button}"
+        BasedOn="{StaticResource {x:Type ui:Button}}">
+        <!-- 限制最大和最小高宽，并提供默认高宽 -->
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="MinWidth" Value="50" />
+        <Setter Property="MaxHeight" Value="200" />
+        <Setter Property="MaxWidth" Value="400" />
+        <Setter Property="Height" Value="38" />
+        <!-- 外观设置 -->
+        <Setter Property="Appearance" Value="Secondary" />
+        <!-- 图标（可自定义） -->
+        <Setter Property="Icon" Value="{StaticResource IconRadioButton24}" />
+        <!-- 外边距 -->
+        <Setter Property="Margin" Value="5,5,5,5" />
+        <!-- 默认文本 -->
+        <Setter Property="Content" Value="SecondaryButton" />
+    </Style>
+</ResourceDictionary>

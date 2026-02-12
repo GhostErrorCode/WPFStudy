@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -6,18 +8,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Wpf.Ui.Controls;
 
-namespace WPFUITEST
+namespace WpfUiTest.App.Views.Main
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// MainView.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : FluentWindow
+    public partial class MainView : FluentWindow
     {
-        public MainWindow()
+        public MainView()
         {
             InitializeComponent();
         }

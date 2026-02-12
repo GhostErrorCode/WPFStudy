@@ -1,3 +1,8 @@
 <Solution>
-  <Project Path="WPFUITEST.csproj" />
+  <Project Path="WpfUiTest.App/WpfUiTest.App.csproj" />
+  <Project Path="WpfUiTest.Core.Tests/WpfUiTest.Core.Tests.csproj" Id="d1d5b400-fec9-46db-9479-46ee63bfcabe" />
+  <Project Path="WpfUiTest.Core/WpfUiTest.Core.csproj" />
+  <Project Path="WpfUiTest.Modules.Memo/WpfUiTest.Modules.Memo.csproj" />
+  <Project Path="WpfUiTest.Modules.ToDo/WpfUiTest.Modules.ToDo.csproj" />
+  <Project Path="WpfUiTest.Shared/WpfUiTest.Shared.csproj" />
 </Solution>
