@@ -8,6 +8,7 @@ using WpfUiTest.Core.Data.UnitOfWork.Interfaces;
 using WpfUiTest.Core.DTOs.User;
 using WpfUiTest.Core.Mapping;
 using WpfUiTest.Core.Services.Interfaces;
+using WpfUiTest.Shared.Models;
 using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.Core.Services.Implements
@@ -32,18 +33,22 @@ namespace WpfUiTest.Core.Services.Implements
         private readonly IUnitOfWork _unitOfWork;
         // 字段：日志管理
         private readonly ILogger<UserService> _logger;
+        // 字段：登录凭证管理
+        private readonly CredentialUtility _credentialUtility;
 
 
         // 构造函数(依赖注入)
-        public UserService(ILogger<UserService> logger, IUserRepository userRepository, IUnitOfWork unitOfWork)
+        public UserService(ILogger<UserService> logger, IUserRepository userRepository, IUnitOfWork unitOfWork, CredentialUtility credentialUtility)
         {
             // 依赖注入解析
             this._logger = logger;
             this._userRepository = userRepository;
             this._unitOfWork = unitOfWork;
+            this._credentialUtility = credentialUtility;
 
             // 输出日志
             this._logger.LogInformation("UserService: 已成功解析所有依赖");
+            _credentialUtility = credentialUtility;
         }
 
 
@@ -81,6 +86,16 @@ namespace WpfUiTest.Core.Services.Implements
                 // 登录成功：保存当前登录的用户以及是否生成本地令牌
                 // 保存当前用户
                 this._currentUser = currentLoginUser.ToUserResultDto();
+                // 检查是否勾选了记住我，以便生成登录凭证
+                if(loginUserDto.IsRememberMe == true)
+                {
+                    // 调用工具集保存登录凭证
+                    this._credentialUtility.Save(new LoginCredential()
+                    {
+                        UserId = this._currentUser.Id,
+                        Account = this._currentUser.Account
+                    });
+                }
                 // 输出登录成功日志
                 this._logger.LogInformation("登录成功: 用户 {Account} 登录成功", currentLoginUser.Account);
                 return ServiceResult<bool>.Success("登录成功", true);
@@ -93,6 +108,45 @@ namespace WpfUiTest.Core.Services.Implements
                 return ServiceResult<bool>.Failure("系统内部异常,请稍后重试!");
             }
         }
+
+        // 用户自动登录方法
+        public async Task<ServiceResult<bool>> AutoLoginAsync(int userId, string account)
+        {
+            try
+            {
+                // 登录失败：用户账户或密码为空
+                if (!(userId > 0) || string.IsNullOrWhiteSpace(account))
+                {
+                    // 输出日志
+                    this._logger.LogWarning("自动登录失败: 未找到对应用户!");
+                    // 返回失败的服务结果
+                    return ServiceResult<bool>.Failure("未找到对应用户!");
+                }
+                // 1.开始从数据库中尝试查找并判断
+                User? user = await this._userRepository.GetByIdAsync(userId);
+                if(user != null && user.Account == account)
+                {
+                    // 输出登录成功日志
+                    this._logger.LogInformation("自动登录成功: 用户 {Account} 登录成功", user.Account);
+                    return ServiceResult<bool>.Success("自动登录成功", true);
+                }
+                else
+                {
+                    // 输出日志
+                    this._logger.LogWarning("自动登录失败: 未找到对应用户!");
+                    // 返回失败的服务结果
+                    return ServiceResult<bool>.Failure("未找到对应用户!");
+                }
+            }
+            catch (Exception ex)
+            {
+                // 记录异常日志
+                this._logger.LogError("自动登录失败: 用户自动登录时出现系统内部异常!\n异常信息: {ex}", ex);
+                // 登录失败：系统内部异常
+                return ServiceResult<bool>.Failure("系统内部异常,请稍后重试!");
+            }
+        }
+
         // 用户注册方法
         public async Task<ServiceResult<bool>> RegisterAsync(RegisterUserDto registerUserDto)
         {

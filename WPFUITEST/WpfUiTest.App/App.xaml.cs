@@ -24,6 +24,7 @@ using WpfUiTest.Core.Data.UnitOfWork.Implements;
 using WpfUiTest.Core.Data.UnitOfWork.Interfaces;
 using WpfUiTest.Core.Services.Implements;
 using WpfUiTest.Core.Services.Interfaces;
+using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.App
 {
@@ -195,6 +196,9 @@ namespace WpfUiTest.App
                     services.AddSingleton<ISnackbarService, SnackbarService>();  // 注册提示信息框
                     services.AddSingleton<IMessenger, WeakReferenceMessenger>();  // 消息提示器（弱引用）
                     services.AddSingleton<IUserService, UserService>();
+
+                    // 注册工具
+                    services.AddSingleton<CredentialUtility>();
 
 
                     // ========== 后续扩展：各类服务注册示例（带注释说明） ==========

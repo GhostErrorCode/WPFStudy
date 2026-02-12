@@ -18,6 +18,8 @@ namespace WpfUiTest.Core.Services.Interfaces
 
         // 用户登录方法
         public Task<ServiceResult<bool>> LoginAsync(LoginUserDto loginUserDto);
+        // 用户自动登录方法
+        public Task<ServiceResult<bool>> AutoLoginAsync(int userId, string account);
         // 用户注册方法
         public Task<ServiceResult<bool>> RegisterAsync(RegisterUserDto registerUserDto);
         // 用户登出方法

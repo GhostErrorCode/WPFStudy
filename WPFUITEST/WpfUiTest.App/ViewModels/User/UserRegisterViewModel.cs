@@ -6,12 +6,13 @@ using System.Text;
 using Wpf.Ui;
 using WpfUiTest.App.ViewModels.Mapping;
 using WpfUiTest.Core.Services.Interfaces;
+using WpfUiTest.Shared.Base;
 using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.App.ViewModels.User
 {
     // 用户注册ViewModel
-    public class UserRegisterViewModel : ObservableObject
+    public class UserRegisterViewModel : BaseViewModel
     {
         // ============================= 字段 属性 ===================================
         // 字段：用户服务层

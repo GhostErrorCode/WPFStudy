@@ -4,16 +4,82 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
+        xmlns:vio="http://schemas.lepo.co/wpfui/2022/xaml/violeta"
         xmlns:local="clr-namespace:WpfUiTest.App.Views.Main"
         mc:Ignorable="d"
         ExtendsContentIntoTitleBar="True"
         WindowBackdropType="Mica"
         WindowCornerPreference="Round"
         WindowStartupLocation="CenterScreen"
-        Title="MainView" Height="750" Width="1300"
-        MinHeight="450" MinWidth="800"
-        MaxHeight="1080" MaxWidth="1920">
+        Title="MainView" Height="802" Width="1450"
+        MinHeight="450" MinWidth="800">
+    <!-- ===========================================================
+    声明:
+    1.这里不在使用Drawer抽屉作为导航容器，使用WPFUI中的NavigationView
+    2.如果要使用Drawer抽屉作为导航比较麻烦，需要重写TitleBar控件，完全自定义 Header，抛弃默认的 Icon 和 Header 分离布局，并使用DockPanel容器即可
+    ============================================================ -->
+
     <Grid>
+        <!-- 标题栏 -->
+        <ui:TitleBar
+            x:Name="MainViewTitleBar"
+            Style="{StaticResource MainViewUITitleBarStyle}">
+            <!-- 标题栏图标 -->
+            <ui:TitleBar.Icon>
+                <ui:ImageIcon Source="pack://application:,,,/WpfUiTest.App;component/Resources/Images/User.jpg" />
+            </ui:TitleBar.Icon>
+            <!-- 标题栏标题文本 直接设置Title或Header可能导致无法图标和标题无法对齐-->
+            <ui:TitleBar.Header>
+                <TextBlock Text="WPFUI-MainView" VerticalAlignment="Center" />
+            </ui:TitleBar.Header>
+        </ui:TitleBar>
         
+        <!-- 导航视图 -->
+        <ui:NavigationView
+            TitleBar="{Binding ElementName=MainViewTitleBar}" 
+            Style="{StaticResource MainViewUiNavigationViewStyle}">
+            
+            <!-- NavigationView控件自定义头部区域（Header） -->
+            <ui:NavigationView.Header>
+                <StackPanel Margin="20,20,20,20">
+                    <!-- 自定义头部区域... -->
+                </StackPanel>
+            </ui:NavigationView.Header>
+            
+            <!-- 自动建议搜索框 -->
+            <ui:NavigationView.AutoSuggestBox>
+                <!-- AutomationProperties.AutomationId="NavigationAutoSuggestBox"自动化测试ID：仅用于UI自动化测试（如Selenium/Appium定位控件），日常开发不影响功能 -->
+                <ui:AutoSuggestBox
+                    x:Name="AutoSuggestBox"
+                    AutomationProperties.AutomationId="NavigationAutoSuggestBox"
+                    PlaceholderText="Search...">
+                    <ui:AutoSuggestBox.Icon>
+                        <!-- 
+                            IconSourceElement：WPF UI的「图标源容器」（必加的中间层）
+                            作用：作为"图标源（SymbolIconSource）"和"控件Icon属性"的桥梁，
+                            因为Icon属性要求IconElement类型，而SymbolIconSource是IconSource类型，
+                            必须通过该容器包裹才能被控件识别渲染
+                        -->
+                        <ui:IconSourceElement>
+                            <!-- 
+                                SymbolIconSource：WPF UI内置的符号图标源（具体的图标内容）
+                                Symbol="Search24"：指定24px尺寸的放大镜搜索图标（WPF UI内置预设符号，无需自定义图片）
+                                扩展：可添加Foreground="#165DFF"改颜色、Width/Height改尺寸
+                            -->
+                            <ui:SymbolIconSource Symbol="Search24" />
+                        </ui:IconSourceElement>
+                    </ui:AutoSuggestBox.Icon>
+                </ui:AutoSuggestBox>
+            </ui:NavigationView.AutoSuggestBox>
+
+            <!-- NavigationView 控件内容区的 “顶层悬浮层” -->
+            <ui:NavigationView.ContentOverlay>
+                <Grid>
+                    <!-- SnackbarPresenter 消息提示容器 -->
+                    <ui:SnackbarPresenter x:Name="MainSnackbarPresenter" Panel.ZIndex="10"/>
+                </Grid>
+            </ui:NavigationView.ContentOverlay>
+        </ui:NavigationView>
     </Grid>
 </ui:FluentWindow>
