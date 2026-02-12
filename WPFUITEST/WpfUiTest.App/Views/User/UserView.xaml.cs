@@ -49,6 +49,8 @@ namespace WpfUiTest.App.Views.User
             /// Loaded事件触发时机：窗体可视化并布局完成后，确保控件已初始化（避免操作空控件）
             /// </summary>
 
+            // ContentRendered 事件后执行自动登录方法
+            this.ContentRendered += async (s, e) => await userViewModel.UserAutoLogin();
             // 订阅登录成功后打开主页面
             this.Loaded += (Object s, RoutedEventArgs e) =>
             {

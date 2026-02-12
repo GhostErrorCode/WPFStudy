@@ -7,17 +7,20 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Wpf.Ui;
+using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Controls;
 using WpfUiTest.App.ViewModels.Enums;
+using WpfUiTest.Shared.Base;
 using WpfUiTest.Shared.Enums;
 using WpfUiTest.Shared.Extensions;
 using WpfUiTest.Shared.Messages;
+using WpfUiTest.Shared.Models;
 using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.App.ViewModels.User
 {
     // 继承 ObservableObject 实现通知更改等
-    public class UserViewModel : ObservableObject
+    public class UserViewModel : BaseViewModel
     {
         // ============================= 字段 属性 ===================================
         // 字段：Snackbar 服务
@@ -28,6 +31,8 @@ namespace WpfUiTest.App.ViewModels.User
         private readonly IServiceProvider _serviceProvider;
         // 字段：ILogger服务
         private readonly ILogger<UserViewModel> _logger;
+        // 字段：CredentialUtility 工具
+        private readonly CredentialUtility _credentialUtility;
 
 
         // 属性：当前选中的视图类型 注册或登录
@@ -62,13 +67,14 @@ namespace WpfUiTest.App.ViewModels.User
 
 
         // ============================= 构造函数 ===================================
-        public UserViewModel(IServiceProvider serviceProvider, ISnackbarService snackbarService, IMessenger messenger, ILogger<UserViewModel> logger)
+        public UserViewModel(IServiceProvider serviceProvider, ISnackbarService snackbarService, IMessenger messenger, ILogger<UserViewModel> logger, CredentialUtility credentialUtility)
         {
             // 初始化字段
             this._serviceProvider = serviceProvider;
             this._snackbarService = snackbarService;
             this._messenger = messenger;
             this._logger = logger;
+            this._credentialUtility = credentialUtility;
 
             // 初始化属性
             this._userRegisterViewModel = this._serviceProvider.GetRequiredService<UserRegisterViewModel>();
@@ -136,6 +142,51 @@ namespace WpfUiTest.App.ViewModels.User
             {
                 this._logger.LogInformation("UserViewModel：调用注册服务完成");
             }
+        }
+
+        // 用户自动登录方法
+        public async Task UserAutoLogin()
+        {
+            try
+            {
+                this._logger.LogInformation("UserViewModel：开始调用自动登录服务");
+                // 尝试加载登录凭证
+                LoginCredential? loginCredential = this._credentialUtility.Load();
+                // 如果返回的是NULL则视为无效凭证(不进行提示，静默处理)
+                if (loginCredential == null) { return; }
+                // 登录凭证超过30天
+                if (loginCredential.Expires < DateTime.Now)
+                {
+                    this._logger.LogWarning("登录凭证已超时失效，当前需要手动登录");
+                    this._messenger.ShowCaution(SnackbarTarget.UserView, "登录凭证失效!", "登录凭证已超时失效，当前需要手动登录");
+                }
+                // ====== 以下为登录凭证有效的情况 ======
+                // 尝试登录凭证
+                ServiceResult<bool> autoLoginResult = await this.UserLoginViewModel.AutoLoginAsync(loginCredential.UserId, loginCredential.Account);
+                // 自动登录成功
+                if (autoLoginResult.IsSuccess)
+                {
+                    // 显示欢迎语，短暂停留后跳转主页
+                    // 打印日志
+                    this._logger.LogInformation("用户自动登录成功!\n[ServiceResult<bool>]\n{registerResult}", autoLoginResult.ToJson());
+                    // 展示弹窗
+                    this._messenger.ShowSuccess(SnackbarTarget.UserView, autoLoginResult.Message, "自动登录成功! 欢迎回来!");
+
+                    // 延迟打开主窗口
+                    await Task.Delay(2500);
+                    // 发送打开主窗口的消息（UserView已订阅，会自动执行打开主页面并关闭自己）
+                    this._messenger.Send(new LoginSuccessMessage());
+                }
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError("处理登录凭证过程中出现意外的严重错误!\n{ex}", ex);
+            }
+            finally
+            {
+                this._logger.LogInformation("UserViewModel：调用自动登录服务完成");
+            }
+            
         }
 
         // 用户登录方法

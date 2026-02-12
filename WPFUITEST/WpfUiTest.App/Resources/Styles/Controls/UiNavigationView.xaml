@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <!-- 主页面导航控件NavigationView样式 -->
+    <Style
+        x:Key="MainViewUiNavigationViewStyle"
+        TargetType="{x:Type ui:NavigationView}"
+        BasedOn="{StaticResource {x:Type ui:NavigationView}}"
+        >
+        <!-- 内边距 -->
+        <Setter Property="Padding" Value="42,0,42,0" />
+        <!-- NavigationView内置的Frame控件（用于显示页面内容）的外边距 -->
+        <Setter Property="FrameMargin" Value="0,0,0,0" />
+        <!-- 左侧导航面板展开时的宽度（单位：像素） -->
+        <Setter Property="OpenPaneLength" Value="260" />
+        <!-- 导航返回按钮是否显示 -->
+        <Setter Property="IsBackButtonVisible" Value="Visible" />
+        <!-- 面板切换按钮（汉堡菜单按钮）是否显示 -->
+        <Setter Property="IsPaneToggleVisible" Value="True" />
+        <!-- 导航面板的显示位置 -->
+        <Setter Property="PaneDisplayMode" Value="Left" />
+        <!-- 是否启用调试日志 -->
+        <Setter Property="EnableDebugMessages" Value="True" />
+        <!-- 导航页面切换时的过渡动画 -->
+        <Setter Property="Transition" Value="FadeInWithSlide" />
+    </Style>
+</ResourceDictionary>

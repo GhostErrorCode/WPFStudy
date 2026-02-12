@@ -12,4 +12,10 @@
         <!-- 双击应用图标可关闭程序 -->
         <Setter Property="CloseWindowByDoubleClickOnIcon" Value="True" />
     </Style>
+    
+    <!-- 主页面的标题栏样式 -->
+    <Style x:Key="MainViewUITitleBarStyle" TargetType="{x:Type ui:TitleBar}" BasedOn="{StaticResource {x:Type ui:TitleBar}}">
+        <!-- 双击应用图标可关闭程序 -->
+        <Setter Property="CloseWindowByDoubleClickOnIcon" Value="True" />
+    </Style>
 </ResourceDictionary>

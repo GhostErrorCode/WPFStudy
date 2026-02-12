@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Text;
 using WpfUiTest.App.ViewModels.Mapping;
 using WpfUiTest.Core.Services.Interfaces;
+using WpfUiTest.Shared.Base;
 using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.App.ViewModels.User
 {
     // 用户登录ViewModel
-    public class UserLoginViewModel : ObservableObject
+    public class UserLoginViewModel : BaseViewModel
     {
         // ============================= 字段 属性 ===================================
         // 字段：用户服务层
@@ -61,6 +62,15 @@ namespace WpfUiTest.App.ViewModels.User
             if (UserLoginResult.IsSuccess) { this.Clear(); }
             // 返回服务结果给主VM
             return UserLoginResult;
+        }
+
+        // 自动登录方法
+        public async Task<ServiceResult<bool>> AutoLoginAsync(int userId, string account)
+        {
+            // 调用服务返回结果
+            ServiceResult<bool> UserAutoLoginResult = await this._userService.AutoLoginAsync(userId, account);
+            // 返回服务结果给主VM
+            return UserAutoLoginResult;
         }
 
         // 清空
