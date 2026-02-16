@@ -37,7 +37,9 @@
         
         <!-- 导航视图 -->
         <ui:NavigationView
-            TitleBar="{Binding ElementName=MainViewTitleBar}" 
+            x:Name="MainNavigationView"
+            TitleBar="{Binding ElementName=MainViewTitleBar}"
+            FooterMenuItemsSource="{Binding MainFooterMenuViewModel.FooterMenuItems}"
             Style="{StaticResource MainViewUiNavigationViewStyle}">
             
             <!-- NavigationView控件自定义头部区域（Header） -->
@@ -81,5 +83,8 @@
                 </Grid>
             </ui:NavigationView.ContentOverlay>
         </ui:NavigationView>
+        
+        <!-- 全局对话框Host -->
+        <ui:ContentDialogHost x:Name="MainContentDialogHost" />
     </Grid>
 </ui:FluentWindow>

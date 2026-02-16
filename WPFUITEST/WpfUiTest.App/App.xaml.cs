@@ -13,6 +13,8 @@ using System.IO;
 using System.Text;
 using System.Windows;
 using Wpf.Ui;
+using Wpf.Ui.DependencyInjection;
+using WpfUiTest.App.ViewModels.Main;
 using WpfUiTest.App.ViewModels.User;
 using WpfUiTest.App.Views;
 using WpfUiTest.App.Views.Main;
@@ -186,16 +188,24 @@ namespace WpfUiTest.App
 
                     // 注册页面
                     services.AddSingleton<UserView>();
+                    services.AddSingleton<MainView>();
+                    services.AddSingleton<SettingsView>();
 
                     // 注册ViewModel
                     services.AddSingleton<UserViewModel>();
                     services.AddSingleton<UserRegisterViewModel>();
                     services.AddSingleton<UserLoginViewModel>();
+                    services.AddSingleton<MainViewModel>();
+                    services.AddSingleton<MainFooterMenuViewModel>();
+                    services.AddSingleton<SettingsViewModel>();
 
                     // 注册服务
                     services.AddSingleton<ISnackbarService, SnackbarService>();  // 注册提示信息框
                     services.AddSingleton<IMessenger, WeakReferenceMessenger>();  // 消息提示器（弱引用）
                     services.AddSingleton<IUserService, UserService>();
+                    services.AddNavigationViewPageProvider();  // WPFUI中导航
+                    services.AddSingleton<INavigationService, NavigationService>();  // 导航服务
+                    services.AddSingleton<IContentDialogService, ContentDialogService>();  // 对话框服务
 
                     // 注册工具
                     services.AddSingleton<CredentialUtility>();
