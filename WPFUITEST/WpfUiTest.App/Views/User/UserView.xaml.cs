@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using WpfUiTest.App.ViewModels.User;
@@ -50,7 +51,13 @@ namespace WpfUiTest.App.Views.User
             /// </summary>
 
             // ContentRendered 事件后执行自动登录方法
-            this.ContentRendered += async (s, e) => await userViewModel.UserAutoLogin();
+            this.ContentRendered += async (s, e) =>
+            {
+                // 因UserView存在动画切换效果，直接开始代码会造成明显卡顿，这里延迟100ms
+                await Task.Delay(100);
+                await userViewModel.UserAutoLogin();
+            };
+                
             // 订阅登录成功后打开主页面
             this.Loaded += (Object s, RoutedEventArgs e) =>
             {

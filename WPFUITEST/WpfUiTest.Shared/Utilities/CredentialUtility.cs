@@ -53,7 +53,7 @@ namespace WpfUiTest.Shared.Utilities
                 */
                 byte[] encrypted = ProtectedData.Protect(data, null, DataProtectionScope.CurrentUser);
                 // 加密数据写入指定文件（覆盖已有文件）
-                File.WriteAllBytes(this._fullFilePath, encrypted);
+                File.WriteAllBytesAsync(this._fullFilePath, encrypted);
 
                 this._logger.LogInformation("登录凭证保存成功,有效期至{Expires}", credential.Expires);
             }
@@ -64,7 +64,7 @@ namespace WpfUiTest.Shared.Utilities
         }
 
         // 加载登录凭证
-        public LoginCredential? Load()
+        public async Task<LoginCredential?> Load()
         {
             // 检查文件是否存在，不存在则直接返回null
             if (!File.Exists(this._fullFilePath)) return null;
@@ -72,7 +72,7 @@ namespace WpfUiTest.Shared.Utilities
             try
             {
                 // 读取文件中的加密字节数组
-                byte[] encrypted = File.ReadAllBytes(this._fullFilePath);
+                byte[] encrypted = await File.ReadAllBytesAsync(this._fullFilePath);
                 // 解密加密的字节数组
                 byte[] data = ProtectedData.Unprotect(encrypted, null, DataProtectionScope.CurrentUser);
                 // 将解密后的字节数组转换为UTF8编码的JSON字符串

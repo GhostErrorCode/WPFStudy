@@ -151,7 +151,7 @@ namespace WpfUiTest.App.ViewModels.User
             {
                 this._logger.LogInformation("UserViewModel：开始调用自动登录服务");
                 // 尝试加载登录凭证
-                LoginCredential? loginCredential = this._credentialUtility.Load();
+                LoginCredential? loginCredential = await this._credentialUtility.Load();
                 // 如果返回的是NULL则视为无效凭证(不进行提示，静默处理)
                 if (loginCredential == null) { return; }
                 // 登录凭证超过30天
@@ -173,7 +173,7 @@ namespace WpfUiTest.App.ViewModels.User
                     this._messenger.ShowSuccess(SnackbarTarget.UserView, autoLoginResult.Message, "自动登录成功! 欢迎回来!");
 
                     // 延迟打开主窗口
-                    await Task.Delay(2500);
+                    await Task.Delay(2000);
                     // 发送打开主窗口的消息（UserView已订阅，会自动执行打开主页面并关闭自己）
                     this._messenger.Send(new LoginSuccessMessage());
                 }
