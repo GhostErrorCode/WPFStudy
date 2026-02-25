@@ -37,7 +37,7 @@
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiTitleBar.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/Border.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiImage.xaml" />
-                <ResourceDictionary Source="/Resources/Styles/Controls/TextBlock.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Controls/UiTextBlock.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/StackPanel.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiTextBox.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiPasswordBox.xaml" />

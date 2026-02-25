@@ -36,7 +36,7 @@
             </ui:TitleBar.Icon>
             <!-- 标题栏标题文本 直接设置Title或Header可能导致无法图标和标题无法对齐-->
             <ui:TitleBar.Header>
-                <TextBlock Text="WPFUI" VerticalAlignment="Center" />
+                <ui:TextBlock Text="WPFUI" VerticalAlignment="Center" />
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
@@ -59,7 +59,7 @@
                 Grid.Row="1" Grid.Column="1"
                 Style="{StaticResource RegisterStackPanelStyle}">
                 <!-- 注册标题 -->
-                <TextBlock Text="注册" Style="{StaticResource TitleTextBlock}" />
+                <ui:TextBlock Text="注册" Style="{StaticResource TitleTwoUiTextBlockStyle}" />
                 <!-- 卡片 -->
                 <ui:Card>
                     <StackPanel Orientation="Vertical">
@@ -105,7 +105,7 @@
                 Grid.Row="1" Grid.Column="1"
                 Style="{StaticResource LoginStackPanelStyle}">
                 <!-- 登录标题 -->
-                <TextBlock Text="登录" Style="{StaticResource TitleTextBlock}" />
+                <ui:TextBlock Text="登录" Style="{StaticResource TitleTwoUiTextBlockStyle}" />
                 <!-- 卡片 -->
                 <ui:Card>
                     <StackPanel Orientation="Vertical">
