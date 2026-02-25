@@ -8,6 +8,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Settings\AppSettings.json" />
+    <None Remove="Settings\UserAppSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Settings\AppSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Settings\UserAppSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Constants\" />
   </ItemGroup>
 
