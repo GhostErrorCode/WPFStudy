@@ -33,22 +33,18 @@ namespace WpfUiTest.Core.Services.Implements
         private readonly IUnitOfWork _unitOfWork;
         // 字段：日志管理
         private readonly ILogger<UserService> _logger;
-        // 字段：登录凭证管理
-        private readonly CredentialUtility _credentialUtility;
 
 
         // 构造函数(依赖注入)
-        public UserService(ILogger<UserService> logger, IUserRepository userRepository, IUnitOfWork unitOfWork, CredentialUtility credentialUtility)
+        public UserService(ILogger<UserService> logger, IUserRepository userRepository, IUnitOfWork unitOfWork)
         {
             // 依赖注入解析
             this._logger = logger;
             this._userRepository = userRepository;
             this._unitOfWork = unitOfWork;
-            this._credentialUtility = credentialUtility;
 
             // 输出日志
-            this._logger.LogInformation("UserService: 已成功解析所有依赖");
-            _credentialUtility = credentialUtility;
+            // this._logger.LogInformation("UserService: 已成功解析所有依赖");
         }
 
 
@@ -72,14 +68,14 @@ namespace WpfUiTest.Core.Services.Implements
                 // 如果数据库没找到这个用户账户
                 if (currentLoginUser == null)
 {
-                    this._logger.LogWarning($"登录失败: 用户账户不存在: {loginUserDto.Account}");
+                    this._logger.LogWarning("登录失败: 用户 {Account} 不存在!", loginUserDto.Account);
                     return ServiceResult<bool>.Failure("用户账户或密码错误!");
                 }
 
                 // 用户存在，但密码验证失败 -> 失败
                 if (!PasswordHasher.Verify(loginUserDto.Password, currentLoginUser.Password))
                 {
-                    this._logger.LogWarning($"登录失败: 密码错误。账户: {currentLoginUser.Account}");
+                    this._logger.LogWarning("登录失败: 用户 {Account} 密码错误!", currentLoginUser.Account);
                     return ServiceResult<bool>.Failure("用户账户或密码错误!");
                 }
 
@@ -89,21 +85,29 @@ namespace WpfUiTest.Core.Services.Implements
                 // 检查是否勾选了记住我，以便生成登录凭证
                 if(loginUserDto.IsRememberMe == true)
                 {
-                    // 调用工具集保存登录凭证
-                    this._credentialUtility.Save(new LoginCredential()
+                    try
                     {
-                        UserId = this._currentUser.Id,
-                        Account = this._currentUser.Account
-                    });
+                        // 调用工具集保存登录凭证
+                        await LoginCredentialHelper.SaveLoginCredential(new LoginCredential()
+                        {
+                            UserId = this._currentUser.Id,
+                            Account = this._currentUser.Account
+                        });
+                    }
+                    catch(Exception ex)
+                    {
+                        // 记录报错登录凭证的异常日志
+                        this._logger.LogError("保存登录凭证失败: 异常信息: {ex}", ex);
+                    }
                 }
                 // 输出登录成功日志
-                this._logger.LogInformation("登录成功: 用户 {Account} 登录成功", currentLoginUser.Account);
+                this._logger.LogInformation("登录成功: 用户 {Account} 登录成功!", currentLoginUser.Account);
                 return ServiceResult<bool>.Success("登录成功", true);
             }
             catch(Exception ex)
             {
                 // 记录异常日志
-                this._logger.LogError("登录失败: 用户登录时出现系统内部异常!\n异常信息: {ex}", ex);
+                this._logger.LogError("登录失败: 用户登录时出现系统内部异常! 异常信息: {ex}", ex);
                 // 登录失败：系统内部异常
                 return ServiceResult<bool>.Failure("系统内部异常,请稍后重试!");
             }
@@ -141,7 +145,7 @@ namespace WpfUiTest.Core.Services.Implements
             catch (Exception ex)
             {
                 // 记录异常日志
-                this._logger.LogError("自动登录失败: 用户自动登录时出现系统内部异常!\n异常信息: {ex}", ex);
+                this._logger.LogError("自动登录失败: 用户自动登录时出现系统内部异常! 异常信息: {ex}", ex);
                 // 登录失败：系统内部异常
                 return ServiceResult<bool>.Failure("系统内部异常,请稍后重试!");
             }
@@ -165,19 +169,19 @@ namespace WpfUiTest.Core.Services.Implements
                 // 2.验证两次输入的密码是否一致
                 if (registerUserDto.Password != registerUserDto.ConfirmPassword)
                 {
-                    this._logger.LogWarning("注册失败: 输入的两次密码不一致。用户账户 {Account}", registerUserDto.Account);
+                    this._logger.LogWarning("注册失败: 用户 {Account} 输入的两次密码不一致!", registerUserDto.Account);
                     return ServiceResult<bool>.Failure("输入的两次密码不一致");
                 }
                 // 3.验证密码复杂度（规则）
                 if (registerUserDto.Password.Length < 6)
                 {
-                    this._logger.LogWarning("注册失败: 密码长度至少为6位。用户账户 {Account}", registerUserDto.Account);
+                    this._logger.LogWarning("注册失败: 用户 {Account} 密码长度至少为6位!", registerUserDto.Account);
                     return ServiceResult<bool>.Failure("密码长度至少为6位");
                 }
                 // 4.检查用户账户是否已存在
                 if (await this._userRepository.ExistsAsync((User user) => user.Account == registerUserDto.Account))
                 {
-                    this._logger.LogWarning("注册失败: 用户已存在。用户账户 {Account}", registerUserDto.Account);
+                    this._logger.LogWarning("注册失败: 用户 {Account} 已存在!", registerUserDto.Account);
                     return ServiceResult<bool>.Failure("该账户已被注册");
                 }
 
@@ -190,7 +194,7 @@ namespace WpfUiTest.Core.Services.Implements
                     User registerUser = await this._userRepository.AddAsync(registerUserDto.ToUser());
                     // 7.显示提交事务
                     await this._unitOfWork.CommitTransactionAsync();
-                    _logger.LogInformation("注册成功: 用户注册成功。用户账户: {Account}, ID: {Id}", registerUser.Account, registerUser.Id);
+                    _logger.LogInformation("注册成功: 用户 {Account}, ID: {Id}", registerUser.Account, registerUser.Id);
                     return ServiceResult<bool>.Success("注册成功", true);
                 }
                 catch (Exception ex)
@@ -202,7 +206,7 @@ namespace WpfUiTest.Core.Services.Implements
             }
             catch(Exception ex)
             {
-                this._logger.LogError("注册失败: 用户注册时出现系统内部异常\n异常信息: {ex}", ex);
+                this._logger.LogError("注册失败: 用户注册时出现系统内部异常! 异常信息: {ex}", ex);
                 return ServiceResult<bool>.Failure("注册失败: 系统内部错误，请稍后重试");
             }
         }

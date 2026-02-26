@@ -31,8 +31,6 @@ namespace WpfUiTest.App.ViewModels.User
         private readonly IServiceProvider _serviceProvider;
         // 字段：ILogger服务
         private readonly ILogger<UserViewModel> _logger;
-        // 字段：CredentialUtility 工具
-        private readonly CredentialUtility _credentialUtility;
 
 
         // 属性：当前选中的视图类型 注册或登录
@@ -67,14 +65,13 @@ namespace WpfUiTest.App.ViewModels.User
 
 
         // ============================= 构造函数 ===================================
-        public UserViewModel(IServiceProvider serviceProvider, ISnackbarService snackbarService, IMessenger messenger, ILogger<UserViewModel> logger, CredentialUtility credentialUtility)
+        public UserViewModel(IServiceProvider serviceProvider, ISnackbarService snackbarService, IMessenger messenger, ILogger<UserViewModel> logger)
         {
             // 初始化字段
             this._serviceProvider = serviceProvider;
             this._snackbarService = snackbarService;
             this._messenger = messenger;
             this._logger = logger;
-            this._credentialUtility = credentialUtility;
 
             // 初始化属性
             this._userRegisterViewModel = this._serviceProvider.GetRequiredService<UserRegisterViewModel>();
@@ -104,14 +101,14 @@ namespace WpfUiTest.App.ViewModels.User
         {
             try
             {
-                this._logger.LogInformation("UserViewModel：开始调用注册服务");
+                this._logger.LogDebug("UserViewModel：开始调用注册服务");
                 // 调用副VM并接收结果
                 ServiceResult<bool> registerResult = await this._userRegisterViewModel.RegisterAsync();
                 // 如果结果不为空且注册成功
                 if (registerResult != null && registerResult.IsSuccess)
                 {
                     // 打印日志
-                    this._logger.LogInformation("用户注册成功!\n[ServiceResult<bool>]\n{registerResult}", registerResult.ToJson());
+                    this._logger.LogInformation("用户注册成功! {@RegisterResult}", registerResult);
                     // 展示弹窗
                     this._messenger.ShowSuccess(SnackbarTarget.UserView, registerResult.Message, "注册成功! 请返回登录页面进行登录!");
                     // 返回登录页面
@@ -120,14 +117,14 @@ namespace WpfUiTest.App.ViewModels.User
                 else if (registerResult != null && !registerResult.IsSuccess) // 注册失败的话
                 {
                     // 打印日志
-                    this._logger.LogWarning("用户注册失败!\n[ServiceResult<bool>]\n{registerResult}", registerResult.ToJson());
+                    this._logger.LogWarning("用户注册失败! {@RegisterResult}", registerResult);
                     // 展示弹窗
                     this._messenger.ShowCaution(SnackbarTarget.UserView, registerResult.Message, "注册失败! 请检查输入的内容!");
                 }
                 else
                 {
                     // 打印日志
-                    this._logger.LogError("用户注册失败!\n[ServiceResult<bool>]\n{registerResult}", registerResult?.ToJson());
+                    this._logger.LogError("用户注册失败! {@RegisterResult}", registerResult);
                     // 展示弹窗
                     this._messenger.ShowDanger(SnackbarTarget.UserView, "系统异常!", "注册失败! 系统异常!");
                 }
@@ -135,12 +132,12 @@ namespace WpfUiTest.App.ViewModels.User
             }
             catch(Exception ex)
             {
-                this._logger.LogError("发生意外的未处理异常：\n{ex}", ex);
+                this._logger.LogError("用户注册失败! 发生意外的未处理异常: {ex}", ex);
                 this._messenger.ShowDanger(SnackbarTarget.UserView,"操作失败!", "系统出现意外的严重错误!");
             }
             finally
             {
-                this._logger.LogInformation("UserViewModel：调用注册服务完成");
+                this._logger.LogDebug("UserViewModel：调用注册服务完成");
             }
         }
 
@@ -149,15 +146,15 @@ namespace WpfUiTest.App.ViewModels.User
         {
             try
             {
-                this._logger.LogInformation("UserViewModel：开始调用自动登录服务");
+                this._logger.LogDebug("UserViewModel：开始调用自动登录服务");
                 // 尝试加载登录凭证
-                LoginCredential? loginCredential = await this._credentialUtility.Load();
+                LoginCredential? loginCredential = await LoginCredentialHelper.LoadLoginCredential();
                 // 如果返回的是NULL则视为无效凭证(不进行提示，静默处理)
                 if (loginCredential == null) { return; }
                 // 登录凭证超过30天
                 if (loginCredential.Expires < DateTime.Now)
                 {
-                    this._logger.LogWarning("登录凭证已超时失效，当前需要手动登录");
+                    this._logger.LogWarning("自动登录失败: 登录凭证已超时失效，当前需要手动登录");
                     this._messenger.ShowCaution(SnackbarTarget.UserView, "登录凭证失效!", "登录凭证已超时失效，当前需要手动登录");
                 }
                 // ====== 以下为登录凭证有效的情况 ======
@@ -168,7 +165,7 @@ namespace WpfUiTest.App.ViewModels.User
                 {
                     // 显示欢迎语，短暂停留后跳转主页
                     // 打印日志
-                    this._logger.LogInformation("用户自动登录成功!\n[ServiceResult<bool>]\n{registerResult}", autoLoginResult.ToJson());
+                    this._logger.LogInformation("自动登录成功: 用户自动登录成功! {@RegisterResult}", autoLoginResult);
                     // 展示弹窗
                     this._messenger.ShowSuccess(SnackbarTarget.UserView, autoLoginResult.Message, "自动登录成功! 欢迎回来!");
 
@@ -180,11 +177,11 @@ namespace WpfUiTest.App.ViewModels.User
             }
             catch (Exception ex)
             {
-                this._logger.LogError("处理登录凭证过程中出现意外的严重错误!\n{ex}", ex);
+                this._logger.LogError("自动登录失败: 处理登录凭证过程中出现意外的严重错误! 异常信息: {ex}", ex);
             }
             finally
             {
-                this._logger.LogInformation("UserViewModel：调用自动登录服务完成");
+                this._logger.LogDebug("UserViewModel：调用自动登录服务完成");
             }
             
         }
@@ -194,7 +191,7 @@ namespace WpfUiTest.App.ViewModels.User
         {
             try
             {
-                this._logger.LogInformation("UserViewModel：开始调用登录服务");
+                this._logger.LogDebug("UserViewModel：开始调用登录服务");
                 // 调用副VM并接收结果
                 ServiceResult<bool> loginResult = await this._userLoginViewModel.LoginAsync();
 
@@ -202,7 +199,7 @@ namespace WpfUiTest.App.ViewModels.User
                 if (loginResult != null && loginResult.IsSuccess)
                 {
                     // 打印日志
-                    this._logger.LogInformation("用户登录成功!\n[ServiceResult<bool>]\n{registerResult}", loginResult.ToJson());
+                    this._logger.LogInformation("用户登录成功! {@RegisterResult}", loginResult);
                     // 展示弹窗
                     this._messenger.ShowSuccess(SnackbarTarget.UserView, loginResult.Message, "登录成功! 欢迎回来!");
 
@@ -215,7 +212,7 @@ namespace WpfUiTest.App.ViewModels.User
                 else if(loginResult != null && !loginResult.IsSuccess)
                 {
                     // 打印日志
-                    this._logger.LogWarning("用户登录失败!\n[ServiceResult<bool>]\n{loginResult}", loginResult.ToJson());
+                    this._logger.LogWarning("用户登录失败! {@RegisterResult}", loginResult);
                     // 展示弹窗
                     this._messenger.ShowCaution(SnackbarTarget.UserView, loginResult.Message, "登录失败! 请检查输入的内容!");
                 }
@@ -223,19 +220,19 @@ namespace WpfUiTest.App.ViewModels.User
                 else
                 {
                     // 打印日志
-                    this._logger.LogError("用户登录失败!\n[ServiceResult<bool>]\n{loginResult}", loginResult?.ToJson());
+                    this._logger.LogError("用户登录失败! {@RegisterResult}", loginResult);
                     // 展示弹窗
                     this._messenger.ShowDanger(SnackbarTarget.UserView, "系统异常!", "登录失败! 系统异常!");
                 }
             }
             catch (Exception ex)
             {
-                this._logger.LogError("发生意外的未处理异常：\n{ex}", ex);
+                this._logger.LogError("用户登录失败! 发生意外的未处理异常, 异常信息: {ex}", ex);
                 this._messenger.ShowDanger(SnackbarTarget.UserView, "操作失败!", "系统出现意外的严重错误!");
             }
             finally
             {
-                this._logger.LogInformation("UserViewModel：调用登录服务完成");
+                this._logger.LogDebug("UserViewModel：调用登录服务完成");
             }
         }
     }

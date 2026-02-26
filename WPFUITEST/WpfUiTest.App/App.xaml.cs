@@ -26,6 +26,7 @@ using WpfUiTest.Core.Data.UnitOfWork.Implements;
 using WpfUiTest.Core.Data.UnitOfWork.Interfaces;
 using WpfUiTest.Core.Services.Implements;
 using WpfUiTest.Core.Services.Interfaces;
+using WpfUiTest.Shared.Models;
 using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.App
@@ -35,6 +36,9 @@ namespace WpfUiTest.App
     /// </summary>
     public partial class App : Application
     {
+        // 字段：获取应用设置
+        private readonly AppConfiguration _appConfiguration = AppConfigurationHelper.LoadMergeSettings();
+
         /// <summary>
         /// .NET通用主机实例，管理应用程序生命周期和服务依赖注入
         /// 定义为属性：封装访问逻辑、符合编码规范，便于后续扩展（如非空校验）
@@ -63,11 +67,11 @@ namespace WpfUiTest.App
                     // AppContext.BaseDirectory：当前运行的EXE程序所在的文件夹路径（如：D:\WPFUITEST\bin\Debug\net10-windows\）
                     string exeRunDir = AppContext.BaseDirectory;
                     // 拼接EXE目录下的Logs文件夹路径（最终：EXE目录\Logs）
-                    string logFolder = Path.Combine(exeRunDir, "Logs");
+                    string logDirectory = Path.Combine(exeRunDir, this._appConfiguration.LogSettings.Directory);
                     // 确保Logs文件夹存在，不存在则自动创建（避免写入日志时路径不存在报错）
-                    Directory.CreateDirectory(logFolder);
+                    Directory.CreateDirectory(logDirectory);
                     // 日志文件路径：EXE目录\Logs\log-.txt（Serilog会自动拼接日期，如log-2026-01-23.txt）
-                    string logFilePath = Path.Combine(logFolder, "log-.txt");
+                    string logFilePath = Path.Combine(logDirectory, "Log-.txt");
 
                     try
                     {
@@ -76,15 +80,20 @@ namespace WpfUiTest.App
                         Log.Logger = new LoggerConfiguration()
                             // 从应用配置（appsettings.json）读取Serilog配置（优先级低于代码硬编码）
                             // 作用：可通过配置文件动态调整日志级别，无需改代码
-                            .ReadFrom.Configuration(context.Configuration)
+                            // 移除：不再从Host配置读取Serilog，改用自定义配置
+                            // .ReadFrom.Configuration(context.Configuration)
+
                             // 设置全局日志最小级别为Debug（会输出Debug及以上级别日志：Debug/Info/Warn/Error/Fatal）
-                            .MinimumLevel.Debug()
+                            // .MinimumLevel.Information()
+                            .MinimumLevel.Is(ParseLogLevel(this._appConfiguration.LogSettings.LogLevel.Default))
                             // 覆盖「Microsoft命名空间」下组件的日志级别为Information
                             // 作用：过滤微软组件的Debug级冗余日志（如EF Core的SQL执行日志）
-                            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                            // .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                            .MinimumLevel.Override("Microsoft", ParseLogLevel(this._appConfiguration.LogSettings.LogLevel.Microsoft))
                             // 覆盖「System命名空间」下组件的日志级别为Warning
                             // 作用：仅输出系统组件的警告/错误日志，进一步减少冗余
-                            .MinimumLevel.Override("System", LogEventLevel.Warning)
+                            // .MinimumLevel.Override("System", LogEventLevel.Warning)
+                            .MinimumLevel.Override("System", ParseLogLevel(this._appConfiguration.LogSettings.LogLevel.System))
                             // 从日志上下文（LogContext）中添加丰富信息（如当前用户、请求ID等）
                             // 扩展：后续可通过LogContext.PushProperty("UserId", 123)添加自定义上下文
                             .Enrich.FromLogContext()
@@ -123,11 +132,13 @@ namespace WpfUiTest.App
 
                     // 5. 记录日志系统初始化完成的信息（验证日志配置是否生效）
                     // {LogPath}是结构化日志参数，便于后续检索日志目录
-                    Log.Information("Serilog日志系统初始化完成，日志文件路径: {LogPath}", logFolder);
+                    Log.Information("Serilog日志系统初始化完成，日志文件路径: {LogPath}", logDirectory);
                 })
                 // 自定义配置应用程序的配置源（扩展默认配置，添加JSON配置文件）
                 // context：配置上下文，包含主机环境信息（如运行环境、配置根等）
                 // config：配置构建器，用于添加/管理各类配置源（JSON、环境变量、命令行等）
+
+                /* 此处不在需要Host读取配置文件，由AppConfigurationHelper接管
                 .ConfigureAppConfiguration((context, config) =>
                 {
                     // 第一步：添加主配置文件 appsettings.json
@@ -146,6 +157,8 @@ namespace WpfUiTest.App
                     // 这句日志不会输出，因为Hosting存在强制顺序，第一个永远是ConfigureAppConfiguration
                     Log.Information("配置文件初始化完成!");
                 })
+                */
+
                 // ConfigureServices: 配置依赖注入(DI)容器，是WPF/ASP.NET Core应用的核心服务注册入口
                 // context：配置上下文，可访问当前应用的配置（appsettings.json）、环境信息等
                 // services：DI容器的服务集合，所有需要注入的服务都通过这个对象注册
@@ -168,14 +181,22 @@ namespace WpfUiTest.App
                     // 数据库路径串
                     // string dbDir = context.Configuration.GetConnectionString("DefaultConnection") ?? "DataBase/WpfUiTest.db;Cache=Shared";
                     // 创建数据库目录
-                    string dbDir = Path.Combine(AppContext.BaseDirectory, context.Configuration.GetConnectionString("DefaultDir") ?? "DataBase"); // 拼接相对路径目录
+                    string dbDir = Path.Combine(AppContext.BaseDirectory, this._appConfiguration.DataBaseSettings.Directory); // 拼接相对路径目录
                     dbDir = Path.GetFullPath(dbDir); // 转成真实路径（解决../解析）
                     Directory.CreateDirectory(dbDir); // 确保目录存在
                     // 注册数据库上下文
                     services.AddDbContext<ApplicationDbContext>(options =>
+                    {
+                        options.UseSqlite($"Data Source={Path.Combine(AppContext.BaseDirectory,this._appConfiguration.DataBaseSettings.Connection)}");
+                    },
+                    ServiceLifetime.Singleton);
+
+                    /*
+                    services.AddDbContext<ApplicationDbContext>(options =>
                         options.UseSqlite($"Data Source={Path.Combine(AppContext.BaseDirectory,
                         context.Configuration.GetConnectionString("DefaultConnection") ?? "DataBase/WpfUiTest.db;Cache=Shared")}"),
                         ServiceLifetime.Singleton);
+                    */
 
                     // 注册工作单元
                     services.AddSingleton<IUnitOfWork, UnitOfWork>();
@@ -208,7 +229,7 @@ namespace WpfUiTest.App
                     services.AddSingleton<IContentDialogService, ContentDialogService>();  // 对话框服务
 
                     // 注册工具
-                    services.AddSingleton<CredentialUtility>();
+                    // services.AddSingleton<CredentialUtility>();  // 已删除此工具类，由LoginCredentialHelper替代
 
 
                     // ========== 后续扩展：各类服务注册示例（带注释说明） ==========
@@ -240,6 +261,34 @@ namespace WpfUiTest.App
                 .Build();
         }
 
+        // ========== 新增：日志级别转换辅助方法 ==========
+        /// <summary>
+        /// 将字符串形式的日志级别名称转换为 LogEventLevel 枚举值
+        /// </summary>
+        /// <param name="levelStr">从配置文件读取的日志级别字符串，如 "Information"、"Error" 等</param>
+        /// <returns>转换后的 LogEventLevel 枚举值；如果转换失败，则返回默认的 Information 级别</returns>
+        private LogEventLevel ParseLogLevel(string levelStr)
+        {
+            // 使用 Enum.TryParse 尝试将字符串解析为 LogEventLevel 枚举
+            // Enum.TryParse 是泛型方法，这里指定目标枚举类型为 LogEventLevel
+            // ignoreCase: true 表示在解析时忽略大小写，例如 "information"、"INFORMATION" 都能正确匹配到 Information
+            // out var level 是 C# 7.0 引入的内联变量声明，用于接收解析结果，如果解析成功，level 会被赋值为对应的枚举值；
+            // 如果解析失败，level 会被赋值为该枚举的默认值（通常是 0，但这里不依赖它）
+            // 方法返回 bool 值，表示解析是否成功，此处用 ! 取反，所以条件成立表示解析失败
+            if (!Enum.TryParse<LogEventLevel>(levelStr, ignoreCase: true, out var level))
+            {
+                // 解析失败时的处理：记录警告日志，提醒配置有问题，并指定使用默认值
+                // 这里假设存在静态的 Log 对象（如 Serilog 的 Log），如果实际项目中无此对象，可替换为其他日志输出方式
+                Log.Warning("日志级别配置无效：{LevelStr}，使用默认级别 Information", levelStr);
+
+                // 将 level 变量赋值为默认的 Information 级别，确保方法始终返回一个有效的枚举值
+                level = LogEventLevel.Information;
+            }
+
+            // 返回最终确定的枚举值（可能是成功解析的值，也可能是默认的 Information）
+            return level;
+        }
+
         /// <summary>
         /// 应用程序启动入口方法，重写基类方法以自定义启动流程
         /// 此方法在构造函数执行完成后调用
@@ -262,6 +311,7 @@ namespace WpfUiTest.App
 
                     // 方法2：使用迁移创建数据库（推荐）
                     dbContext.Database.Migrate();
+                    Log.Information("数据库初始化成功! 数据文件路径: {dir}",Path.Combine(AppContext.BaseDirectory, this._appConfiguration.DataBaseSettings.Directory));
                 }
 
                 // StartAsync: 异步启动主机，开始托管所有已注册的服务
@@ -274,8 +324,9 @@ namespace WpfUiTest.App
                 // Show: 显示主窗口，启动WPF应用程序的用户界面
                 loginView.Show();
                 // Log.Information: 记录应用程序成功启动的日志
-                Log.Information("应用程序启动成功! 主窗口已显示");
-                
+                // Log.Information("应用程序启动成功! 主窗口已显示");
+                Log.Information("应用程序启动成功!");
+
             }
             catch (Exception ex)
             {

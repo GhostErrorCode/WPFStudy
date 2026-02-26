@@ -8,14 +8,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Settings\AppSettings.json" />
+    <None Remove="Settings\UserAppSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Settings\AppSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Settings\UserAppSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Constants\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.3" />
     <PackageReference Include="WPF-UI" Version="4.2.0" />
   </ItemGroup>
