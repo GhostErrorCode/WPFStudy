@@ -108,7 +108,7 @@ namespace WpfUiTest.App.ViewModels.User
                 if (registerResult != null && registerResult.IsSuccess)
                 {
                     // 打印日志
-                    this._logger.LogInformation("用户注册成功!\n[ServiceResult<bool>]\n{registerResult}", registerResult.ToJson());
+                    this._logger.LogInformation("用户注册成功! {@RegisterResult}", registerResult);
                     // 展示弹窗
                     this._messenger.ShowSuccess(SnackbarTarget.UserView, registerResult.Message, "注册成功! 请返回登录页面进行登录!");
                     // 返回登录页面
@@ -117,14 +117,14 @@ namespace WpfUiTest.App.ViewModels.User
                 else if (registerResult != null && !registerResult.IsSuccess) // 注册失败的话
                 {
                     // 打印日志
-                    this._logger.LogWarning("用户注册失败!\n[ServiceResult<bool>]\n{registerResult}", registerResult.ToJson());
+                    this._logger.LogWarning("用户注册失败! {@RegisterResult}", registerResult);
                     // 展示弹窗
                     this._messenger.ShowCaution(SnackbarTarget.UserView, registerResult.Message, "注册失败! 请检查输入的内容!");
                 }
                 else
                 {
                     // 打印日志
-                    this._logger.LogError("用户注册失败!\n[ServiceResult<bool>]\n{registerResult}", registerResult?.ToJson());
+                    this._logger.LogError("用户注册失败! {@RegisterResult}", registerResult);
                     // 展示弹窗
                     this._messenger.ShowDanger(SnackbarTarget.UserView, "系统异常!", "注册失败! 系统异常!");
                 }
@@ -165,7 +165,7 @@ namespace WpfUiTest.App.ViewModels.User
                 {
                     // 显示欢迎语，短暂停留后跳转主页
                     // 打印日志
-                    this._logger.LogInformation("用户自动登录成功!\n[ServiceResult<bool>]\n{registerResult}", autoLoginResult.ToJson());
+                    this._logger.LogInformation("用户自动登录成功! {@RegisterResult}", autoLoginResult);
                     // 展示弹窗
                     this._messenger.ShowSuccess(SnackbarTarget.UserView, autoLoginResult.Message, "自动登录成功! 欢迎回来!");
 
@@ -199,7 +199,7 @@ namespace WpfUiTest.App.ViewModels.User
                 if (loginResult != null && loginResult.IsSuccess)
                 {
                     // 打印日志
-                    this._logger.LogInformation("用户登录成功!\n[ServiceResult<bool>]\n{registerResult}", loginResult.ToJson());
+                    this._logger.LogInformation("用户登录成功! {@RegisterResult}", loginResult);
                     // 展示弹窗
                     this._messenger.ShowSuccess(SnackbarTarget.UserView, loginResult.Message, "登录成功! 欢迎回来!");
 
@@ -212,7 +212,7 @@ namespace WpfUiTest.App.ViewModels.User
                 else if(loginResult != null && !loginResult.IsSuccess)
                 {
                     // 打印日志
-                    this._logger.LogWarning("用户登录失败!\n[ServiceResult<bool>]\n{loginResult}", loginResult.ToJson());
+                    this._logger.LogWarning("用户登录失败! {@RegisterResult}", loginResult);
                     // 展示弹窗
                     this._messenger.ShowCaution(SnackbarTarget.UserView, loginResult.Message, "登录失败! 请检查输入的内容!");
                 }
@@ -220,7 +220,7 @@ namespace WpfUiTest.App.ViewModels.User
                 else
                 {
                     // 打印日志
-                    this._logger.LogError("用户登录失败!\n[ServiceResult<bool>]\n{loginResult}", loginResult?.ToJson());
+                    this._logger.LogError("用户登录失败! {@RegisterResult}", loginResult);
                     // 展示弹窗
                     this._messenger.ShowDanger(SnackbarTarget.UserView, "系统异常!", "登录失败! 系统异常!");
                 }

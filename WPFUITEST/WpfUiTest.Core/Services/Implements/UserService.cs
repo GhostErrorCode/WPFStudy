@@ -85,12 +85,20 @@ namespace WpfUiTest.Core.Services.Implements
                 // 检查是否勾选了记住我，以便生成登录凭证
                 if(loginUserDto.IsRememberMe == true)
                 {
-                    // 调用工具集保存登录凭证
-                    LoginCredentialHelper.SaveLoginCredential(new LoginCredential()
+                    try
                     {
-                        UserId = this._currentUser.Id,
-                        Account = this._currentUser.Account
-                    });
+                        // 调用工具集保存登录凭证
+                        await LoginCredentialHelper.SaveLoginCredential(new LoginCredential()
+                        {
+                            UserId = this._currentUser.Id,
+                            Account = this._currentUser.Account
+                        });
+                    }
+                    catch(Exception ex)
+                    {
+                        // 记录报错登录凭证的异常日志
+                        this._logger.LogError("保存登录凭证失败: 异常信息: {ex}", ex);
+                    }
                 }
                 // 输出登录成功日志
                 this._logger.LogInformation("登录成功: 用户 {Account} 登录成功", currentLoginUser.Account);
@@ -99,7 +107,7 @@ namespace WpfUiTest.Core.Services.Implements
             catch(Exception ex)
             {
                 // 记录异常日志
-                this._logger.LogError("登录失败: 用户登录时出现系统内部异常!\n异常信息: {ex}", ex);
+                this._logger.LogError("登录失败: 用户登录时出现系统内部异常! 异常信息: {ex}", ex);
                 // 登录失败：系统内部异常
                 return ServiceResult<bool>.Failure("系统内部异常,请稍后重试!");
             }

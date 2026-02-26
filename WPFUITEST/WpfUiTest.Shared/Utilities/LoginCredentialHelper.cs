@@ -18,7 +18,7 @@ namespace WpfUiTest.Shared.Utilities
         private static readonly string _loginCredentialFilePath = Path.Combine(_loginCredentialDirectory, AppConfigurationHelper.LoadMergeSettings().CredentialSettings.FileName);
 
         // 静态方法：保存登录凭证
-        public static void SaveLoginCredential(LoginCredential loginCredential)
+        public static async Task SaveLoginCredential(LoginCredential loginCredential)
         {
             try
             {
@@ -36,7 +36,8 @@ namespace WpfUiTest.Shared.Utilities
                 */
                 byte[] encrypted = ProtectedData.Protect(data, null, DataProtectionScope.CurrentUser);
                 // 加密数据写入指定文件（覆盖已有文件）
-                File.WriteAllBytesAsync(_loginCredentialFilePath, encrypted);
+                if (!File.Exists(_loginCredentialDirectory)) { Directory.CreateDirectory(_loginCredentialDirectory); }
+                await File.WriteAllBytesAsync(_loginCredentialFilePath, encrypted);
             }
             catch(Exception ex)
             {
