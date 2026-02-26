@@ -18,7 +18,7 @@ namespace WpfUiTest.App.Views.Main
     /// <summary>
     /// SettingsView.xaml 的交互逻辑
     /// </summary>
-    public partial class SettingsView : INavigableView<SettingsViewModel>
+    public partial class SettingsView : Page
     {
         // 依赖注入获取对应ViewModel
         public SettingsView(SettingsViewModel settingsViewModel)
@@ -27,9 +27,6 @@ namespace WpfUiTest.App.Views.Main
 
             // 获取ViewModel
             this.DataContext = settingsViewModel;
-            ViewModel = settingsViewModel;
         }
-
-        public SettingsViewModel ViewModel { get; }
     }
 }

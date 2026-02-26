@@ -16,8 +16,7 @@ namespace WpfUiTest.App.ViewModels.Main
     public class MainViewModel : BaseViewModel
     {
         // 字段：IServiceProvider服务
-        private readonly IServiceProvider _serviceProvider;
-
+        // private readonly IServiceProvider _serviceProvider;
 
 
         // 属性：主页面Footer区域的菜单
@@ -32,13 +31,14 @@ namespace WpfUiTest.App.ViewModels.Main
 
 
         // ============ 构造函数 ==============
-        public MainViewModel(IServiceProvider serviceProvider)
+        public MainViewModel(MainFooterMenuViewModel mainFooterMenuViewModel)
         {
             // 初始化字段
-            this._serviceProvider = serviceProvider;
+            // this._serviceProvider = serviceProvider;
 
             // 初始化属性
-            this._mainFooterMenuViewModel = this._serviceProvider.GetRequiredService<MainFooterMenuViewModel>();
+            // this._mainFooterMenuViewModel = this._serviceProvider.GetRequiredService<MainFooterMenuViewModel>();
+            this._mainFooterMenuViewModel = mainFooterMenuViewModel;
 
             // 初始化命令
         }

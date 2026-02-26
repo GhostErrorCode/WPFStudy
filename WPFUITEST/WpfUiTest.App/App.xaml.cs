@@ -181,14 +181,22 @@ namespace WpfUiTest.App
                     // 数据库路径串
                     // string dbDir = context.Configuration.GetConnectionString("DefaultConnection") ?? "DataBase/WpfUiTest.db;Cache=Shared";
                     // 创建数据库目录
-                    string dbDir = Path.Combine(AppContext.BaseDirectory, context.Configuration.GetConnectionString("DefaultDir") ?? "DataBase"); // 拼接相对路径目录
+                    string dbDir = Path.Combine(AppContext.BaseDirectory, this._appConfiguration.DataBaseSettings.Directory); // 拼接相对路径目录
                     dbDir = Path.GetFullPath(dbDir); // 转成真实路径（解决../解析）
                     Directory.CreateDirectory(dbDir); // 确保目录存在
                     // 注册数据库上下文
                     services.AddDbContext<ApplicationDbContext>(options =>
+                    {
+                        options.UseSqlite($"Data Source={Path.Combine(AppContext.BaseDirectory,this._appConfiguration.DataBaseSettings.Connection)}");
+                    },
+                    ServiceLifetime.Singleton);
+
+                    /*
+                    services.AddDbContext<ApplicationDbContext>(options =>
                         options.UseSqlite($"Data Source={Path.Combine(AppContext.BaseDirectory,
                         context.Configuration.GetConnectionString("DefaultConnection") ?? "DataBase/WpfUiTest.db;Cache=Shared")}"),
                         ServiceLifetime.Singleton);
+                    */
 
                     // 注册工作单元
                     services.AddSingleton<IUnitOfWork, UnitOfWork>();
@@ -303,6 +311,7 @@ namespace WpfUiTest.App
 
                     // 方法2：使用迁移创建数据库（推荐）
                     dbContext.Database.Migrate();
+                    Log.Information("数据库初始化成功! 数据文件路径: {dir}",Path.Combine(AppContext.BaseDirectory, this._appConfiguration.DataBaseSettings.Directory));
                 }
 
                 // StartAsync: 异步启动主机，开始托管所有已注册的服务
@@ -315,8 +324,9 @@ namespace WpfUiTest.App
                 // Show: 显示主窗口，启动WPF应用程序的用户界面
                 loginView.Show();
                 // Log.Information: 记录应用程序成功启动的日志
-                Log.Information("应用程序启动成功! 主窗口已显示");
-                
+                // Log.Information("应用程序启动成功! 主窗口已显示");
+                Log.Information("应用程序启动成功!");
+
             }
             catch (Exception ex)
             {

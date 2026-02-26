@@ -101,7 +101,7 @@ namespace WpfUiTest.App.ViewModels.User
         {
             try
             {
-                this._logger.LogInformation("UserViewModel：开始调用注册服务");
+                this._logger.LogDebug("UserViewModel：开始调用注册服务");
                 // 调用副VM并接收结果
                 ServiceResult<bool> registerResult = await this._userRegisterViewModel.RegisterAsync();
                 // 如果结果不为空且注册成功
@@ -132,12 +132,12 @@ namespace WpfUiTest.App.ViewModels.User
             }
             catch(Exception ex)
             {
-                this._logger.LogError("发生意外的未处理异常：\n{ex}", ex);
+                this._logger.LogError("用户注册失败! 发生意外的未处理异常: {ex}", ex);
                 this._messenger.ShowDanger(SnackbarTarget.UserView,"操作失败!", "系统出现意外的严重错误!");
             }
             finally
             {
-                this._logger.LogInformation("UserViewModel：调用注册服务完成");
+                this._logger.LogDebug("UserViewModel：调用注册服务完成");
             }
         }
 
@@ -146,7 +146,7 @@ namespace WpfUiTest.App.ViewModels.User
         {
             try
             {
-                this._logger.LogInformation("UserViewModel：开始调用自动登录服务");
+                this._logger.LogDebug("UserViewModel：开始调用自动登录服务");
                 // 尝试加载登录凭证
                 LoginCredential? loginCredential = await LoginCredentialHelper.LoadLoginCredential();
                 // 如果返回的是NULL则视为无效凭证(不进行提示，静默处理)
@@ -154,7 +154,7 @@ namespace WpfUiTest.App.ViewModels.User
                 // 登录凭证超过30天
                 if (loginCredential.Expires < DateTime.Now)
                 {
-                    this._logger.LogWarning("登录凭证已超时失效，当前需要手动登录");
+                    this._logger.LogWarning("自动登录失败: 登录凭证已超时失效，当前需要手动登录");
                     this._messenger.ShowCaution(SnackbarTarget.UserView, "登录凭证失效!", "登录凭证已超时失效，当前需要手动登录");
                 }
                 // ====== 以下为登录凭证有效的情况 ======
@@ -165,7 +165,7 @@ namespace WpfUiTest.App.ViewModels.User
                 {
                     // 显示欢迎语，短暂停留后跳转主页
                     // 打印日志
-                    this._logger.LogInformation("用户自动登录成功! {@RegisterResult}", autoLoginResult);
+                    this._logger.LogInformation("自动登录成功: 用户自动登录成功! {@RegisterResult}", autoLoginResult);
                     // 展示弹窗
                     this._messenger.ShowSuccess(SnackbarTarget.UserView, autoLoginResult.Message, "自动登录成功! 欢迎回来!");
 
@@ -177,11 +177,11 @@ namespace WpfUiTest.App.ViewModels.User
             }
             catch (Exception ex)
             {
-                this._logger.LogError("处理登录凭证过程中出现意外的严重错误!\n{ex}", ex);
+                this._logger.LogError("自动登录失败: 处理登录凭证过程中出现意外的严重错误! 异常信息: {ex}", ex);
             }
             finally
             {
-                this._logger.LogInformation("UserViewModel：调用自动登录服务完成");
+                this._logger.LogDebug("UserViewModel：调用自动登录服务完成");
             }
             
         }
@@ -191,7 +191,7 @@ namespace WpfUiTest.App.ViewModels.User
         {
             try
             {
-                this._logger.LogInformation("UserViewModel：开始调用登录服务");
+                this._logger.LogDebug("UserViewModel：开始调用登录服务");
                 // 调用副VM并接收结果
                 ServiceResult<bool> loginResult = await this._userLoginViewModel.LoginAsync();
 
@@ -227,12 +227,12 @@ namespace WpfUiTest.App.ViewModels.User
             }
             catch (Exception ex)
             {
-                this._logger.LogError("发生意外的未处理异常：\n{ex}", ex);
+                this._logger.LogError("用户登录失败! 发生意外的未处理异常, 异常信息: {ex}", ex);
                 this._messenger.ShowDanger(SnackbarTarget.UserView, "操作失败!", "系统出现意外的严重错误!");
             }
             finally
             {
-                this._logger.LogInformation("UserViewModel：调用登录服务完成");
+                this._logger.LogDebug("UserViewModel：调用登录服务完成");
             }
         }
     }
