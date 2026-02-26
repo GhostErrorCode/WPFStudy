@@ -14,7 +14,7 @@
     // 数据库文件目录
     "Directory": "DataBase",
     // 数据库连接串
-    "Connection": "DataBase/GhostWpfUiTest.db;Cache=Shared"
+    "Connection": "DataBase/WpfUiTest.db;Cache=Shared"
   },
 
   // 日志设置
@@ -40,7 +40,7 @@
     // 凭证目录名
     "Directory": "Cache",
     // 凭证文件名
-    "FileName": "loginCache.dat",
+    "FileName": "LoginCredential.dat",
     // 默认过期时间30天
     "ExpireDays": 30
   },

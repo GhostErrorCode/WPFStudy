@@ -31,8 +31,6 @@ namespace WpfUiTest.App.ViewModels.User
         private readonly IServiceProvider _serviceProvider;
         // 字段：ILogger服务
         private readonly ILogger<UserViewModel> _logger;
-        // 字段：CredentialUtility 工具
-        private readonly CredentialUtility _credentialUtility;
 
 
         // 属性：当前选中的视图类型 注册或登录
@@ -67,14 +65,13 @@ namespace WpfUiTest.App.ViewModels.User
 
 
         // ============================= 构造函数 ===================================
-        public UserViewModel(IServiceProvider serviceProvider, ISnackbarService snackbarService, IMessenger messenger, ILogger<UserViewModel> logger, CredentialUtility credentialUtility)
+        public UserViewModel(IServiceProvider serviceProvider, ISnackbarService snackbarService, IMessenger messenger, ILogger<UserViewModel> logger)
         {
             // 初始化字段
             this._serviceProvider = serviceProvider;
             this._snackbarService = snackbarService;
             this._messenger = messenger;
             this._logger = logger;
-            this._credentialUtility = credentialUtility;
 
             // 初始化属性
             this._userRegisterViewModel = this._serviceProvider.GetRequiredService<UserRegisterViewModel>();
@@ -151,7 +148,7 @@ namespace WpfUiTest.App.ViewModels.User
             {
                 this._logger.LogInformation("UserViewModel：开始调用自动登录服务");
                 // 尝试加载登录凭证
-                LoginCredential? loginCredential = await this._credentialUtility.Load();
+                LoginCredential? loginCredential = await LoginCredentialHelper.LoadLoginCredential();
                 // 如果返回的是NULL则视为无效凭证(不进行提示，静默处理)
                 if (loginCredential == null) { return; }
                 // 登录凭证超过30天

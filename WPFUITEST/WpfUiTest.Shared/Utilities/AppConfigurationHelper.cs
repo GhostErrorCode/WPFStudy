@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -38,15 +37,22 @@ namespace WpfUiTest.Shared.Utilities
         // 静态方法 - 保存用户设置
         public static void SaveUserSettings(AppConfiguration settings)
         {
-            // 确保配置目录存在
-            Directory.CreateDirectory(_appSettingsDirectory);
-            // 拼接完整的用户 JSON 设置文件路径
-            string SettingsPath = Path.Combine(_appSettingsDirectory, "UserAppSettings.json");
+            try
+            {
+                // 确保配置目录存在
+                Directory.CreateDirectory(_appSettingsDirectory);
+                // 拼接完整的用户 JSON 设置文件路径
+                string SettingsPath = Path.Combine(_appSettingsDirectory, "UserAppSettings.json");
 
-            // 序列化并保存JSON（格式化，便于手动修改）
-            string jsonContent = JsonSerializer.Serialize(settings, _jsonSerializerOptions);
-            // 写入用户配置JSON文件中
-            File.WriteAllText(SettingsPath, jsonContent, Encoding.UTF8);
+                // 序列化并保存JSON（格式化，便于手动修改）
+                string jsonContent = JsonSerializer.Serialize(settings, _jsonSerializerOptions);
+                // 写入用户配置JSON文件中
+                File.WriteAllText(SettingsPath, jsonContent, Encoding.UTF8);
+            }
+            catch(Exception ex)
+            {
+                throw;  // 异常信息抛给上层处理
+            }
         }
 
 

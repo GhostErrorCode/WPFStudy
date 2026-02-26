@@ -208,7 +208,7 @@ namespace WpfUiTest.App
                     services.AddSingleton<IContentDialogService, ContentDialogService>();  // 对话框服务
 
                     // 注册工具
-                    services.AddSingleton<CredentialUtility>();
+                    // services.AddSingleton<CredentialUtility>();  // 已删除此工具类，由LoginCredentialHelper替代
 
 
                     // ========== 后续扩展：各类服务注册示例（带注释说明） ==========

@@ -33,22 +33,18 @@ namespace WpfUiTest.Core.Services.Implements
         private readonly IUnitOfWork _unitOfWork;
         // 字段：日志管理
         private readonly ILogger<UserService> _logger;
-        // 字段：登录凭证管理
-        private readonly CredentialUtility _credentialUtility;
 
 
         // 构造函数(依赖注入)
-        public UserService(ILogger<UserService> logger, IUserRepository userRepository, IUnitOfWork unitOfWork, CredentialUtility credentialUtility)
+        public UserService(ILogger<UserService> logger, IUserRepository userRepository, IUnitOfWork unitOfWork)
         {
             // 依赖注入解析
             this._logger = logger;
             this._userRepository = userRepository;
             this._unitOfWork = unitOfWork;
-            this._credentialUtility = credentialUtility;
 
             // 输出日志
-            this._logger.LogInformation("UserService: 已成功解析所有依赖");
-            _credentialUtility = credentialUtility;
+            // this._logger.LogInformation("UserService: 已成功解析所有依赖");
         }
 
 
@@ -90,7 +86,7 @@ namespace WpfUiTest.Core.Services.Implements
                 if(loginUserDto.IsRememberMe == true)
                 {
                     // 调用工具集保存登录凭证
-                    this._credentialUtility.Save(new LoginCredential()
+                    LoginCredentialHelper.SaveLoginCredential(new LoginCredential()
                     {
                         UserId = this._currentUser.Id,
                         Account = this._currentUser.Account
