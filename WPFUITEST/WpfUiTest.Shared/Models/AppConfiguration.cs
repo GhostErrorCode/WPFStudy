@@ -15,7 +15,7 @@ namespace WpfUiTest.Shared.Models
         // 日志设置
         public LogSettings LogSettings { get; set; } = new LogSettings();
         // 登录凭证设置
-        public CredentialSettings CredentialSettings { get; set; } = new CredentialSettings();
+        public LoginCredentialSettings LoginCredentialSettings { get; set; } = new LoginCredentialSettings();
         // 应用主题设置
         public ThemeSettings ThemeSettings { get; set; } = new ThemeSettings();
     }
@@ -63,7 +63,7 @@ namespace WpfUiTest.Shared.Models
     }
 
     // 4.登录凭证设置
-    public class CredentialSettings
+    public class LoginCredentialSettings
     {
         // 凭证目录名
         public string Directory { get; set; } = "Cache";

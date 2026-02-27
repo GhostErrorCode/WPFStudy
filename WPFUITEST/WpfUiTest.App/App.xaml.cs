@@ -13,7 +13,9 @@ using System.IO;
 using System.Text;
 using System.Windows;
 using Wpf.Ui;
+using Wpf.Ui.Appearance;
 using Wpf.Ui.DependencyInjection;
+using WpfUiTest.App.Services.Implements;
 using WpfUiTest.App.ViewModels.Main;
 using WpfUiTest.App.ViewModels.User;
 using WpfUiTest.App.Views;
@@ -26,6 +28,8 @@ using WpfUiTest.Core.Data.UnitOfWork.Implements;
 using WpfUiTest.Core.Data.UnitOfWork.Interfaces;
 using WpfUiTest.Core.Services.Implements;
 using WpfUiTest.Core.Services.Interfaces;
+using WpfUiTest.Shared.Enums;
+using WpfUiTest.Shared.Extensions;
 using WpfUiTest.Shared.Models;
 using WpfUiTest.Shared.Utilities;
 
@@ -219,6 +223,8 @@ namespace WpfUiTest.App
                     services.AddSingleton<MainViewModel>();
                     services.AddSingleton<MainFooterMenuViewModel>();
                     services.AddSingleton<SettingsViewModel>();
+                    services.AddSingleton<SettingsAboutViewModel>();
+                    services.AddSingleton<SettingsThemeViewModel>();
 
                     // 注册服务
                     services.AddSingleton<ISnackbarService, SnackbarService>();  // 注册提示信息框
@@ -227,6 +233,7 @@ namespace WpfUiTest.App
                     services.AddNavigationViewPageProvider();  // WPFUI中导航
                     services.AddSingleton<INavigationService, NavigationService>();  // 导航服务
                     services.AddSingleton<IContentDialogService, ContentDialogService>();  // 对话框服务
+                    services.AddSingleton<IWindowService, WindowService>();  // 自定义窗体服务
 
                     // 注册工具
                     // services.AddSingleton<CredentialUtility>();  // 已删除此工具类，由LoginCredentialHelper替代
@@ -296,9 +303,6 @@ namespace WpfUiTest.App
         /// <param name="e">启动事件参数，包含命令行参数</param>
         protected override async void OnStartup(StartupEventArgs e)
         {
-            // 调用基类方法，确保WPF基础初始化完成
-            base.OnStartup(e);
-
             try
             {
                 // 自动创建数据库（如果不存在）
@@ -321,8 +325,17 @@ namespace WpfUiTest.App
                 // GetRequiredService: 从服务容器中获取MainWindow服务实例
                 // 如果服务未注册，此方法会抛出InvalidOperationException异常
                 UserView loginView = this.ApplicationHost.Services.GetRequiredService<UserView>();
+                // MainView mainView = this.ApplicationHost.Services.GetRequiredService<MainView>();
+                // 设置WPF程序上下文的主窗口
+                Application.Current.MainWindow = loginView;
+                // 设置应用主题观察者(这个是跟随系统的，可不设置)
+                SystemThemeWatcher.Watch(loginView);
+                // 在设置主题，从设置读取
+                ApplicationThemeManager.Apply(this._appConfiguration.ThemeSettings.Theme.StringThemeToApplicationTheme());
+                //SystemThemeWatcher.Watch(loginView);
                 // Show: 显示主窗口，启动WPF应用程序的用户界面
                 loginView.Show();
+                //loginView1.Show();
                 // Log.Information: 记录应用程序成功启动的日志
                 // Log.Information("应用程序启动成功! 主窗口已显示");
                 Log.Information("应用程序启动成功!");
@@ -344,6 +357,9 @@ namespace WpfUiTest.App
                 // 非零退出代码通常表示应用程序异常终止
                 Shutdown(1);
             }
+
+            // 调用基类方法，确保WPF基础初始化完成
+            base.OnStartup(e);
         }
 
         /// <summary>

@@ -55,7 +55,7 @@
                 <ui:AutoSuggestBox
                     x:Name="AutoSuggestBox"
                     AutomationProperties.AutomationId="NavigationAutoSuggestBox"
-                    PlaceholderText="Search...">
+                    PlaceholderText="搜索导航列表...">
                     <ui:AutoSuggestBox.Icon>
                         <!-- 
                             IconSourceElement：WPF UI的「图标源容器」（必加的中间层）

@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:WpfUiTest.App.Resources.Converters">
+    <!-- 转换器资源字典 -->
+    
+    <!-- 设置页面 应用主题 转 字符串 -->
+    <converters:ThemeToStringConverter x:Key="ThemeToStringConverter" />
+</ResourceDictionary>

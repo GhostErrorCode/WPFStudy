@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <!-- 设置页面中的超链样式 -->
+    <Style
+        x:Key="SettingsUiAnchorStyle"
+        TargetType="{x:Type ui:Anchor}"
+        BasedOn="{StaticResource {x:Type ui:Anchor}}">
+        <!-- 外边距/内边距 -->
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="Padding" Value="16,16,16,16" />
+        <!-- 水平调整 -->
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <!-- 背景色透明 -->
+        <Setter Property="Background" Value="Transparent" />
+        <!-- 边框 -->
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="CornerRadius" Value="0,0,0,0" />
+    </Style>
+</ResourceDictionary>

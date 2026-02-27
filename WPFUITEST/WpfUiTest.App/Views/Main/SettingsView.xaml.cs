@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Wpf.Ui.Abstractions.Controls;
+using Wpf.Ui.Appearance;
 using WpfUiTest.App.ViewModels.Main;
 
 namespace WpfUiTest.App.Views.Main

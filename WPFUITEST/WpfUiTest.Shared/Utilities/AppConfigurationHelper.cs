@@ -117,12 +117,12 @@ namespace WpfUiTest.Shared.Utilities
                 baseSettings.LogSettings.LogLevel.System = userSettings.LogSettings.LogLevel.System;
 
             // 4. 合并登录凭证设置
-            if (!string.IsNullOrEmpty(userSettings.CredentialSettings.Directory))
-                baseSettings.CredentialSettings.Directory = userSettings.CredentialSettings.Directory;
-            if (!string.IsNullOrEmpty(userSettings.CredentialSettings.FileName))
-                baseSettings.CredentialSettings.FileName = userSettings.CredentialSettings.FileName;
-            if (userSettings.CredentialSettings.ExpireDays > 0) // 过期天数>0才覆盖（避免0覆盖默认30）
-                baseSettings.CredentialSettings.ExpireDays = userSettings.CredentialSettings.ExpireDays;
+            if (!string.IsNullOrEmpty(userSettings.LoginCredentialSettings.Directory))
+                baseSettings.LoginCredentialSettings.Directory = userSettings.LoginCredentialSettings.Directory;
+            if (!string.IsNullOrEmpty(userSettings.LoginCredentialSettings.FileName))
+                baseSettings.LoginCredentialSettings.FileName = userSettings.LoginCredentialSettings.FileName;
+            if (userSettings.LoginCredentialSettings.ExpireDays > 0) // 过期天数>0才覆盖（避免0覆盖默认30）
+                baseSettings.LoginCredentialSettings.ExpireDays = userSettings.LoginCredentialSettings.ExpireDays;
 
             // 5. 合并主题设置
             if (!string.IsNullOrEmpty(userSettings.ThemeSettings.Theme))

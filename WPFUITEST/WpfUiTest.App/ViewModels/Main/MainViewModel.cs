@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using Wpf.Ui;
+using Wpf.Ui.Appearance;
 using WpfUiTest.App.ViewModels.User;
 using WpfUiTest.Shared.Base;
 using WpfUiTest.Shared.Utilities;
@@ -41,6 +42,7 @@ namespace WpfUiTest.App.ViewModels.Main
             this._mainFooterMenuViewModel = mainFooterMenuViewModel;
 
             // 初始化命令
+
         }
 
 

@@ -9,14 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="appsettings.json" />
     <None Remove="Resources\Images\User.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -45,12 +38,10 @@
     <PackageReference Include="WPF-UI" Version="4.2.0" />
     <PackageReference Include="WPF-UI.DependencyInjection" Version="4.2.0" />
     <PackageReference Include="WPF-UI.Tray" Version="4.2.0" />
-    <PackageReference Include="WPF-UI.Violeta" Version="4.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Resources\Colors\Themes\" />
-    <Folder Include="Resources\Converters\" />
     <Folder Include="Resources\Icons\" />
     <Folder Include="Resources\Styles\Modules\" />
     <Folder Include="Resources\Styles\Specific\" />

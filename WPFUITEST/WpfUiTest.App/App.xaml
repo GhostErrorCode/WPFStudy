@@ -28,11 +28,9 @@
         <!-- WPF-UI资源 -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ui:ThemesDictionary Theme="Light" />
+                <ui:ThemesDictionary />
                 <ui:ControlsDictionary />
-                <vio:ThemesDictionary Theme="Light" />
-                <vio:ControlsDictionary />
-                
+
                 <!-- 自定义样式、资源等-->
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiTitleBar.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/Border.xaml" />
@@ -44,7 +42,10 @@
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiButton.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/CheckBox.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiNavigationView.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Controls/UiAnchor.xaml" />
 
+                <!-- 全局转换器 -->
+                <ResourceDictionary Source="/Resources/Converters/Converters.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

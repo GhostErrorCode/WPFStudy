@@ -53,18 +53,20 @@ namespace WpfUiTest.App.Views.User
             // ContentRendered 事件后执行自动登录方法
             this.ContentRendered += async (s, e) =>
             {
-                // 因UserView存在动画切换效果，直接开始代码会造成明显卡顿，这里延迟100ms
-                await Task.Delay(100);
+                // 因UserView存在动画切换效果，直接开始代码会造成明显卡顿，这里延迟500ms
+                await Task.Delay(500);
                 await userViewModel.UserAutoLogin();
             };
                 
-            // 订阅登录成功后打开主页面
+            // ===== 订阅登录成功后打开主页面(已废弃，由UserViewModel进行管理窗体的打开关闭) =====
             this.Loaded += (Object s, RoutedEventArgs e) =>
             {
                 this._messenger.Register<LoginSuccessMessage>(this, (Object a, LoginSuccessMessage b) =>
                 {
                     // 打开主页面
-                    this._serviceProvider.GetRequiredService<MainView>().Show();
+                    MainView main = this._serviceProvider.GetRequiredService<MainView>();
+                    Application.Current.MainWindow = main;
+                    main.Show();
                     // 关闭当前页面
                     this.Close();
                 });
