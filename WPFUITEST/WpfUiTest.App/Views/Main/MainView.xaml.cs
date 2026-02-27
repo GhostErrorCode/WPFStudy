@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Wpf.Ui;
+using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 using WpfUiTest.App.ViewModels.Main;
 using WpfUiTest.App.ViewModels.User;
@@ -42,8 +43,6 @@ namespace WpfUiTest.App.Views.Main
             // 对话框服务设置Host
             contentDialogService.SetDialogHost(MainContentDialogHost);
 
-
-
             // 订阅定向SnackBar投放
             this.Loaded += (Object s, RoutedEventArgs e) =>
             {
@@ -65,7 +64,7 @@ namespace WpfUiTest.App.Views.Main
                         {
                             // 双重验证：防止令牌匹配但消息目标不匹配的误触发（兜底校验）
                             // 比如令牌是UserView，但消息Target误设为LoginView，直接过滤
-                            if (message.Target != SnackbarTarget.UserView) return;
+                            if (message.Target != SnackbarTarget.MainView) return;
 
                             // 1. 创建SnackBar实例：传入SnackbarPresenter容器，绑定显示载体
                             // 2. AddToQue：将SnackBar加入容器队列（支持多个消息依次显示）

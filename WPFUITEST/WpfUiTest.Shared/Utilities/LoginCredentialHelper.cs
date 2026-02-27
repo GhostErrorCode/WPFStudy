@@ -13,9 +13,9 @@ namespace WpfUiTest.Shared.Utilities
     public static class LoginCredentialHelper
     {
         // 字段：登录凭证目录路径
-        private static readonly string _loginCredentialDirectory = Path.Combine(AppContext.BaseDirectory,AppConfigurationHelper.LoadMergeSettings().CredentialSettings.Directory);
+        private static readonly string _loginCredentialDirectory = Path.Combine(AppContext.BaseDirectory,AppConfigurationHelper.LoadMergeSettings().LoginCredentialSettings.Directory);
         // 字段：登录凭证文件路径
-        private static readonly string _loginCredentialFilePath = Path.Combine(_loginCredentialDirectory, AppConfigurationHelper.LoadMergeSettings().CredentialSettings.FileName);
+        private static readonly string _loginCredentialFilePath = Path.Combine(_loginCredentialDirectory, AppConfigurationHelper.LoadMergeSettings().LoginCredentialSettings.FileName);
 
         // 静态方法：保存登录凭证
         public static async Task SaveLoginCredential(LoginCredential loginCredential)
@@ -23,7 +23,7 @@ namespace WpfUiTest.Shared.Utilities
             try
             {
                 // 设置凭证过期时间（优先读配置ExpireDays，默认30天，时间去除毫秒）
-                loginCredential.Expires = DateTimeUtility.NowNoMilliseconds().AddDays(AppConfigurationHelper.LoadMergeSettings().CredentialSettings.ExpireDays);
+                loginCredential.Expires = DateTimeUtility.NowNoMilliseconds().AddDays(AppConfigurationHelper.LoadMergeSettings().LoginCredentialSettings.ExpireDays);
                 // 凭证对象序列化为JSON字符串
                 string json = JsonSerializer.Serialize(loginCredential);
                 // JSON字符串转UTF8字节数组（加密/写文件需字节格式）

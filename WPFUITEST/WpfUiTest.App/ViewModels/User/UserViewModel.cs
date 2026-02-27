@@ -6,10 +6,14 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Controls;
 using WpfUiTest.App.ViewModels.Enums;
+using WpfUiTest.App.Views.Main;
+using WpfUiTest.App.Views.User;
+using WpfUiTest.Core.Services.Interfaces;
 using WpfUiTest.Shared.Base;
 using WpfUiTest.Shared.Enums;
 using WpfUiTest.Shared.Extensions;
@@ -31,6 +35,8 @@ namespace WpfUiTest.App.ViewModels.User
         private readonly IServiceProvider _serviceProvider;
         // 字段：ILogger服务
         private readonly ILogger<UserViewModel> _logger;
+        // 字段: IWindow窗体服务
+        private readonly IWindowService _windowService;
 
 
         // 属性：当前选中的视图类型 注册或登录
@@ -65,13 +71,14 @@ namespace WpfUiTest.App.ViewModels.User
 
 
         // ============================= 构造函数 ===================================
-        public UserViewModel(IServiceProvider serviceProvider, ISnackbarService snackbarService, IMessenger messenger, ILogger<UserViewModel> logger)
+        public UserViewModel(IServiceProvider serviceProvider, ISnackbarService snackbarService, IMessenger messenger, ILogger<UserViewModel> logger, IWindowService windowService)
         {
             // 初始化字段
             this._serviceProvider = serviceProvider;
             this._snackbarService = snackbarService;
             this._messenger = messenger;
             this._logger = logger;
+            this._windowService = windowService;
 
             // 初始化属性
             this._userRegisterViewModel = this._serviceProvider.GetRequiredService<UserRegisterViewModel>();
@@ -172,7 +179,11 @@ namespace WpfUiTest.App.ViewModels.User
                     // 延迟打开主窗口
                     await Task.Delay(2000);
                     // 发送打开主窗口的消息（UserView已订阅，会自动执行打开主页面并关闭自己）
-                    this._messenger.Send(new LoginSuccessMessage());
+                    // this._messenger.Send(new LoginSuccessMessage()); 已废弃
+
+                    // 用IWindowService服务控制窗口
+                    this._windowService.ShowMainWindow();
+                    this._windowService.HideUserWindow();
                 }
             }
             catch (Exception ex)
@@ -206,7 +217,11 @@ namespace WpfUiTest.App.ViewModels.User
                     // 延迟打开主窗口
                     await Task.Delay(2000);
                     // 发送打开主窗口的消息（UserView已订阅，会自动执行打开主页面并关闭自己）
-                    this._messenger.Send(new LoginSuccessMessage());
+                    // this._messenger.Send(new LoginSuccessMessage()); 已废弃
+
+                    // 用IWindowService服务控制窗口
+                    this._windowService.ShowMainWindow();
+                    this._windowService.HideUserWindow();
                 }
                 // 如果结果不为空但登录失败
                 else if(loginResult != null && !loginResult.IsSuccess)
