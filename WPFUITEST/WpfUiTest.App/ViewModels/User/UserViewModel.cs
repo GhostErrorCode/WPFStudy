@@ -133,14 +133,14 @@ namespace WpfUiTest.App.ViewModels.User
                     // 打印日志
                     this._logger.LogError("用户注册失败! {@RegisterResult}", registerResult);
                     // 展示弹窗
-                    this._messenger.ShowDanger(SnackbarTarget.UserView, "系统异常!", "注册失败! 系统异常!");
+                    this._messenger.ShowDanger(SnackbarTarget.UserView, "用户注册失败! 系统异常!", "用户注册失败! 系统异常!");
                 }
                 
             }
             catch(Exception ex)
             {
                 this._logger.LogError("用户注册失败! 发生意外的未处理异常: {ex}", ex);
-                this._messenger.ShowDanger(SnackbarTarget.UserView,"操作失败!", "系统出现意外的严重错误!");
+                this._messenger.ShowDanger(SnackbarTarget.UserView, "用户注册失败! 系统异常!", "系统出现意外的严重错误!");
             }
             finally
             {
@@ -189,6 +189,7 @@ namespace WpfUiTest.App.ViewModels.User
             catch (Exception ex)
             {
                 this._logger.LogError("自动登录失败: 处理登录凭证过程中出现意外的严重错误! 异常信息: {ex}", ex);
+                this._messenger.ShowDanger(SnackbarTarget.UserView, "自动登录失败! 系统异常!", "系统出现意外的严重错误!");
             }
             finally
             {
@@ -237,13 +238,13 @@ namespace WpfUiTest.App.ViewModels.User
                     // 打印日志
                     this._logger.LogError("用户登录失败! {@RegisterResult}", loginResult);
                     // 展示弹窗
-                    this._messenger.ShowDanger(SnackbarTarget.UserView, "系统异常!", "登录失败! 系统异常!");
+                    this._messenger.ShowDanger(SnackbarTarget.UserView, "用户登录失败! 系统异常!", "登录失败! 系统异常!");
                 }
             }
             catch (Exception ex)
             {
                 this._logger.LogError("用户登录失败! 发生意外的未处理异常, 异常信息: {ex}", ex);
-                this._messenger.ShowDanger(SnackbarTarget.UserView, "操作失败!", "系统出现意外的严重错误!");
+                this._messenger.ShowDanger(SnackbarTarget.UserView, "用户登录失败! 系统异常!", "系统出现意外的严重错误!");
             }
             finally
             {

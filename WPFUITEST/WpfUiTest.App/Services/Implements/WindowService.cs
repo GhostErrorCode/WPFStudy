@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
 using WpfUiTest.App.ViewModels.Main;
 using WpfUiTest.App.Views.Main;
 using WpfUiTest.App.Views.User;
@@ -20,15 +23,18 @@ namespace WpfUiTest.App.Services.Implements
         private MainView? _mainView;
         // 字段: IServiceProvider DI容器服务
         private readonly IServiceProvider _serviceProvider;
+        // 字段: INavigationService 服务
+        private readonly INavigationService _navigationService;
 
 
         // ========== 构造函数 ==========
-        public WindowService(IServiceProvider serviceProvider)
+        public WindowService(IServiceProvider serviceProvider, INavigationService navigationService)
         {
             // ========== 这里不能使用依赖注入，否则会陷入循环依赖，改用IServiceProvider获取 ==========
 
             // 初始化字段
             this._serviceProvider = serviceProvider;
+            this._navigationService = navigationService;
 
             // 初始化属性
             // 初始化命令
@@ -44,8 +50,12 @@ namespace WpfUiTest.App.Services.Implements
             this._mainView = this._serviceProvider.GetRequiredService<MainView>();
             // 设置WPF上下文主窗口
             Application.Current.MainWindow = this._mainView;
+            // 设置INavigationService容器
+            this._navigationService.SetNavigationControl(this._mainView.MainNavigationView);
             // 打开窗口
             this._mainView.Show();
+            // 默认导航至首页
+            this._navigationService.Navigate(typeof(IndexView));
         }
         // 隐藏主窗口
         public void HideMainWindow()
