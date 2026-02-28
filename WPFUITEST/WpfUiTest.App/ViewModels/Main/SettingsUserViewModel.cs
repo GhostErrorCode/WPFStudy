@@ -25,7 +25,13 @@ namespace WpfUiTest.App.ViewModels.Main
         private readonly ILogger<SettingsUserViewModel> _logger;
 
         // 属性: 用户昵称
-        public string UserName { get; set; } = string.Empty;
+        private string _userName = string.Empty;
+        public string UserName
+        {
+            get { return _userName; }
+            set { SetProperty(ref _userName, value); }
+        }
+        
 
         // Command: 登出当前用户Command
         public RelayCommand UserLogoutCommand { get; private set; }

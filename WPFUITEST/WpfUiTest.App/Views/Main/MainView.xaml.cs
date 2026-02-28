@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -27,21 +28,27 @@ namespace WpfUiTest.App.Views.Main
     {
         // IMessenger 消息转发
         private readonly IMessenger _messenger;
+        // ILogger 日志
+        private readonly ILogger<MainView> _logger;
 
         // 依赖注入获取对应ViewModel
-        public MainView(MainViewModel mainViewModel, INavigationService navigationService, IContentDialogService contentDialogService, IMessenger messenger)
+        public MainView(MainViewModel mainViewModel, INavigationService navigationService, IContentDialogService contentDialogService, IMessenger messenger, ILogger<MainView> logger)
         {
             InitializeComponent();
 
             // 获取ViewModel
             this.DataContext = mainViewModel;
+
+            // 依赖注入服务
             this._messenger = messenger;
+            this._logger = logger;
 
             // 服务初始化
             // 设置导航服务的导航控件，以便能够实现DI注入
-            navigationService.SetNavigationControl(MainNavigationView);
+            // navigationService.SetNavigationControl(MainNavigationView);
             // 对话框服务设置Host
             contentDialogService.SetDialogHost(MainContentDialogHost);
+
 
             // 订阅定向SnackBar投放
             this.Loaded += (Object s, RoutedEventArgs e) =>
@@ -79,6 +86,25 @@ namespace WpfUiTest.App.Views.Main
                         });
                     });
             };
+
+
+            // Loaded事件与ContentRendered事件的区别——Loaded事件是在显示窗口之前发生的；
+            // ContentRendered事件是在窗口内容呈现后 即被渲染之后发生的。
+            /* 已废弃，由IWindowService管理
+            this.ContentRendered += (s, e) =>
+            {
+                // 默认首次打开时导航到首页
+                if (navigationService.Navigate(typeof(IndexView)))
+                {
+                    this._logger.LogInformation("首次导航至默认首页成功!");
+                }
+                else
+                {
+                    this._logger.LogInformation("首次导航至默认首页失败!");
+                }
+            };
+            */
+
             /// <summary>
             /// 窗体Unloaded事件：页面卸载时注销所有消息订阅（核心：防止内存泄漏）
             /// Unloaded触发时机：窗体从可视化树移除时（关闭/隐藏并卸载）

@@ -28,6 +28,8 @@ using WpfUiTest.Core.Data.UnitOfWork.Implements;
 using WpfUiTest.Core.Data.UnitOfWork.Interfaces;
 using WpfUiTest.Core.Services.Implements;
 using WpfUiTest.Core.Services.Interfaces;
+using WpfUiTest.Modules.Memo;
+using WpfUiTest.Modules.ToDo;
 using WpfUiTest.Shared.Enums;
 using WpfUiTest.Shared.Extensions;
 using WpfUiTest.Shared.Models;
@@ -215,13 +217,18 @@ namespace WpfUiTest.App
                     services.AddSingleton<UserView>();
                     services.AddSingleton<MainView>();
                     services.AddSingleton<SettingsView>();
+                    services.AddSingleton<IndexView>();
 
                     // 注册ViewModel
                     services.AddSingleton<UserViewModel>();
                     services.AddSingleton<UserRegisterViewModel>();
                     services.AddSingleton<UserLoginViewModel>();
+
                     services.AddSingleton<MainViewModel>();
                     services.AddSingleton<MainFooterMenuViewModel>();
+                    services.AddSingleton<MainMenuViewModel>();
+                    services.AddSingleton<MainAutoSuggestBoxViewModel>();
+
                     services.AddSingleton<SettingsViewModel>();
                     services.AddSingleton<SettingsAboutViewModel>();
                     services.AddSingleton<SettingsThemeViewModel>();
@@ -240,6 +247,9 @@ namespace WpfUiTest.App
                     // 注册工具
                     // services.AddSingleton<CredentialUtility>();  // 已删除此工具类，由LoginCredentialHelper替代
 
+                    // 注册模块
+                    services.AddModuleMemo();
+                    services.AddModuleToDo();
 
                     // ========== 后续扩展：各类服务注册示例（带注释说明） ==========
                     // 1. 数据库上下文注册（EF Core）：通常用AddDbContext，生命周期默认Scoped
