@@ -47,7 +47,25 @@ namespace WpfUiTest.App.Services.Implements
             // 打开窗口
             this._mainView.Show();
         }
+        // 隐藏主窗口
+        public void HideMainWindow()
+        {
+            // 隐藏窗口
+            this._mainView = this._serviceProvider.GetRequiredService<MainView>();
+            this._mainView.Visibility = Visibility.Hidden;
+        }
 
+
+        // 显示登录窗口
+        public void ShowUserWindow()
+        {
+            // 延迟获取MainView（用到时才从DI拿，而非构造时）
+            this._userView = this._serviceProvider.GetRequiredService<UserView>();
+            // 设置WPF上下文主窗口
+            Application.Current.MainWindow = this._userView;
+            // 打开窗口
+            this._userView.Show();
+        }
         // 隐藏登录窗口
         public void HideUserWindow()
         {

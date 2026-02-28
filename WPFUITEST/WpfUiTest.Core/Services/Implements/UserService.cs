@@ -130,6 +130,8 @@ namespace WpfUiTest.Core.Services.Implements
                 User? user = await this._userRepository.GetByIdAsync(userId);
                 if(user != null && user.Account == account)
                 {
+                    // 保存当前用户
+                    this._currentUser = user.ToUserResultDto();
                     // 输出登录成功日志
                     this._logger.LogInformation("自动登录成功: 用户 {Account} 登录成功", user.Account);
                     return ServiceResult<bool>.Success("自动登录成功", true);
@@ -219,6 +221,8 @@ namespace WpfUiTest.Core.Services.Implements
             this._logger.LogInformation("登出成功: 用户 {Account} 已登出...", this.UserAccount);
             // 3.清理登录状态
             this._currentUser = null;
+            // 4.清理自动登录缓存
+            LoginCredentialHelper.DeleteLoginCredential();
         }
     }
 }

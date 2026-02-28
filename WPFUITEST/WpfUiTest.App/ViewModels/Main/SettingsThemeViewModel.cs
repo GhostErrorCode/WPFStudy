@@ -13,6 +13,7 @@ using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 using WpfUiTest.App.Views.Main;
 using WpfUiTest.Core.Services.Interfaces;
+using WpfUiTest.Shared.Base;
 using WpfUiTest.Shared.Enums;
 using WpfUiTest.Shared.Extensions;
 using WpfUiTest.Shared.Models;
@@ -21,7 +22,7 @@ using WpfUiTest.Shared.Utilities;
 namespace WpfUiTest.App.ViewModels.Main
 {
     // 设置 - 主题设置
-    public class SettingsThemeViewModel : ObservableObject
+    public class SettingsThemeViewModel : BaseViewModel
     {
         // 属性: ComboBox子项
         // 暴露所有枚举值，用于 ComboBox 的 ItemsSource, IEnumerable只读符合当前环境, 可用List集合
