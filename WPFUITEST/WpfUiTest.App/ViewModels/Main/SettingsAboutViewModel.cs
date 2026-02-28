@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using WpfUiTest.Shared.Base;
 using WpfUiTest.Shared.Models;
 using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.App.ViewModels.Main
 {
-    public class SettingsAboutViewModel : ObservableObject
+    public class SettingsAboutViewModel : BaseViewModel
     {
         // 属性: 应用名称
         public string AppName { get; set; } = string.Empty;

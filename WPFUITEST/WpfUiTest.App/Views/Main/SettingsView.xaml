@@ -89,7 +89,7 @@
                             Grid.Row="1"
                             FontTypography="Body"
                             Foreground="{ui:ThemeResource TextFillColorSecondaryBrush }"
-                            Text="GHOST"
+                            Text="{Binding SettingsUserViewModel.UserName}"
                             />
                     </Grid>
                 </ui:CardControl.Header>
@@ -98,6 +98,7 @@
                     Margin="0"
                     Icon="{ui:SymbolIcon Symbol=PersonArrowBack24}"
                     Foreground="{DynamicResource TextFillColorWhiteBrush}"
+                    Command="{Binding SettingsUserViewModel.UserLogoutCommand}"
                     Style="{StaticResource CautionUiButtonStyle}"
                       />
             </ui:CardControl>

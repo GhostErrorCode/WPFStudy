@@ -9,6 +9,8 @@ namespace WpfUiTest.Core.Services.Interfaces
     // 用户服务接口
     public interface IUserService
     {
+        // 当前登录用户的昵称
+        public UserResultDto? CurrentUser { get; }
         // 当前是否有用户登录
         public bool IsLoggedIn { get; }
         // 当前登录用户的ID

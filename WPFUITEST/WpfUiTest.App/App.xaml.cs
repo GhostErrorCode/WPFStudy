@@ -225,6 +225,7 @@ namespace WpfUiTest.App
                     services.AddSingleton<SettingsViewModel>();
                     services.AddSingleton<SettingsAboutViewModel>();
                     services.AddSingleton<SettingsThemeViewModel>();
+                    services.AddSingleton<SettingsUserViewModel>();
 
                     // 注册服务
                     services.AddSingleton<ISnackbarService, SnackbarService>();  // 注册提示信息框
