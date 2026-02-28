@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
-        xmlns:vio="http://schemas.lepo.co/wpfui/2022/xaml/violeta"
+        xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
         xmlns:local="clr-namespace:WpfUiTest.App.Views.Main"
         mc:Ignorable="d"
         ExtendsContentIntoTitleBar="True"
@@ -55,6 +55,8 @@
                 <!-- AutomationProperties.AutomationId="NavigationAutoSuggestBox"自动化测试ID：仅用于UI自动化测试（如Selenium/Appium定位控件），日常开发不影响功能 -->
                 <ui:AutoSuggestBox
                     x:Name="AutoSuggestBox"
+                    ClearButtonEnabled="True"
+                    OriginalItemsSource="{Binding MainAutoSuggestBoxViewModel.AutoSuggestBoxSuggestions}"
                     AutomationProperties.AutomationId="NavigationAutoSuggestBox"
                     PlaceholderText="搜索导航列表...">
                     <ui:AutoSuggestBox.Icon>

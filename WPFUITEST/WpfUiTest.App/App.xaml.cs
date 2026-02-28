@@ -227,6 +227,7 @@ namespace WpfUiTest.App
                     services.AddSingleton<MainViewModel>();
                     services.AddSingleton<MainFooterMenuViewModel>();
                     services.AddSingleton<MainMenuViewModel>();
+                    services.AddSingleton<MainAutoSuggestBoxViewModel>();
 
                     services.AddSingleton<SettingsViewModel>();
                     services.AddSingleton<SettingsAboutViewModel>();
