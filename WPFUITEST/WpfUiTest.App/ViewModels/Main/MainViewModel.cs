@@ -29,10 +29,19 @@ namespace WpfUiTest.App.ViewModels.Main
             set { SetProperty(ref _mainFooterMenuViewModel, value); }
         }
 
+        // 属性：主页面Footer区域的菜单
+        // 属性：MainView的Footer区域菜单列表
+        private MainMenuViewModel _mainMenuViewModel;
+        public MainMenuViewModel MainMenuViewModel
+        {
+            get { return _mainMenuViewModel; }
+            set { SetProperty(ref _mainMenuViewModel, value); }
+        }
+
 
 
         // ============ 构造函数 ==============
-        public MainViewModel(MainFooterMenuViewModel mainFooterMenuViewModel)
+        public MainViewModel(MainFooterMenuViewModel mainFooterMenuViewModel, MainMenuViewModel mainMenuViewModel)
         {
             // 初始化字段
             // this._serviceProvider = serviceProvider;
@@ -40,6 +49,7 @@ namespace WpfUiTest.App.ViewModels.Main
             // 初始化属性
             // this._mainFooterMenuViewModel = this._serviceProvider.GetRequiredService<MainFooterMenuViewModel>();
             this._mainFooterMenuViewModel = mainFooterMenuViewModel;
+            this._mainMenuViewModel = mainMenuViewModel;
 
             // 初始化命令
 

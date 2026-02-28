@@ -39,6 +39,7 @@
         <ui:NavigationView
             x:Name="MainNavigationView"
             TitleBar="{Binding ElementName=MainViewTitleBar}"
+            MenuItemsSource="{Binding MainMenuViewModel.MenuItems}"
             FooterMenuItemsSource="{Binding MainFooterMenuViewModel.FooterMenuItems}"
             Style="{StaticResource MainViewUiNavigationViewStyle}">
             
