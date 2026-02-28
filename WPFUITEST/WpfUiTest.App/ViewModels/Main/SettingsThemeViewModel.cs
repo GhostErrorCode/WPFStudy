@@ -12,6 +12,7 @@ using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 using WpfUiTest.App.Views.Main;
+using WpfUiTest.Core.Services.Interfaces;
 using WpfUiTest.Shared.Enums;
 using WpfUiTest.Shared.Extensions;
 using WpfUiTest.Shared.Models;
@@ -51,15 +52,18 @@ namespace WpfUiTest.App.ViewModels.Main
         private ILogger<SettingsThemeViewModel> _logger;
         // 字段: IMessenger服务
         private IMessenger _messenger;
+        // 字段: ICustomThemeService服务
+        private ICustomThemeService _customThemeService;
 
 
 
         // ========== 构造函数 ==========
-        public SettingsThemeViewModel(ISnackbarService snackbarService, ILogger<SettingsThemeViewModel> logger, IMessenger messenger)
+        public SettingsThemeViewModel(ILogger<SettingsThemeViewModel> logger, IMessenger messenger, ICustomThemeService customThemeService)
         {
             // 初始化字段
             this._logger = logger;
             this._messenger = messenger;
+            this._customThemeService = customThemeService;
 
             this._appConfiguration = AppConfigurationHelper.LoadMergeSettings();
             this._currentTheme = this._appConfiguration.ThemeSettings.Theme.StringThemeToEnumTheme();
@@ -83,23 +87,12 @@ namespace WpfUiTest.App.ViewModels.Main
         {
             try
             {
-                /*
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    ApplicationThemeManager.Apply(this._currentTheme switch
-                    {
-                        Theme.Light => ApplicationTheme.Light,
-                        Theme.Dark => ApplicationTheme.Dark,
-                        Theme.HighContrast => ApplicationTheme.HighContrast,
-                        _ => ApplicationTheme.Light,
-                    });
-                });
-                */
                 // 日志
                 this._logger.LogDebug("SettingsThemeViewModel：应用主题切换开始");
 
                 // 切换当前应用主题
-                ApplicationThemeManager.Apply(this._currentTheme.EnumThemeToApplicationTheme());
+                // ApplicationThemeManager.Apply(this._currentTheme.EnumThemeToApplicationTheme());
+                this._customThemeService.SwitchTheme(this._currentTheme);
 
                 // === 保存当前主题至用户JSON文件 ===
                 // 先读取应用配置并保存到当前VM的字段中

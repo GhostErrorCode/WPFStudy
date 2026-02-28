@@ -234,6 +234,7 @@ namespace WpfUiTest.App
                     services.AddSingleton<INavigationService, NavigationService>();  // 导航服务
                     services.AddSingleton<IContentDialogService, ContentDialogService>();  // 对话框服务
                     services.AddSingleton<IWindowService, WindowService>();  // 自定义窗体服务
+                    services.AddSingleton<ICustomThemeService, CustomThemeService>();  // 自定义主题切换服务
 
                     // 注册工具
                     // services.AddSingleton<CredentialUtility>();  // 已删除此工具类，由LoginCredentialHelper替代
@@ -330,8 +331,9 @@ namespace WpfUiTest.App
                 Application.Current.MainWindow = loginView;
                 // 设置应用主题观察者(这个是跟随系统的，可不设置)
                 SystemThemeWatcher.Watch(loginView);
-                // 在设置主题，从设置读取
-                ApplicationThemeManager.Apply(this._appConfiguration.ThemeSettings.Theme.StringThemeToApplicationTheme());
+                // 设置主题，从设置读取
+                this.ApplicationHost.Services.GetRequiredService<ICustomThemeService>().SwitchTheme(this._appConfiguration.ThemeSettings.Theme.StringThemeToEnumTheme());
+
                 //SystemThemeWatcher.Watch(loginView);
                 // Show: 显示主窗口，启动WPF应用程序的用户界面
                 loginView.Show();

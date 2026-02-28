@@ -63,6 +63,46 @@
             </ui:CardControl>
 
 
+            <!-- 列表小标题 -->
+            <ui:TextBlock
+                Margin="0,24,0,8"
+                Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
+                FontTypography="BodyStrong"
+                Text="用户"
+                />
+            <!-- 应用主题的设置 CardControl-->
+            <ui:CardControl Icon="{ui:SymbolIcon Symbol=Person24}">
+                <!-- 设置头部区域 -->
+                <ui:CardControl.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <ui:TextBlock
+                            Grid.Row="0"
+                            FontTypography="Body"
+                            Foreground="{ui:ThemeResource TextFillColorPrimaryBrush }"
+                            Text="当前用户"
+                            />
+                        <ui:TextBlock
+                            Grid.Row="1"
+                            FontTypography="Body"
+                            Foreground="{ui:ThemeResource TextFillColorSecondaryBrush }"
+                            Text="GHOST"
+                            />
+                    </Grid>
+                </ui:CardControl.Header>
+                <ui:Button
+                    Content="登出当前用户"
+                    Margin="0"
+                    Icon="{ui:SymbolIcon Symbol=PersonArrowBack24}"
+                    Foreground="{DynamicResource TextFillColorWhiteBrush}"
+                    Style="{StaticResource CautionUiButtonStyle}"
+                      />
+            </ui:CardControl>
+
+
             <!-- 关于此应用 -->
             <!-- 小标题 -->
             <ui:TextBlock

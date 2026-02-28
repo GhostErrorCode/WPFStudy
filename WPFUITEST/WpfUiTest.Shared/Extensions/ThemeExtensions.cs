@@ -21,6 +21,18 @@ namespace WpfUiTest.Shared.Extensions
             };
         }
 
+        // 自定义枚举主题 转为 英文字符串主题
+        public static string EnumThemeToEnglishStringTheme(this Theme theme)
+        {
+            return theme switch
+            {
+                Theme.Light => "Light",
+                Theme.Dark => "Dark",
+                Theme.HighContrast => "HighContrast",
+                _ => "Light"
+            };
+        }
+
         // 字符串主题 转为 自定义枚举主题
         public static Theme StringThemeToEnumTheme(this string str)
         {
