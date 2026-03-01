@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
+using Wpf.Ui.Extensions;
 using WpfUiTest.App.ViewModels.Main;
 using WpfUiTest.App.ViewModels.User;
 using WpfUiTest.Shared.Enums;

@@ -50,6 +50,7 @@ namespace WpfUiTest.App.Services.Implements
             this._mainView = this._serviceProvider.GetRequiredService<MainView>();
             // 设置WPF上下文主窗口
             Application.Current.MainWindow = this._mainView;
+            Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose; // 设置主窗口关闭，程序就关闭
             // 设置INavigationService容器
             this._navigationService.SetNavigationControl(this._mainView.MainNavigationView);
             // 打开窗口
@@ -73,6 +74,7 @@ namespace WpfUiTest.App.Services.Implements
             this._userView = this._serviceProvider.GetRequiredService<UserView>();
             // 设置WPF上下文主窗口
             Application.Current.MainWindow = this._userView;
+            Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose; // 设置主窗口关闭，程序就关闭
             // 打开窗口
             this._userView.Show();
         }
