@@ -70,7 +70,9 @@ namespace WpfUiTest.App.ViewModels.Main
                 if(ContentDialogResult.Primary != await this._contentDialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions()
                 {
                     Title = "是否登出?",
-                    Content = $"是否登出当前用户 {this._userName}",
+                    Content = $"是否登出当前用户，当前用户信息如下：{Environment.NewLine}" +
+                              $"├─ 账户：{this._userService.UserAccount}{Environment.NewLine}" +
+                              $"└─ 昵称：{this._userName}",
                     PrimaryButtonText = "确认登出",
                     SecondaryButtonText = "取消登出",
                     CloseButtonText = "我点错了!"
@@ -84,8 +86,8 @@ namespace WpfUiTest.App.ViewModels.Main
                 this._windowService.ShowUserWindow();
 
                 // 输出日志并显示Snackbar
-                this._messenger.ShowSuccess(SnackbarTarget.UserView, "用户已登出", $"用户登出成功");
-                this._logger.LogInformation("用户 {username} 登出成功", this.UserName);  // 这块先写死，等后面看情况优化
+                this._messenger.ShowSuccess(SnackbarTarget.UserView, "用户已登出", "用户登出成功");
+                this._logger.LogInformation("用户 {username} 登出成功", this._userName);  // 这块先写死，等后面看情况优化
             }
             catch(Exception ex)
             {

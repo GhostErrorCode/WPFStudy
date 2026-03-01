@@ -10,13 +10,38 @@
       Title="IndexView">
 
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <!-- 标题 -->
+        <!-- 布局整体分为3行2列 -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        
+        <!-- 首页标题 第1行 跨2列 -->
+        <StackPanel
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            >
             <ui:TextBlock
-                Text="首页 (占位符)"
                 Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                Style="{StaticResource TitleOneUiTextBlockStyle}"
-                />
+                Style="{StaticResource TitleThreeUiTextBlockStyle}"
+                >
+                <!-- 内联Span,可以用Bold、Italic等标签，但只有Run标签可以通过Text绑定ViewModel -->
+                <Span>
+                    <Run Text="{Binding IndexTitleViewModel.WelcomeMessage}" />
+                    <Run Text="，" />
+                    <Run Text="{Binding IndexTitleViewModel.UserName}" Foreground="#27AE60" />  <!-- 还有个蓝色 #2D6BFF -->
+                    <Run Text="，今天是" />
+                    <Run Text="{Binding IndexTitleViewModel.CurrentDateTime}" />
+                </Span>
+            </ui:TextBlock>
         </StackPanel>
+        
+        
+        <!-- 第2行 跨2列 -->
     </Grid>
 </Page>
