@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfUiTest.App.ViewModels.Main;
 
 namespace WpfUiTest.App.Views.Main
 {
@@ -18,9 +19,12 @@ namespace WpfUiTest.App.Views.Main
     /// </summary>
     public partial class IndexView : Page
     {
-        public IndexView()
+        public IndexView(IndexViewModel indexViewModel)
         {
             InitializeComponent();
+
+            // 获取VM
+            this.DataContext = indexViewModel;
         }
     }
 }

@@ -10,13 +10,76 @@
       Title="IndexView">
 
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <!-- 标题 -->
+        <!-- 布局整体分为3行2列 -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        
+        <!-- 首页标题 第1行 跨2列 -->
+        <StackPanel
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            >
             <ui:TextBlock
-                Text="首页 (占位符)"
-                Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                Style="{StaticResource TitleOneUiTextBlockStyle}"
-                />
+                Style="{StaticResource IndexTitleTextStyle}"
+                >
+                <!-- 内联Span,可以用Bold、Italic等标签，但只有Run标签可以通过Text绑定ViewModel -->
+                <Span>
+                    <Run Text="{Binding IndexTitleViewModel.WelcomeMessage}" />
+                    <Run Text="，" />
+                    <Run Text="{Binding IndexTitleViewModel.UserName}" Foreground="#27AE60" />  <!-- 还有个蓝色 #2D6BFF -->
+                    <Run Text="，今天是" />
+                    <Run Text="{Binding IndexTitleViewModel.CurrentDateTime}" />
+                </Span>
+            </ui:TextBlock>
         </StackPanel>
+        
+        
+        <!-- 汇总数据 第2行 跨2列 -->
+        <ItemsControl
+            x:Name="IndexSummaryItemsControl"
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            ItemsSource="{Binding IndexSummaryViewModel.IndexSummaryItems}"
+            >
+            <!-- 要承载内容的容器 -->
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <!-- UniformGrid能均匀排列，用转换器获取ItemsControl的数量集合，调用Count属性转换成UniformGrid容器列数 -->
+                    <UniformGrid
+                        Columns="{Binding ElementName=IndexSummaryItemsControl, Path=ItemsSource.Count, Converter={StaticResource ItemsCountToColumnsConverter}}"
+                        Rows="1"
+                        />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <!-- 要显示的内容 -->
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid
+                        Margin="5,0,5,10"
+                        >
+                        <Border
+                            Style="{StaticResource IndexSummaryBorderStyle}"
+                            />
+                        <StackPanel
+                            Orientation="Vertical"
+                            Margin="10,10,10,10"
+                            >
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="{Binding Icon}" Style="{StaticResource IndexSummaryIconStyle}" />
+                                <TextBlock Text="{Binding Title}" Style="{StaticResource IndexSummaryTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding Content}" Style="{StaticResource IndexSummaryTextBlockStyle}" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </Page>

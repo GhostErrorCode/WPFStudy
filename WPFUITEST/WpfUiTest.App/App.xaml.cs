@@ -234,6 +234,11 @@ namespace WpfUiTest.App
                     services.AddSingleton<SettingsThemeViewModel>();
                     services.AddSingleton<SettingsUserViewModel>();
 
+                    services.AddSingleton<IndexViewModel>();
+                    services.AddSingleton<IndexTitleViewModel>();
+                    services.AddSingleton<IndexSummaryViewModel>();
+                    services.AddSingleton<IndexSummaryItemViewModel>();
+
                     // 注册服务
                     services.AddSingleton<ISnackbarService, SnackbarService>();  // 注册提示信息框
                     services.AddSingleton<IMessenger, WeakReferenceMessenger>();  // 消息提示器（弱引用）

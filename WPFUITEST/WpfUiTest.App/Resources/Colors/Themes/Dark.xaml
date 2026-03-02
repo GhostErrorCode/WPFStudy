@@ -4,4 +4,41 @@
 
     <!-- 白色文本 -->
     <SolidColorBrush x:Key="TextFillColorWhiteBrush" Color="#FFFFFF"/>
+
+    <!-- ==================== 首页汇总区域Boder渐变颜色 ==================== -->
+    <!-- 1. ToDoTotal（汇总）- 暗蓝渐变 -->
+    <LinearGradientBrush x:Key="IndexSummaryToDoTotalGradientBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#1E293B" Offset="0"/>
+        <!-- 暗黑背景适配的深灰底 -->
+        <GradientStop Color="#3B82F6" Offset="1"/>
+        <!-- 暗调蓝，不刺眼 -->
+    </LinearGradientBrush>
+
+    <!-- 2. Completed（已完成）- 暗绿渐变 -->
+    <LinearGradientBrush x:Key="IndexSummaryTodoCompletedGradientBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#1E293B" Offset="0"/>
+        <GradientStop Color="#10B981" Offset="1"/>
+        <!-- 暗调绿，低亮度 -->
+    </LinearGradientBrush>
+
+    <!-- 3. CompletionRate（完成率）- 暗橙渐变 -->
+    <LinearGradientBrush x:Key="IndexSummaryTodoCompletionRateGradientBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#1E293B" Offset="0"/>
+        <GradientStop Color="#F97316" Offset="1"/>
+        <!-- 暗调橙，不刺眼 -->
+    </LinearGradientBrush>
+
+    <!-- 4. MemoTotal（备忘录）- 暗紫渐变 -->
+    <LinearGradientBrush x:Key="IndexSummaryMemoTotalGradientBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#1E293B" Offset="0"/>
+        <GradientStop Color="#7C3AED" Offset="1"/>
+        <!-- 暗调紫，低亮度 -->
+    </LinearGradientBrush>
+
+    <!-- 5. Custom（自定义）- 暗青渐变 -->
+    <LinearGradientBrush x:Key="IndexSummaryCustomGradientBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#1E293B" Offset="0"/>
+        <GradientStop Color="#0891B2" Offset="1"/>
+        <!-- 暗调青，适配暗黑 -->
+    </LinearGradientBrush>
 </ResourceDictionary>

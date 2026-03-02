@@ -42,7 +42,6 @@
 
   <ItemGroup>
     <Folder Include="Resources\Icons\" />
-    <Folder Include="Resources\Styles\Modules\" />
     <Folder Include="Resources\Styles\Specific\" />
   </ItemGroup>
 
