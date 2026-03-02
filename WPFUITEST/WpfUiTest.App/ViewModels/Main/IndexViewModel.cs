@@ -16,14 +16,23 @@ namespace WpfUiTest.App.ViewModels.Main
             get { return _indexTitleViewModel; }
             set { SetProperty(ref _indexTitleViewModel, value); }
         }
+        // 属性: 首页汇总ViewModel
+        private IndexSummaryViewModel _indexSummaryViewModel;
+        public IndexSummaryViewModel IndexSummaryViewModel
+        {
+            get { return _indexSummaryViewModel; }
+            set { SetProperty(ref _indexSummaryViewModel, value); }
+        }
 
 
         // ==================== 构造函数 ====================
-        public IndexViewModel(IndexTitleViewModel indexTitleViewModel)
+        public IndexViewModel(IndexTitleViewModel indexTitleViewModel, IndexSummaryViewModel indexSummaryViewModel)
         {
             // 初始化字段
             // 初始化属性
             this._indexTitleViewModel = indexTitleViewModel;
+            this._indexSummaryViewModel = indexSummaryViewModel;
+
             // 初始化命令
         }
 

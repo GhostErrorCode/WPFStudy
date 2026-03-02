@@ -55,7 +55,7 @@ namespace WpfUiTest.App.Resources.Converters
         // View -> ViewModel
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return Binding.DoNothing;
         }
     }
 }

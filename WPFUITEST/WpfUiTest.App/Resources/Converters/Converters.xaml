@@ -5,4 +5,7 @@
     
     <!-- 设置页面 应用主题 转 字符串 -->
     <converters:ThemeToStringConverter x:Key="ThemeToStringConverter" />
+    
+    <!-- 首页 汇总ItemsControl数量 转 列数 -->
+    <converters:ItemsCountToColumnsConverter x:Key="ItemsCountToColumnsConverter" />
 </ResourceDictionary>
