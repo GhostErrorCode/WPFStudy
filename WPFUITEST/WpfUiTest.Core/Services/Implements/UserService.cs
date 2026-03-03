@@ -64,7 +64,7 @@ namespace WpfUiTest.Core.Services.Implements
 
                 // 登录失败：用户找不到或密码验证不通过
                 // 先从数据库中获取用户账户
-                User? currentLoginUser = await this._userRepository.GetByAccountAsync(loginUserDto.Account);
+                User? currentLoginUser = await this._userRepository.UserGetByAccountAsync(loginUserDto.Account);
                 // 如果数据库没找到这个用户账户
                 if (currentLoginUser == null)
 {
@@ -127,7 +127,7 @@ namespace WpfUiTest.Core.Services.Implements
                     return ServiceResult<bool>.Failure("未找到对应用户!");
                 }
                 // 1.开始从数据库中尝试查找并判断
-                User? user = await this._userRepository.GetByIdAsync(userId);
+                User? user = await this._userRepository.UserGetByIdAsync(userId);
                 if(user != null && user.Account == account)
                 {
                     // 保存当前用户
@@ -181,7 +181,7 @@ namespace WpfUiTest.Core.Services.Implements
                     return ServiceResult<bool>.Failure("密码长度至少为6位");
                 }
                 // 4.检查用户账户是否已存在
-                if (await this._userRepository.ExistsAsync((User user) => user.Account == registerUserDto.Account))
+                if (await this._userRepository.UserAccountExistsAsync(registerUserDto.Account))
                 {
                     this._logger.LogWarning("注册失败: 用户 {Account} 已存在!", registerUserDto.Account);
                     return ServiceResult<bool>.Failure("该账户已被注册");
@@ -193,7 +193,7 @@ namespace WpfUiTest.Core.Services.Implements
                 try
                 {
                     // 6.创建用户实体并哈希密码，保存到数据库
-                    User registerUser = await this._userRepository.AddAsync(registerUserDto.ToUser());
+                    User registerUser = await this._userRepository.AddUserAsync(registerUserDto.ToUser());
                     // 7.显示提交事务
                     await this._unitOfWork.CommitTransactionAsync();
                     _logger.LogInformation("注册成功: 用户 {Account}, ID: {Id}", registerUser.Account, registerUser.Id);

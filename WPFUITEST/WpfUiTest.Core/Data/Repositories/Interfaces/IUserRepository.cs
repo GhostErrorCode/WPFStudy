@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using WpfUiTest.Core.Data.Entities;
 
@@ -23,14 +24,21 @@ namespace WpfUiTest.Core.Data.Repositories.Interfaces
         /// </summary>
         /// <param name="account">要查找的用户账户名</param>
         /// <returns>找到的用户实体；如果未找到则返回null</returns>
-        public Task<User?> GetByAccountAsync(string account);
+        public Task<User?> UserGetByAccountAsync(string account, CancellationToken cancellationToken = default);
+
+        // 根据用户ID查询用户实体
+        public Task<User?> UserGetByIdAsync(int id, CancellationToken cancellationToken = default);
+
 
         /// <summary>
         /// 检查指定的用户账户名是否已存在于数据库中
         /// </summary>
         /// <param name="account">要检查的用户账户名</param>
         /// <returns>如果账户名已存在返回true，否则返回false</returns>
-        public Task<bool> AccountExistsAsync(string account);
+        public Task<bool> UserAccountExistsAsync(string account, CancellationToken cancellationToken = default);
+
+        // 添加用户实体
+        public Task<User> AddUserAsync(User user, CancellationToken cancellationToken = default);
     }
 
 }

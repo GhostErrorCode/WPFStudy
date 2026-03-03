@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using WpfUiTest.Core.Data.DbContexts;
 using WpfUiTest.Core.Data.Repositories.Interfaces;
+using WpfUiTest.Core.Services.Interfaces;
 
 namespace WpfUiTest.Core.Data.Repositories.Implements
 {
@@ -27,13 +28,16 @@ namespace WpfUiTest.Core.Data.Repositories.Implements
         // DbSet<TEntity>：EF Core中表示数据库表的集合
         protected readonly DbSet<TEntity> _dbSet;
 
+        // 字段：IUserService用户服务
+        private readonly IUserService _userService;
+
 
 
 
         // 构造函数
         // 访问修饰符：protected - 只能被派生类调用，不能从外部实例化
         // 参数：context - 数据库上下文，由依赖注入提供
-        public Repository(ApplicationDbContext applicationDbContext)
+        public Repository(ApplicationDbContext applicationDbContext, IUserService userService)
         {
             // 参数验证：防御性编程，尽早发现错误
             if (applicationDbContext == null)
@@ -48,6 +52,7 @@ namespace WpfUiTest.Core.Data.Repositories.Implements
             // 通过DbContext的Set方法获取对应实体的DbSet
             // 这是EF Core的标准做法：每个实体类型对应一个DbSet
             this._dbSet = applicationDbContext.Set<TEntity>();
+            this._userService = userService;
         }
 
         // 方法：根据主键ID异步查询单个实体（虚方法）
@@ -59,6 +64,7 @@ namespace WpfUiTest.Core.Data.Repositories.Implements
             // 参数：new object[] { id } - 主键值数组（支持复合主键）
             // 返回：Task<TEntity?> - 异步任务，可能返回null（如果实体不存在）
             TEntity? entity = await this._dbSet.FindAsync(new object[] { id }, cancellationToken);
+
             return entity;
         }
 
