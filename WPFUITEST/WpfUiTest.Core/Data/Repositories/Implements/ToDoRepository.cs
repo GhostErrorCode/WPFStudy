@@ -4,6 +4,7 @@ using System.Text;
 using WpfUiTest.Core.Data.DbContexts;
 using WpfUiTest.Core.Data.Entities;
 using WpfUiTest.Core.Data.Repositories.Interfaces;
+using WpfUiTest.Core.Services.Interfaces;
 
 namespace WpfUiTest.Core.Data.Repositories.Implements
 {

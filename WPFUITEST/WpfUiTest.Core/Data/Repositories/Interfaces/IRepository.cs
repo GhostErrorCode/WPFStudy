@@ -26,7 +26,7 @@ namespace WpfUiTest.Core.Data.Repositories.Interfaces
         // 返回值：Task<TEntity?> - 异步任务，可能返回实体或null
         //   问号(?)表示：返回值可能为null（当实体不存在时）
         // 异常：可能抛出数据库异常、网络异常等
-        public Task<TEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+        // public Task<TEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
 
         // 方法：查询所有实体
         // 作用：获取该类型的所有实体记录
@@ -34,7 +34,7 @@ namespace WpfUiTest.Core.Data.Repositories.Interfaces
         //       需要在具体实现中手动过滤（如.Where(e => !e.IsDeleted)）
         // 返回值：Task<List<TEntity>> - 异步任务，返回实体列表
         // 为什么返回List而不是IEnumerable：List更常用，支持索引访问，已完全加载
-        public Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+        // public Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
 
         // 方法：根据条件表达式查询实体
         // 作用：使用Lambda表达式筛选符合条件的实体
@@ -44,9 +44,10 @@ namespace WpfUiTest.Core.Data.Repositories.Interfaces
         //     示例：p => p.Price > 100 && p.StockQuantity > 0
         //   - cancellationToken: CancellationToken - 取消令牌
         // 返回值：Task<List<TEntity>> - 异步任务，返回符合条件的实体列表
-        public Task<List<TEntity>> FindAsync(
-            Expression<Func<TEntity, bool>> predicate,
-            CancellationToken cancellationToken = default);
+        public Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+
+        // 查询单条数据的方法
+        public Task<TEntity?> FindSingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
         // 方法：异步添加新实体
         // 作用：将新实体添加到数据上下文，开始被EF Core跟踪
@@ -75,7 +76,7 @@ namespace WpfUiTest.Core.Data.Repositories.Interfaces
         // 返回值：Task<bool> - 异步任务，返回操作是否成功
         //   true: 删除成功，false: 实体不存在（删除失败）
         // 注意：这是物理删除，数据将永久丢失，考虑使用软删除
-        public Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default);
+        public Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
 
         // ========== 统计与检查方法 ==========
@@ -115,7 +116,7 @@ namespace WpfUiTest.Core.Data.Repositories.Interfaces
         //   - cancellationToken: CancellationToken - 取消令牌
         // 返回值：Task<bool> - 异步任务，返回操作是否成功
         // 异常：如果实体没有IsDeleted属性，抛出InvalidOperationException
-        public Task<bool> SoftDeleteAsync(int id, CancellationToken cancellationToken = default);
+        // public Task<bool> SoftDeleteAsync(int id, CancellationToken cancellationToken = default);
 
         // 方法：异步恢复软删除的实体
         // 作用：将实体的IsDeleted字段设置为false，恢复被软删除的实体
@@ -124,6 +125,6 @@ namespace WpfUiTest.Core.Data.Repositories.Interfaces
         //   - id: int - 要恢复的实体主键ID值
         //   - cancellationToken: CancellationToken - 取消令牌
         // 返回值：Task<bool> - 异步任务，返回操作是否成功
-        public Task<bool> RestoreAsync(int id, CancellationToken cancellationToken = default);
+        // public Task<bool> RestoreAsync(int id, CancellationToken cancellationToken = default);
     }
 }
