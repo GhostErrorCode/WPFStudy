@@ -28,16 +28,13 @@ namespace WpfUiTest.Core.Data.Repositories.Implements
         // DbSet<TEntity>：EF Core中表示数据库表的集合
         protected readonly DbSet<TEntity> _dbSet;
 
-        // 字段：IUserService用户服务
-        private readonly IUserService _userService;
-
 
 
 
         // 构造函数
         // 访问修饰符：protected - 只能被派生类调用，不能从外部实例化
         // 参数：context - 数据库上下文，由依赖注入提供
-        public Repository(ApplicationDbContext applicationDbContext, IUserService userService)
+        public Repository(ApplicationDbContext applicationDbContext)
         {
             // 参数验证：防御性编程，尽早发现错误
             if (applicationDbContext == null)
@@ -52,8 +49,9 @@ namespace WpfUiTest.Core.Data.Repositories.Implements
             // 通过DbContext的Set方法获取对应实体的DbSet
             // 这是EF Core的标准做法：每个实体类型对应一个DbSet
             this._dbSet = applicationDbContext.Set<TEntity>();
-            this._userService = userService;
         }
+
+        /*
 
         // 方法：根据主键ID异步查询单个实体（虚方法）
         // 作用：通过唯一标识符获取单个实体对象
@@ -80,10 +78,10 @@ namespace WpfUiTest.Core.Data.Repositories.Implements
             return entities;
         }
 
+        */
+
         // 方法：根据条件表达式查询实体（虚方法）
-        public virtual async Task<List<TEntity>> FindAsync(
-            Expression<Func<TEntity, bool>> predicate,
-            CancellationToken cancellationToken = default)
+        public virtual async Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
             // Where：应用查询条件
             // predicate：Lambda表达式树，如 p => p.Price > 100
@@ -94,6 +92,13 @@ namespace WpfUiTest.Core.Data.Repositories.Implements
                 .ToListAsync(cancellationToken);  // 异步执行查询并转换为列表
 
             return entities;
+        }
+
+        // 查询单条数据的方法
+        public async Task<TEntity?> FindSingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            TEntity? entity = await this._dbSet.FirstOrDefaultAsync(predicate, cancellationToken);
+            return entity;
         }
 
 
@@ -145,12 +150,11 @@ namespace WpfUiTest.Core.Data.Repositories.Implements
             this._applicationDbContext.Entry(entity).State = EntityState.Modified;
         }
 
-
         // 方法：物理删除实体（虚方法）
-        public virtual async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public virtual async Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
             // 先查找要删除的实体
-            TEntity? entity = await GetByIdAsync(id, cancellationToken);
+            TEntity? entity = await this.FindSingleAsync(predicate, cancellationToken);
 
             // 如果实体不存在，返回false表示删除失败
             if (entity == null)
@@ -164,7 +168,6 @@ namespace WpfUiTest.Core.Data.Repositories.Implements
 
             return true;
         }
-
 
         // 方法：统计实体数量（虚方法）
         public virtual async Task<int> CountAsync(
@@ -194,6 +197,7 @@ namespace WpfUiTest.Core.Data.Repositories.Implements
             return await this._dbSet.AnyAsync(predicate, cancellationToken);
         }
 
+        /*
 
         // 方法：软删除实体（虚方法）
         public virtual async Task<bool> SoftDeleteAsync(int id, CancellationToken cancellationToken = default)
@@ -261,5 +265,7 @@ namespace WpfUiTest.Core.Data.Repositories.Implements
 
             return true;
         }
+
+        */
     }
 }
