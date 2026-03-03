@@ -243,6 +243,8 @@ namespace WpfUiTest.App
                     services.AddSingleton<ISnackbarService, SnackbarService>();  // 注册提示信息框
                     services.AddSingleton<IMessenger, WeakReferenceMessenger>();  // 消息提示器（弱引用）
                     services.AddSingleton<IUserService, UserService>();
+                    services.AddSingleton<ISummaryService, SummaryService>();
+
                     services.AddNavigationViewPageProvider();  // WPFUI中导航
                     services.AddSingleton<INavigationService, NavigationService>();  // 导航服务
                     services.AddSingleton<IContentDialogService, ContentDialogService>();  // 对话框服务

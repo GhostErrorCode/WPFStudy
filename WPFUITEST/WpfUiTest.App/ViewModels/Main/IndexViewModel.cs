@@ -43,6 +43,8 @@ namespace WpfUiTest.App.ViewModels.Main
         {
             // 调用子VM此方法
             await this._indexTitleViewModel.OnNavigatedToAsync();
+            await this._indexSummaryViewModel.OnNavigatedToAsync();
+
             await base.OnNavigatedToAsync();
         }
     }
