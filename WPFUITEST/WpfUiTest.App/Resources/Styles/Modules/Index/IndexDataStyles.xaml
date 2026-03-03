@@ -1,0 +1,105 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                    >
+    <!-- 先把Icon控件单独拿出来，这里有个大坑，Icon只有一个实例，导致第一个控件设置后，第二个控件再设置就会把第一个控件的实例抢走，导致第一个控件的Icon就没了 -->
+    <!-- 共享实例设置为False -->
+    <!-- 默认按钮Icon -->
+    <ui:SymbolIcon x:Key="IconAddCircle24" Symbol="AddCircle24" x:Shared="False"/>
+    <!-- 对勾图标 -->
+    <ui:SymbolIcon x:Key="IconCheckmarkCircle24" Symbol="CheckmarkCircle24" x:Shared="False"/>
+    
+    <!-- 首页待办事项区域Border样式 -->
+    <Style
+        x:Key="IndexToDoDataBorderStyle"
+        TargetType="{x:Type Border}"
+        >
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="CornerRadius" Value="10,10,10,10" />
+        <!-- 裁剪超出区域 -->
+        <Setter Property="ClipToBounds" Value="True" />
+        <!-- 渐变背景色 -->
+        <Setter Property="Background" Value="{DynamicResource IndexToDoDataGradientBrush}" />
+    </Style>
+    <!-- 首页备忘录区域Border样式 -->
+    <Style
+        x:Key="IndexMemoDataBorderStyle"
+        TargetType="{x:Type Border}"
+        >
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="CornerRadius" Value="10,10,10,10" />
+        <!-- 裁剪超出区域 -->
+        <Setter Property="ClipToBounds" Value="True" />
+        <!-- 渐变背景色 -->
+        <Setter Property="Background" Value="{DynamicResource IndexMemoDataGradientBrush}" />
+    </Style>
+
+
+    <!-- 待办事项和备忘录说明文本样式 -->
+    <Style
+        x:Key="IndexDataTextBlockStyle"
+        TargetType="{x:Type TextBlock}"
+        BasedOn="{StaticResource TitleThreeUiTextBlockStyle}"
+        >
+        <Setter Property="Margin" Value="10,8,0,0" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorPrimaryBrush}" />
+    </Style>
+
+    <!-- 待办事项和备忘录添加数据样式 -->
+    <Style
+        x:Key="IndexAddDataUiButonStyle"
+        TargetType="{x:Type ui:Button}"
+        BasedOn="{StaticResource TransparentUiButtonStyle}"
+        >
+        <Setter Property="Margin" Value="0,8,10,0" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Content" Value="添加" />
+        <Setter Property="Icon" Value="{StaticResource IconAddCircle24}" />
+        <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorPrimaryBrush}" />
+    </Style>
+
+
+    <!-- 待办事项和备忘录显示数据样式 -->
+    <Style
+        x:Key="IndexDataListViewStyle"
+        TargetType="{x:Type ui:ListView}"
+        BasedOn="{StaticResource {x:Type ui:ListView}}"
+        >
+        <Setter Property="Margin" Value="5,0,5,10" />
+        <Setter Property="SelectionMode" Value="Single" />
+    </Style>
+    
+    <!-- 待办事项和备忘录显示数据的标题样式 -->
+    <Style
+        x:Key="IndexDataTitleTextBlockStyle"
+        TargetType="{x:Type TextBlock}"
+        >
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorPrimaryBrush}" />
+    </Style>
+
+    <!-- 待办事项和备忘录显示数据的内容样式 -->
+    <Style
+        x:Key="IndexDataContentTextBlockStyle"
+        TargetType="{x:Type TextBlock}"
+        >
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Margin" Value="0,4,0,0" />
+        <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorSecondaryBrush}" />
+    </Style>
+
+    <!-- 待办事项的一键完成按钮样式 -->
+    <Style
+        x:Key="IndexToDoCompletedUiButonStyle"
+        TargetType="{x:Type ui:Button}"
+        BasedOn="{StaticResource TransparentUiButtonStyle}"
+        >
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Content" Value="" />
+        <Setter Property="Icon" Value="{StaticResource IconCheckmarkCircle24}" />
+        <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorPrimaryBrush}" />
+    </Style>
+</ResourceDictionary>

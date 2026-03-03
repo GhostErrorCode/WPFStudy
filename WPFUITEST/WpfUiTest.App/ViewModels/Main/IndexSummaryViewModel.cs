@@ -93,16 +93,38 @@ namespace WpfUiTest.App.ViewModels.Main
                 this._logger.LogError("首页（IndexView）汇总数据获取失败，处理首页汇总数据中出现意外的严重错误! 异常信息：{ex}", ex);
             }
         }
+        // 私有方法：清理VM
+        private async Task Cleanup()
+        {
+            foreach (IndexSummaryItemViewModel item in this.IndexSummaryItems)
+            {
+                item.Content = item.SummaryType switch
+                {
+                    IndexSummaryType.ToDoTotal => "999999", // 待办总数转字符串
+                    IndexSummaryType.Completed => "999999", // 已完成数
+                    IndexSummaryType.CompletionRate => "100.00%", // 完成率（直接用Dto里的%格式）
+                    IndexSummaryType.MemoTotal => "999999", // 备忘录总数
+                    IndexSummaryType.Custom => "0", // 自定义数值
+                    _ => "错误" // 兜底，避免漏枚举
+                };
+            }
+            // 打印日志
+            this._logger.LogInformation("[首页] 汇总数据已清理！");
+        }
 
 
 
-
-
+        // 方法：导航进入后执行
         public override async Task OnNavigatedToAsync()
         {
-            // 调用自己的初始化方法
+            // 执行初始化方法
             await this.Init();
-            await base.OnNavigatedToAsync();
+        }
+        // 方法：导航离开后执行
+        public override async Task OnNavigatedFromAsync()
+        {
+            // 执行清理方法
+            await this.Cleanup();
         }
     }
 }

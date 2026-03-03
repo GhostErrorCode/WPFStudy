@@ -68,4 +68,25 @@
         <!-- 默认文本 -->
         <Setter Property="Content" Value="PrimaryButton" />
     </Style>
+
+    <!-- 外观为警告的按钮 -->
+    <Style
+        x:Key="TransparentUiButtonStyle"
+        TargetType="{x:Type ui:Button}"
+        BasedOn="{StaticResource {x:Type ui:Button}}">
+        <!-- 限制最大和最小高宽，并提供默认高宽 -->
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="MinWidth" Value="50" />
+        <Setter Property="MaxHeight" Value="200" />
+        <Setter Property="MaxWidth" Value="400" />
+        <Setter Property="Height" Value="35" />
+        <!-- 外观设置 -->
+        <Setter Property="Appearance" Value="Transparent" />
+        <!-- 图标（可自定义） -->
+        <Setter Property="Icon" Value="{StaticResource IconRadioButton24}" />
+        <!-- 外边距 -->
+        <Setter Property="Margin" Value="5,5,5,5" />
+        <!-- 默认文本 -->
+        <Setter Property="Content" Value="PrimaryButton" />
+    </Style>
 </ResourceDictionary>

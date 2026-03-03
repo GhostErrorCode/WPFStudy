@@ -238,12 +238,18 @@ namespace WpfUiTest.App
                     services.AddSingleton<IndexTitleViewModel>();
                     services.AddSingleton<IndexSummaryViewModel>();
                     services.AddSingleton<IndexSummaryItemViewModel>();
+                    services.AddSingleton<IndexToDoViewModel>();
+                    services.AddSingleton<IndexToDoItemViewModel>();
+                    services.AddSingleton<IndexMemoViewModel>();
+                    services.AddSingleton<IndexMemoItemViewModel>();
 
                     // 注册服务
                     services.AddSingleton<ISnackbarService, SnackbarService>();  // 注册提示信息框
                     services.AddSingleton<IMessenger, WeakReferenceMessenger>();  // 消息提示器（弱引用）
                     services.AddSingleton<IUserService, UserService>();
                     services.AddSingleton<ISummaryService, SummaryService>();
+                    services.AddSingleton<IToDoService, ToDoService>();
+                    services.AddSingleton<IMemoService, MemoService>();
 
                     services.AddNavigationViewPageProvider();  // WPFUI中导航
                     services.AddSingleton<INavigationService, NavigationService>();  // 导航服务
