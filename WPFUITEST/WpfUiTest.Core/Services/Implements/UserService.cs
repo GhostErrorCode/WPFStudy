@@ -57,7 +57,7 @@ namespace WpfUiTest.Core.Services.Implements
                 if (loginUserDto == null || string.IsNullOrWhiteSpace(loginUserDto.Account) || string.IsNullOrWhiteSpace(loginUserDto.Password))
                 {
                     // 输出日志
-                    this._logger.LogWarning("登录失败: 用户账户与密码不能为空!");
+                    this._logger.LogWarning("[UserService] [用户：{Account}] 登录失败。用户账户与密码不能为空!","未知");
                     // 返回失败的服务结果
                     return ServiceResult<bool>.Failure("用户账户与密码不能为空!");
                 }
@@ -68,14 +68,14 @@ namespace WpfUiTest.Core.Services.Implements
                 // 如果数据库没找到这个用户账户
                 if (currentLoginUser == null)
 {
-                    this._logger.LogWarning("登录失败: 用户 {Account} 不存在!", loginUserDto.Account);
+                    this._logger.LogWarning("[UserService] [用户：{Account}] 登录失败: 用户不存在!", loginUserDto.Account);
                     return ServiceResult<bool>.Failure("用户账户或密码错误!");
                 }
 
                 // 用户存在，但密码验证失败 -> 失败
                 if (!PasswordHasher.Verify(loginUserDto.Password, currentLoginUser.Password))
                 {
-                    this._logger.LogWarning("登录失败: 用户 {Account} 密码错误!", currentLoginUser.Account);
+                    this._logger.LogWarning("[UserService] [用户：{Account}] 登录失败。用户密码错误!", currentLoginUser.Account);
                     return ServiceResult<bool>.Failure("用户账户或密码错误!");
                 }
 
@@ -101,13 +101,13 @@ namespace WpfUiTest.Core.Services.Implements
                     }
                 }
                 // 输出登录成功日志
-                this._logger.LogInformation("登录成功: 用户 {Account} 登录成功!", currentLoginUser.Account);
+                this._logger.LogInformation("[UserService] [用户：{Account}] 登录成功。用户登录成功!", currentLoginUser.Account);
                 return ServiceResult<bool>.Success("登录成功", true);
             }
             catch(Exception ex)
             {
                 // 记录异常日志
-                this._logger.LogError("登录失败: 用户登录时出现系统内部异常! 异常信息: {ex}", ex);
+                this._logger.LogError("[UserService] 登录失败。用户登录时出现系统内部异常！异常信息: {ex}", ex);
                 // 登录失败：系统内部异常
                 return ServiceResult<bool>.Failure("系统内部异常,请稍后重试!");
             }
@@ -122,7 +122,7 @@ namespace WpfUiTest.Core.Services.Implements
                 if (!(userId > 0) || string.IsNullOrWhiteSpace(account))
                 {
                     // 输出日志
-                    this._logger.LogWarning("自动登录失败: 未找到对应用户!");
+                    this._logger.LogWarning("[UserService] [用户：{Account}]自动登录失败。未找到对应用户！", account);
                     // 返回失败的服务结果
                     return ServiceResult<bool>.Failure("未找到对应用户!");
                 }
@@ -133,13 +133,13 @@ namespace WpfUiTest.Core.Services.Implements
                     // 保存当前用户
                     this._currentUser = user.ToUserResultDto();
                     // 输出登录成功日志
-                    this._logger.LogInformation("自动登录成功: 用户 {Account} 登录成功", user.Account);
+                    this._logger.LogInformation("[UserService] [用户：{Account}] 自动登录成功。用户自动登录成功！", user.Account);
                     return ServiceResult<bool>.Success("自动登录成功", true);
                 }
                 else
                 {
                     // 输出日志
-                    this._logger.LogWarning("自动登录失败: 未找到对应用户!");
+                    this._logger.LogWarning("[UserService] 自动登录失败。未找到对应用户！");
                     // 返回失败的服务结果
                     return ServiceResult<bool>.Failure("未找到对应用户!");
                 }
@@ -147,7 +147,7 @@ namespace WpfUiTest.Core.Services.Implements
             catch (Exception ex)
             {
                 // 记录异常日志
-                this._logger.LogError("自动登录失败: 用户自动登录时出现系统内部异常! 异常信息: {ex}", ex);
+                this._logger.LogError("[UserService] 自动登录失败。用户自动登录时出现系统内部异常！异常信息: {ex}", ex);
                 // 登录失败：系统内部异常
                 return ServiceResult<bool>.Failure("系统内部异常,请稍后重试!");
             }
@@ -165,25 +165,25 @@ namespace WpfUiTest.Core.Services.Implements
                     string.IsNullOrWhiteSpace(registerUserDto.Password) ||
                     string.IsNullOrWhiteSpace(registerUserDto.ConfirmPassword))
                 {
-                    this._logger.LogWarning("注册失败: 提交的数据不完整或为空");
+                    this._logger.LogWarning("[UserService] 注册失败。提交的数据不完整或为空！");
                     return ServiceResult<bool>.Failure("注册信息不能为空");
                 }
                 // 2.验证两次输入的密码是否一致
                 if (registerUserDto.Password != registerUserDto.ConfirmPassword)
                 {
-                    this._logger.LogWarning("注册失败: 用户 {Account} 输入的两次密码不一致!", registerUserDto.Account);
+                    this._logger.LogWarning("[UserService] [用户：{Account}] 注册失败。用户输入的两次密码不一致!", registerUserDto.Account);
                     return ServiceResult<bool>.Failure("输入的两次密码不一致");
                 }
                 // 3.验证密码复杂度（规则）
                 if (registerUserDto.Password.Length < 6)
                 {
-                    this._logger.LogWarning("注册失败: 用户 {Account} 密码长度至少为6位!", registerUserDto.Account);
+                    this._logger.LogWarning("[UserService] [用户：{Account}] 注册失败。用户密码长度至少为6位！", registerUserDto.Account);
                     return ServiceResult<bool>.Failure("密码长度至少为6位");
                 }
                 // 4.检查用户账户是否已存在
                 if (await this._userRepository.UserAccountExistsAsync(registerUserDto.Account))
                 {
-                    this._logger.LogWarning("注册失败: 用户 {Account} 已存在!", registerUserDto.Account);
+                    this._logger.LogWarning("[UserService] [用户：{Account}] 注册失败。该用户已存在！", registerUserDto.Account);
                     return ServiceResult<bool>.Failure("该账户已被注册");
                 }
 
@@ -196,7 +196,7 @@ namespace WpfUiTest.Core.Services.Implements
                     User registerUser = await this._userRepository.AddUserAsync(registerUserDto.ToUser());
                     // 7.显示提交事务
                     await this._unitOfWork.CommitTransactionAsync();
-                    _logger.LogInformation("注册成功: 用户 {Account}, ID: {Id}", registerUser.Account, registerUser.Id);
+                    _logger.LogInformation("[UserService] [用户：{Account}] 注册成功。用户ID: {Id}", registerUser.Account, registerUser.Id);
                     return ServiceResult<bool>.Success("注册成功", true);
                 }
                 catch (Exception ex)
@@ -208,7 +208,7 @@ namespace WpfUiTest.Core.Services.Implements
             }
             catch(Exception ex)
             {
-                this._logger.LogError("注册失败: 用户注册时出现系统内部异常! 异常信息: {ex}", ex);
+                this._logger.LogError("[UserService] 注册失败。用户注册时出现系统内部异常！异常信息: {ex}", ex);
                 return ServiceResult<bool>.Failure("注册失败: 系统内部错误，请稍后重试");
             }
         }
@@ -216,9 +216,9 @@ namespace WpfUiTest.Core.Services.Implements
         public void Logout()
         {
             // 1.安全检查 - 检查是否已登录
-            if(this.IsLoggedIn == false) { this._logger.LogWarning("登出失败: 当前无用户登录!"); return; }
+            if(this.IsLoggedIn == false) { this._logger.LogWarning("[UserService] 登出失败。当前无用户登录！"); return; }
             // 2.登出的日志记录
-            this._logger.LogInformation("登出成功: 用户 {Account} 已登出...", this.UserAccount);
+            this._logger.LogInformation("[UserService] [用户：{Account}] 登出成功。用户已登出...", this.UserAccount);
             // 3.清理登录状态
             this._currentUser = null;
             // 4.清理自动登录缓存

@@ -56,15 +56,15 @@ namespace WpfUiTest.Core.Services.Implements
                     Custom = 0
                 };
 
-                this._logger.LogInformation("首页汇总数据已获取，数据：{@summaryDto}", summaryDto);
+                this._logger.LogInformation("[SummaryService] [用户：{Account}（{Id}）] 查询汇总数据完成。数据：待办总量={ToDoTotal}，待办完成量={TodoCompleted}，待办完成比例={TodoCompletionRate}，备忘总量={MemoTotal}，自定义={Custom}", this._userService.UserAccount, this._userService.UserId, summaryDto.ToDoTotal, summaryDto.TodoCompleted, summaryDto.TodoCompletionRate, summaryDto.MemoTotal, summaryDto.Custom);
                 // 返回汇总Dto
-                return ServiceResult<SummaryDto>.Success("首页汇总数据获取成功!", summaryDto);
+                return ServiceResult<SummaryDto>.Success("汇总数据获取成功", summaryDto);
             }
             catch(Exception ex)
             {
-                this._logger.LogInformation("首页汇总数据获取时出现异常，异常信息：{ex}", ex);
+                this._logger.LogInformation("[SummaryService]  [用户：{Account}（{Id}）] 查询汇总数据时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
                 // 返回汇总Dto
-                return ServiceResult<SummaryDto>.Failure("首页汇总数据获取失败!");
+                return ServiceResult<SummaryDto>.Failure("汇总数据获取失败");
             }
         }
     }

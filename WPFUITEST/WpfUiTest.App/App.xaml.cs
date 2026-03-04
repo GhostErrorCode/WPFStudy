@@ -108,7 +108,8 @@ namespace WpfUiTest.App
                                 // 控制台日志输出模板：[时分秒 日志级别] 日志内容 + 异常（如有）
                                 // {Timestamp:HH:mm:ss}：仅显示时分秒（控制台简洁）；{Level:u3}：3位大写级别（如DBG/INF）
                                 // {Message:lj}：保留换行的日志内容；{NewLine}{Exception}：异常信息换行显示
-                                outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}",
+                                // outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}",
+                                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
                                 // 控制台仅输出Debug及以上级别日志（与全局级别一致）
                                 restrictedToMinimumLevel: LogEventLevel.Debug)
                             // 配置日志输出到本地文件（生产环境持久化日志）
@@ -138,7 +139,7 @@ namespace WpfUiTest.App
 
                     // 5. 记录日志系统初始化完成的信息（验证日志配置是否生效）
                     // {LogPath}是结构化日志参数，便于后续检索日志目录
-                    Log.Information("Serilog日志系统初始化完成，日志文件路径: {LogPath}", logDirectory);
+                    Log.Information("[系统初始化] Serilog日志系统初始化完成。日志文件路径：{LogPath}", logDirectory);
                 })
                 // 自定义配置应用程序的配置源（扩展默认配置，添加JSON配置文件）
                 // context：配置上下文，包含主机环境信息（如运行环境、配置根等）
@@ -288,7 +289,7 @@ namespace WpfUiTest.App
                     // 将不同功能模块的服务注册封装为扩展方法，简化ConfigureServices代码
                     // 示例：services.AddMemoModule(); // 注册备忘录模块所有服务
                     // 示例：services.AddToDoModule(); // 注册待办事项模块所有服务
-                    Log.Information("DI容器初始化完成!");
+                    Log.Information("[系统初始化] DI容器初始化完成！");
                 })
                 .Build();
         }
@@ -311,7 +312,7 @@ namespace WpfUiTest.App
             {
                 // 解析失败时的处理：记录警告日志，提醒配置有问题，并指定使用默认值
                 // 这里假设存在静态的 Log 对象（如 Serilog 的 Log），如果实际项目中无此对象，可替换为其他日志输出方式
-                Log.Warning("日志级别配置无效：{LevelStr}，使用默认级别 Information", levelStr);
+                Log.Warning("[系统初始化] 日志级别配置无效：{LevelStr}，使用默认级别 Information", levelStr);
 
                 // 将 level 变量赋值为默认的 Information 级别，确保方法始终返回一个有效的枚举值
                 level = LogEventLevel.Information;
@@ -340,7 +341,7 @@ namespace WpfUiTest.App
 
                     // 方法2：使用迁移创建数据库（推荐）
                     dbContext.Database.Migrate();
-                    Log.Information("数据库初始化成功! 数据文件路径: {dir}",Path.Combine(AppContext.BaseDirectory, this._appConfiguration.DataBaseSettings.Directory));
+                    Log.Information("[系统初始化] 数据库初始化成功。数据文件路径：{dir}",Path.Combine(AppContext.BaseDirectory, this._appConfiguration.DataBaseSettings.Directory));
                 }
 
                 // StartAsync: 异步启动主机，开始托管所有已注册的服务
@@ -364,7 +365,7 @@ namespace WpfUiTest.App
                 //loginView1.Show();
                 // Log.Information: 记录应用程序成功启动的日志
                 // Log.Information("应用程序启动成功! 主窗口已显示");
-                Log.Information("应用程序启动成功!");
+                Log.Information("[系统启动] 应用程序启动成功！");
 
             }
             catch (Exception ex)
@@ -377,7 +378,7 @@ namespace WpfUiTest.App
 
                 // Log.Fatal: 记录致命错误日志，通常用于应用程序启动失败等严重错误
                 // ex: 捕获的异常对象，会记录完整的异常堆栈信息
-                Log.Fatal("应用程序启动失败!\n错误日志: {errorMessage}", ex);
+                Log.Fatal("[系统启动] 应用程序启动失败！异常信息：{errorMessage}", ex);
 
                 // Shutdown: 强制关闭应用程序，参数1表示非正常退出代码
                 // 非零退出代码通常表示应用程序异常终止
@@ -412,12 +413,12 @@ namespace WpfUiTest.App
                         await ApplicationHost.StopAsync(TimeSpan.FromSeconds(5));
 
                         // Log.Information: 记录主机已成功停止的日志
-                        Log.Information("应用程序主机已成功停止");
+                        Log.Information("[系统关闭] 应用程序主机已成功停止！");
                     }
                     catch (Exception ex)
                     {
                         // Log.Error: 记录主机停止过程中发生的错误
-                        Log.Error("停止应用程序主机时发生错误", ex);
+                        Log.Error("[系统关闭] 应用程序主机停止时出现异常。异常信息：{ex}", ex);
                     }
                 }
             }

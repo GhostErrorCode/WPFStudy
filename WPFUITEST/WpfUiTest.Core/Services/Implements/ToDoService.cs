@@ -46,16 +46,16 @@ namespace WpfUiTest.Core.Services.Implements
                 // 从数据库中查到当前用户未完成的待办事项实体集合
                 List<ToDo> toDos = await this._toDoRepository.FindAsync((ToDo toDo)=>toDo.UserId == this._userService.UserId && toDo.Status == TodoStatusEnum.Pending);
                 // 输出日志
-                this._logger.LogInformation("[ToDoService] 查询当前用户 {Account} 全部未完成待办事项完成。数据条数={Count}", this._userService.UserAccount, toDos.Count);
+                this._logger.LogInformation("[ToDoService] [用户：{Account}（{Id}）] 查询全部未完成待办事项成功。数据条数={Count}", this._userService.UserAccount, this._userService.UserId, toDos.Count);
                 // 转为Dto集合并返回
-                return ServiceResult<List<ToDoDto>>.Success("查询当前用户全部未完成待办事项完成", toDos.ToToDoDtoCollection());
+                return ServiceResult<List<ToDoDto>>.Success("查询全部未完成待办事项成功", toDos.ToToDoDtoCollection());
             }
             catch (Exception ex)
             {
                 // 输出日志
-                this._logger.LogInformation("查询当前用户 {Account} 全部未完成待办事项失败。异常信息：{ex}", this._userService.UserAccount, ex);
+                this._logger.LogInformation("[ToDoService] [用户：{Account}（{Id}）] 查询全部未完成待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
                 // 转为Dto集合并返回
-                return ServiceResult<List<ToDoDto>>.Failure("查询当前用户全部未完成待办事项失败");
+                return ServiceResult<List<ToDoDto>>.Failure("查询全部未完成待办事项失败");
             }
         }
     }

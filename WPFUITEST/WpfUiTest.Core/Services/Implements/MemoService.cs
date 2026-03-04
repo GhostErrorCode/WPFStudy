@@ -49,16 +49,16 @@ namespace WpfUiTest.Core.Services.Implements
                 // 从数据库中查到当前用户备忘录实体集合
                 List<Memo> memos = await this._memoRepository.FindAsync((Memo memo) => memo.UserId == this._userService.UserId);
                 // 输出日志
-                this._logger.LogInformation("[MemoService] 查询当前用户 {Account} 全部备忘录完成。数据条数={Count}", this._userService.UserAccount, memos.Count);
+                this._logger.LogInformation("[MemoService] [用户：{Account}（{Id}）] 查询全部备忘录完成。数据条数={Count}", this._userService.UserAccount, this._userService.UserId, memos.Count);
                 // 转为Dto集合并返回
-                return ServiceResult<List<MemoDto>>.Success("查询当前用户全部备忘录完成", memos.ToMemoDtoCollection());
+                return ServiceResult<List<MemoDto>>.Success("查询全部备忘录成功", memos.ToMemoDtoCollection());
             }
             catch (Exception ex)
             {
                 // 输出日志
-                this._logger.LogInformation("查询当前用户 {Account} 全部备忘录失败。异常信息：{ex}", this._userService.UserAccount, ex);
+                this._logger.LogInformation("[MemoService] [用户：{Account}（{Id}）] 查询全部备忘录失败。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
                 // 转为Dto集合并返回
-                return ServiceResult<List<MemoDto>>.Failure("查询当前用户全部备忘录失败");
+                return ServiceResult<List<MemoDto>>.Failure("查询全部备忘录失败");
             }
         }
     }

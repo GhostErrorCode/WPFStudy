@@ -88,9 +88,6 @@ namespace WpfUiTest.App.ViewModels.Main
         {
             try
             {
-                // 日志
-                this._logger.LogDebug("SettingsThemeViewModel：应用主题切换开始");
-
                 // 切换当前应用主题
                 // ApplicationThemeManager.Apply(this._currentTheme.EnumThemeToApplicationTheme());
                 this._customThemeService.SwitchTheme(this._currentTheme);
@@ -105,16 +102,12 @@ namespace WpfUiTest.App.ViewModels.Main
 
                 // 输出日志并显示Snackbar
                 this._messenger.ShowSuccess(SnackbarTarget.MainView, "应用主题已切换", $"应用主题已成功切换至 {this._currentTheme.EnumThemeToStringTheme()}");
-                this._logger.LogInformation("应用主题已切换至 {theme}", this._currentTheme.EnumThemeToStringTheme());
+                this._logger.LogInformation("[设置页（SettingsView）] 应用主题切换成功。主题={theme}", this._currentTheme.EnumThemeToStringTheme());
             }
             catch(Exception ex)
             {
-                this._logger.LogError("应用主题切换失败! 发生意外的未处理异常: {ex}", ex);
-                this._messenger.ShowDanger(SnackbarTarget.MainView, "应用主题切换失败!", "系统出现意外的严重错误!");
-            }
-            finally
-            {
-                this._logger.LogDebug("SettingsThemeViewModel：应用主题切换结束");
+                this._logger.LogError("[设置页（SettingsView）] 应用主题切换时出现异常。异常信息：{ex}", ex);
+                this._messenger.ShowDanger(SnackbarTarget.MainView, "应用主题切换失败", "应用主题切换时出现异常");
             }
         }
     }

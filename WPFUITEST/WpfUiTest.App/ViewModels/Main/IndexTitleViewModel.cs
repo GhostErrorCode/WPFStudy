@@ -57,7 +57,7 @@ namespace WpfUiTest.App.ViewModels.Main
             this._dispatcherTimer.Tick += (object? s, EventArgs e) => { this.CurrentDateTime = DateTime.Now.ToString("yyyy年MM月dd日 dddd HH:mm"); this.WelcomeMessage = DateTime.Now.Hour.ToWelcomeMessage(); };
             this._dispatcherTimer.Start();
             // 输出日志
-            this._logger.LogInformation("首页（IndexView）标题计时器状态: {IsTimerRunning}", this._dispatcherTimer.IsEnabled ? "已启动" : "已停止");
+            this._logger.LogInformation("[首页（IndexView）] 标题计时器{IsTimerRunning}", this._dispatcherTimer.IsEnabled ? "已启动" : "已停止");
 
             // 初始化属性
         }
@@ -79,7 +79,7 @@ namespace WpfUiTest.App.ViewModels.Main
         private async Task Cleanup()
         {
             // 打印日志
-            this._logger.LogInformation("[首页] 当前用户昵称数据已清理！");
+            this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 用户数据清理完成。清理数据：昵称={UserName}", this._userService.UserAccount, this._userService.UserId, this._userName);
             this.UserName = "";
         }
 

@@ -24,7 +24,9 @@ namespace WpfUiTest.App.ViewModels.Main
         // 字段：IMessenger服务
         private readonly IMessenger _messenger;
         // 字段：ILogger服务
-        private readonly ILogger<IndexToDoViewModel> _logger; 
+        private readonly ILogger<IndexToDoViewModel> _logger;
+        // 字段：IUserServcei服务
+        private readonly IUserService _userService;
 
         // 属性：首页未完成的待办事项列表
         private ObservableCollection<IndexToDoItemViewModel> _indexToDoItems;
@@ -35,7 +37,7 @@ namespace WpfUiTest.App.ViewModels.Main
         }
 
         // ==================== 构造函数 ====================
-        public IndexToDoViewModel(IToDoService toDoService, IMessenger messenger, ILogger<IndexToDoViewModel> logger)
+        public IndexToDoViewModel(IToDoService toDoService, IMessenger messenger, ILogger<IndexToDoViewModel> logger, IUserService userService)
         {
             // 初始化字段
             this._indexToDoItems = new ObservableCollection<IndexToDoItemViewModel>();
@@ -43,6 +45,7 @@ namespace WpfUiTest.App.ViewModels.Main
             this._toDoService = toDoService;
             this._messenger = messenger;
             this._logger = logger;
+            this._userService = userService;
 
             // 初始化属性
 
@@ -53,40 +56,50 @@ namespace WpfUiTest.App.ViewModels.Main
         // 私有方法：初始化VM
         private async Task Init()
         {
-            // 1.从数据库拿到当前用户未完成的待办事项集合，并清空当前集合
-            this.IndexToDoItems.Clear();
-            ServiceResult<List<ToDoDto>> allPendingToDosResult = await this._toDoService.GetAllPendingToDosAsync();
-            // 判断是否获取成功并且数据不为空
-            if(allPendingToDosResult != null && allPendingToDosResult.IsSuccess)
+            try
             {
-                // 成功获取到数据之后，放到集合
-                if(allPendingToDosResult.Data != null)
+                // 1.从数据库拿到当前用户未完成的待办事项集合，并清空当前集合
+                this.IndexToDoItems.Clear();
+                ServiceResult<List<ToDoDto>> allPendingToDosResult = await this._toDoService.GetAllPendingToDosAsync();
+                // 判断是否获取成功并且数据不为空
+                if (allPendingToDosResult != null && allPendingToDosResult.IsSuccess)
                 {
-                    foreach (ToDoDto toDoDto in allPendingToDosResult.Data)
+                    // 成功获取到数据之后，放到集合
+                    if (allPendingToDosResult.Data != null)
                     {
-                        this.IndexToDoItems.Add(toDoDto.ToIndexToDoItemViewModel());
+                        foreach (ToDoDto toDoDto in allPendingToDosResult.Data)
+                        {
+                            this.IndexToDoItems.Add(toDoDto.ToIndexToDoItemViewModel());
+                        }
+                        // 打印日志
+                        this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 未完成待办事项数据绑定UI成功。数据条数={Count}", this._userService.UserAccount, this._userService.UserId, allPendingToDosResult.Data.Count);
                     }
-                    // 打印日志
-                    this._logger.LogInformation("首页获取当前用户未完成待办事项成功！共{num}条", allPendingToDosResult.Data.Count);
+                    else
+                    {
+                        // 打印日志
+                        this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 未完成待办事项数据加载成功。无可用数据", this._userService.UserAccount, this._userService.UserId);
+                    }
                 }
                 else
                 {
                     // 打印日志
-                    this._logger.LogInformation("首页获取当前用户未完成待办事项成功！ 但没有数据！ {@RegisterResult}", allPendingToDosResult);
+                    this._logger.LogError("[首页（IndexView）] [用户：{Account}（{Id}）]！未完成待办事项数据加载失败。{Message}", this._userService.UserAccount, this._userService.UserId, allPendingToDosResult == null ? "调用Service失败" : allPendingToDosResult.Message);
+                    this._messenger.ShowDanger(SnackbarTarget.MainView, "数据加载失败！", "未完成待办事项数据加载失败");
                 }
             }
-            else
+            catch (Exception ex)
             {
                 // 打印日志
-                this._logger.LogError("首页获取当前用户未完成待办事项失败！{@RegisterResult}", allPendingToDosResult);
-                this._messenger.ShowDanger(SnackbarTarget.MainView, "获取数据失败！", "首页获取当前用户未完成待办事项失败");
+                this._logger.LogError("[首页（IndexView）] [用户：{Account}（{Id}）]！未完成待办事项数据加载时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                this._messenger.ShowDanger(SnackbarTarget.MainView, "数据加载失败！", "未完成待办事项数据加载失败");
             }
         }
         // 私有方法：清理VM
         private async Task Cleanup()
         {
+            int toDoItemsCount = this._indexToDoItems.Count;
             // 打印日志
-            this._logger.LogInformation("[首页] 未完成待办事项数据已清理！");
+            this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 未完成待办事项数据清理完成。清理条数={Count}", this._userService.UserAccount, this._userService.UserId, toDoItemsCount);
             this.IndexToDoItems.Clear();
         }
 
