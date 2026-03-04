@@ -7,6 +7,7 @@
       xmlns:local="clr-namespace:WpfUiTest.App.Views.Main"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
+      ScrollViewer.CanContentScroll="False"
       Title="IndexView">
 
     <Grid>
@@ -62,7 +63,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid
-                        Margin="5,0,5,10"
+                        Margin="5,10,5,20"
                         >
                         <Border
                             Style="{StaticResource IndexSummaryBorderStyle}"
@@ -81,5 +82,150 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        
+        
+        
+        <!-- 待办事项 第3行 第1列 -->
+        <Grid
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="0,0,10,15"
+            >
+            <!-- 再分2行 -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- 可能会扩展的边框底色 -->
+            <Border
+                Grid.RowSpan="2"
+                Style="{StaticResource IndexToDoDataBorderStyle}"
+                />
+            
+            <!-- 第1行 说明与新增待办区域 -->
+            <DockPanel
+                Margin="5,5,5,5"
+                >
+                <ui:Button
+                    DockPanel.Dock="Right"
+                    Style="{StaticResource IndexAddDataUiButonStyle}"
+                    />
+                <TextBlock
+                    Text="待办事项（待办）"
+                    Style="{StaticResource IndexDataTextBlockStyle}"
+                    />
+            </DockPanel>
+
+            <!-- 第2行 待办事项数据区域 -->
+            <ui:ListView
+                Grid.Row="1"
+                ItemsSource="{Binding IndexToDoViewModel.IndexToDoItems}"
+                Style="{StaticResource IndexDataListViewStyle}"
+                >
+                <!-- ListView的数据模板重写 -->
+                <ui:ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="8,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <!-- 待办事项标题 -->
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Text="{Binding Title}"
+                                Style="{StaticResource IndexDataTitleTextBlockStyle}"
+                                />
+                            <!-- 待办事项内容 -->
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Text="{Binding Content}"
+                                Style="{StaticResource IndexDataContentTextBlockStyle}"
+                                />
+                            <!-- 一键完成待办事项按钮 -->
+                            <ui:Button
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource IndexToDoCompletedUiButonStyle}"
+                                />
+                        </Grid>
+                    </DataTemplate>
+                </ui:ListView.ItemTemplate>
+            </ui:ListView>
+        </Grid>
+
+        
+        <!-- 备忘录 第3行 第2列 -->
+        <Grid
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="10,0,0,15"
+            >
+            <!-- 再分2行 -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- 可能会扩展的边框底色 -->
+            <Border
+                Grid.RowSpan="2"
+                Style="{StaticResource IndexMemoDataBorderStyle}"
+                />
+
+            <!-- 第1行 说明与新增备忘区域 -->
+            <DockPanel
+                Margin="5,5,5,5"
+                >
+                <ui:Button
+                    DockPanel.Dock="Right"
+                    Style="{StaticResource IndexAddDataUiButonStyle}"
+                    />
+                <TextBlock
+                    Text="备忘录"
+                    Style="{StaticResource IndexDataTextBlockStyle}"
+                    />
+            </DockPanel>
+
+            <!-- 第2行 备忘录数据区域 -->
+            <ui:ListView
+                Grid.Row="1"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ItemsSource="{Binding MemoViewModel.IndexMemoItems}"
+                Style="{StaticResource IndexDataListViewStyle}"
+                >
+                <!-- ListView的数据模板重写 -->
+                <ui:ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="8,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <!-- 待办事项标题 -->
+                            <TextBlock
+                                Grid.Row="0"
+                                Text="{Binding Title}"
+                                Style="{StaticResource IndexDataTitleTextBlockStyle}"
+                                />
+                            <!-- 待办事项内容 -->
+                            <TextBlock
+                                Grid.Row="1"
+                                Text="{Binding Content}"
+                                Style="{StaticResource IndexDataContentTextBlockStyle}"
+                                />
+                        </Grid>
+                    </DataTemplate>
+                </ui:ListView.ItemTemplate>
+            </ui:ListView>
+        </Grid>
     </Grid>
 </Page>

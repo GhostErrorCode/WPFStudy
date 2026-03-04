@@ -42,4 +42,24 @@
         <GradientStop Color="#00796B" Offset="1"/>
         <!-- 高对比青，柔和 -->
     </LinearGradientBrush>
+
+    <!-- ==================== 首页数据区域Boder渐变颜色 ==================== -->
+    <!-- 待办：深暗底 → 亮青（高对比，不刺眼） -->
+    <LinearGradientBrush x:Key="IndexToDoDataGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#EFF6FF" Offset="0.0"/>
+        <!-- 左上角浅冰白（黑字清晰） -->
+        <GradientStop Color="#6EE7B7" Offset="0.3"/>
+        <!-- 中间中青绿（主色#10B981中饱和版） -->
+        <GradientStop Color="#10B981" Offset="1.0"/>
+        <!-- 右下角亮青绿（核心主色，强化对比） -->
+    </LinearGradientBrush>
+    <!-- 备忘录：深灰紫 → 亮紫（高对比，和待办呼应） -->
+    <LinearGradientBrush x:Key="IndexMemoDataGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#F5F3FF" Offset="0.0"/>
+        <!-- 左上角浅冰紫（黑字清晰） -->
+        <GradientStop Color="#A855F7" Offset="0.3"/>
+        <!-- 中间中紫蓝（主色#7C3AED中饱和版） -->
+        <GradientStop Color="#7C3AED" Offset="1.0"/>
+        <!-- 右下角亮紫蓝（核心主色，强化对比） -->
+    </LinearGradientBrush>
 </ResourceDictionary>

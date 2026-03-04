@@ -47,6 +47,7 @@
                 <!-- 首页样式 -->
                 <ResourceDictionary Source="/Resources/Styles/Modules/Index/IndexTitleStyles.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Modules/Index/IndexSummaryStyles.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Modules/Index/IndexDataStyles.xaml" />
 
                 <!-- 全局转换器 -->
                 <ResourceDictionary Source="/Resources/Converters/Converters.xaml" />

@@ -41,4 +41,28 @@
         <GradientStop Color="#0891B2" Offset="1"/>
         <!-- 暗调青，适配暗黑 -->
     </LinearGradientBrush>
+
+    <!-- ==================== 首页数据区域Boder渐变颜色 ==================== -->
+    <!-- 待办：暗青底 → 柔绿（暗黑系，渐变突出） -->
+    <LinearGradientBrush x:Key="IndexToDoDataGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#1E293B" Offset="0.0"/>
+        <!-- 左上角深青底 -->
+        <GradientStop Color="#0F766E" Offset="0.4"/>
+        <!-- 中间暗青绿（主色#10B981深化） -->
+        <GradientStop Color="#14B8A6" Offset="0.7"/>
+        <!-- 中后段深青绿（接近主色） -->
+        <GradientStop Color="#10B981" Offset="1.0"/>
+        <!-- 右下角亮青绿（核心主色） -->
+    </LinearGradientBrush>
+    <!-- 备忘录：暗紫底 → 柔紫（暗黑系，和待办风格统一） -->
+    <LinearGradientBrush x:Key="IndexMemoDataGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#27272A" Offset="0.0"/>
+        <!-- 左上角深灰紫底 -->
+        <GradientStop Color="#4C1D95" Offset="0.4"/>
+        <!-- 中间暗紫蓝（主色#7C3AED深化） -->
+        <GradientStop Color="#6D28D9" Offset="0.7"/>
+        <!-- 中后段深紫蓝（接近主色） -->
+        <GradientStop Color="#7C3AED" Offset="1.0"/>
+        <!-- 右下角亮紫蓝（核心主色） -->
+    </LinearGradientBrush>
 </ResourceDictionary>

@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Threading;
+using WpfUiTest.Core.DTOs.ToDo;
 using WpfUiTest.Core.Services.Interfaces;
 using WpfUiTest.Shared.Base;
+using WpfUiTest.Shared.Enums;
 using WpfUiTest.Shared.Extensions;
 using WpfUiTest.Shared.Utilities;
 
@@ -55,15 +57,16 @@ namespace WpfUiTest.App.ViewModels.Main
             this._dispatcherTimer.Tick += (object? s, EventArgs e) => { this.CurrentDateTime = DateTime.Now.ToString("yyyy年MM月dd日 dddd HH:mm"); this.WelcomeMessage = DateTime.Now.Hour.ToWelcomeMessage(); };
             this._dispatcherTimer.Start();
             // 输出日志
-            this._logger.LogInformation("首页（IndexView）标题计时器状态: {IsTimerRunning}", this._dispatcherTimer.IsEnabled ? "已启动" : "已停止");
+            this._logger.LogInformation("[首页（IndexView）] 标题计时器{IsTimerRunning}", this._dispatcherTimer.IsEnabled ? "已启动" : "已停止");
 
             // 初始化属性
         }
 
 
         // ==================== 方法 ====================
-        // 方法: 导航完成
-        public override async Task OnNavigatedToAsync()
+
+        // 私有方法：初始化VM
+        private async Task Init()
         {
             // 获取当前登录用户的昵称
             this.UserName = this._userService.CurrentUser != null ? this._userService.CurrentUser.UserName : "[NULL]";
@@ -71,8 +74,27 @@ namespace WpfUiTest.App.ViewModels.Main
             this.CurrentDateTime = DateTime.Now.ToString("yyyy年MM月dd日 dddd HH:mm");
             // 根据当前日期时间更改欢迎语
             this.WelcomeMessage = DateTime.Now.Hour.ToWelcomeMessage();
+        }
+        // 私有方法：清理VM
+        private async Task Cleanup()
+        {
+            // 打印日志
+            this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 用户数据清理完成。清理数据：昵称={UserName}", this._userService.UserAccount, this._userService.UserId, this._userName);
+            this.UserName = "";
+        }
 
-            await base.OnNavigatedToAsync();
+
+        // 方法: 导航完成
+        public override async Task OnNavigatedToAsync()
+        {
+            // 执行初始化方法
+            await this.Init();
+        }
+        // 方法：导航离开后执行
+        public override async Task OnNavigatedFromAsync()
+        {
+            // 执行清理方法
+            await this.Cleanup();
         }
     }
 }
