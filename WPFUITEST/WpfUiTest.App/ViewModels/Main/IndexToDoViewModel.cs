@@ -1,10 +1,13 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Numerics;
 using System.Text;
+using Wpf.Ui;
+using Wpf.Ui.Extensions;
 using WpfUiTest.App.ViewModels.Mapping;
 using WpfUiTest.Core.DTOs.ToDo;
 using WpfUiTest.Core.Services.Interfaces;
@@ -27,6 +30,8 @@ namespace WpfUiTest.App.ViewModels.Main
         private readonly ILogger<IndexToDoViewModel> _logger;
         // 字段：IUserServcei服务
         private readonly IUserService _userService;
+        // 字段：IContentDialogService对话服务
+        private readonly IContentDialogService _contentDialogService;
 
         // 属性：首页未完成的待办事项列表
         private ObservableCollection<IndexToDoItemViewModel> _indexToDoItems;
@@ -35,24 +40,51 @@ namespace WpfUiTest.App.ViewModels.Main
             get { return _indexToDoItems; }
             set { SetProperty(ref _indexToDoItems, value); }
         }
+        // 属性：要添加或修改的待办事项列表项
+        private IndexToDoItemViewModel _indexToDoItem;
+        public IndexToDoItemViewModel IndexToDoItem
+        {
+            get { return _indexToDoItem; }
+            set { SetProperty(ref _indexToDoItem, value); }
+        }
+
+        // 命令：添加待办事项Command
+        public AsyncRelayCommand<object> AddToDoItemCommand { get; private set; }
+
 
         // ==================== 构造函数 ====================
-        public IndexToDoViewModel(IToDoService toDoService, IMessenger messenger, ILogger<IndexToDoViewModel> logger, IUserService userService)
+        public IndexToDoViewModel(IToDoService toDoService, IMessenger messenger, ILogger<IndexToDoViewModel> logger, IUserService userService, IContentDialogService contentDialogService)
         {
             // 初始化字段
             this._indexToDoItems = new ObservableCollection<IndexToDoItemViewModel>();
+            this._indexToDoItem = new IndexToDoItemViewModel();
 
             this._toDoService = toDoService;
             this._messenger = messenger;
             this._logger = logger;
             this._userService = userService;
+            this._contentDialogService = contentDialogService;
 
             // 初始化属性
 
             // 初始化命令
+            this.AddToDoItemCommand = new AsyncRelayCommand<object>(AddToDoItem);
         }
 
         // ==================== 方法 ====================
+        // 方法：添加待办事项
+        private async Task AddToDoItem(object content)
+        {
+            await this._contentDialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions()
+            {
+                Title = "添加待办",
+                Content = content,
+                PrimaryButtonText = "添加",
+                SecondaryButtonText = "暂不添加",
+                CloseButtonText = "取消",
+            });
+        }
+
         // 私有方法：初始化VM
         private async Task Init()
         {

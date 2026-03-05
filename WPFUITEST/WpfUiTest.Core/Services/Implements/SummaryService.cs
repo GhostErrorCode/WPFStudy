@@ -62,7 +62,7 @@ namespace WpfUiTest.Core.Services.Implements
             }
             catch(Exception ex)
             {
-                this._logger.LogInformation("[SummaryService]  [用户：{Account}（{Id}）] 查询汇总数据时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                this._logger.LogError("[SummaryService]  [用户：{Account}（{Id}）] 查询汇总数据时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
                 // 返回汇总Dto
                 return ServiceResult<SummaryDto>.Failure("汇总数据获取失败");
             }

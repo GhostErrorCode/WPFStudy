@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using WpfUiTest.Core.Data.Entities;
 using WpfUiTest.Core.DTOs.Memo;
+using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.Core.Mapping
 {
@@ -33,6 +34,19 @@ namespace WpfUiTest.Core.Mapping
             foreach (Memo Memo in Memos) { MemoDtos.Add(Memo.ToMemoDto()); }
             // 返回结果Dto集合
             return MemoDtos;
+        }
+
+        // AddMemoDto数据传输对象 映射 Memo实体
+        public static Memo ToMemo(this AddMemoDto addMemoDto, int userId)
+        {
+            return new Memo()
+            {
+                Title = addMemoDto.Title,
+                Content = addMemoDto.Content,
+                UserId = userId,
+                CreateDate = DateTimeUtility.NowNoMilliseconds(),
+                UpdateDate = DateTimeUtility.NowNoMilliseconds()
+            };
         }
     }
 }

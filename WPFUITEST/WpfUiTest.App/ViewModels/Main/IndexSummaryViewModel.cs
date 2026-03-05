@@ -60,6 +60,9 @@ namespace WpfUiTest.App.ViewModels.Main
 
 
         // ==================== 方法 ====================
+        // 方法：首页添加/修改数据后更新汇总数据
+
+
         // 私有方法：初始化首页汇总数据
         private async Task Init()
         {
@@ -99,6 +102,8 @@ namespace WpfUiTest.App.ViewModels.Main
                 this._messenger.ShowDanger(SnackbarTarget.MainView, "数据加载失败！", "汇总数据加载失败");
             }
         }
+
+
         // 私有方法：清理VM
         private async Task Cleanup()
         {
