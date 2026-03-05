@@ -11,9 +11,9 @@ namespace WpfUiTest.App.ViewModels.Enums
         // 待办总量
         ToDoTotal,
         // 已完成
-        Completed,
+        ToDoCompleted,
         // 完成率
-        CompletionRate,
+        ToDoCompletionRate,
         // 备忘录总量
         MemoTotal,
         // 自定义汇总

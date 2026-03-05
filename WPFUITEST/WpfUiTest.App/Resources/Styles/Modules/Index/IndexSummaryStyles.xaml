@@ -20,10 +20,10 @@
             <DataTrigger Binding="{Binding SummaryType}" Value="{x:Static enums:IndexSummaryType.ToDoTotal}">
                 <Setter Property="Background" Value="{DynamicResource IndexSummaryToDoTotalGradientBrush}"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding SummaryType}" Value="{x:Static enums:IndexSummaryType.Completed}">
+            <DataTrigger Binding="{Binding SummaryType}" Value="{x:Static enums:IndexSummaryType.ToDoCompleted}">
                 <Setter Property="Background" Value="{DynamicResource IndexSummaryTodoCompletedGradientBrush}"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding SummaryType}" Value="{x:Static enums:IndexSummaryType.CompletionRate}">
+            <DataTrigger Binding="{Binding SummaryType}" Value="{x:Static enums:IndexSummaryType.ToDoCompletionRate}">
                 <Setter Property="Background" Value="{DynamicResource IndexSummaryTodoCompletionRateGradientBrush}"/>
             </DataTrigger>
             <DataTrigger Binding="{Binding SummaryType}" Value="{x:Static enums:IndexSummaryType.MemoTotal}">

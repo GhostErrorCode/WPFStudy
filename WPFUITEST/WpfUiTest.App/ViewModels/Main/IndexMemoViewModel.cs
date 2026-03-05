@@ -16,6 +16,7 @@ using WpfUiTest.Core.Services.Interfaces;
 using WpfUiTest.Shared.Base;
 using WpfUiTest.Shared.Enums;
 using WpfUiTest.Shared.Extensions;
+using WpfUiTest.Shared.Messages;
 using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.App.ViewModels.Main
@@ -100,6 +101,8 @@ namespace WpfUiTest.App.ViewModels.Main
                 if(addMemoResult != null && addMemoResult.IsSuccess && addMemoResult.Data != null)
                 {
                     this.IndexMemoItems.Add(addMemoResult.Data.ToIndexMemoItemViewModel());
+                    // 通知首页汇总数据更新
+                    this._messenger.Send(new UpdateIndexSummaryMessage() { Type = UpdateIndexSummaryType.AddMemo });
                     this.ClearIndexMemoItem();
                     this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 添加备忘录成功，已添加至当前UI集合，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, addMemoResult.Data.Id, addMemoResult.Data.Title);
                     this._messenger.ShowSuccess(SnackbarTarget.MainView, addMemoResult.Message,"添加备忘录成功");
