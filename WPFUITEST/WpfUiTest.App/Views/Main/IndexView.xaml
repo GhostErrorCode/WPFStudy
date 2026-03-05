@@ -9,7 +9,7 @@
       d:DesignHeight="450" d:DesignWidth="800"
       ScrollViewer.CanContentScroll="False"
       Title="IndexView">
-
+    
     <Grid>
         <!-- 布局整体分为3行2列 -->
         <Grid.RowDefinitions>
@@ -109,6 +109,8 @@
                 >
                 <ui:Button
                     DockPanel.Dock="Right"
+                    Command="{Binding IndexToDoViewModel.AddToDoItemCommand}"
+                    CommandParameter="{StaticResource ToDoContentDialog}"
                     Style="{StaticResource IndexAddDataUiButonStyle}"
                     />
                 <TextBlock
@@ -187,6 +189,8 @@
                 >
                 <ui:Button
                     DockPanel.Dock="Right"
+                    Command="{Binding MemoViewModel.AddMemoItemCommand}"
+                    CommandParameter="{StaticResource MemoContentDialog}"
                     Style="{StaticResource IndexAddDataUiButonStyle}"
                     />
                 <TextBlock

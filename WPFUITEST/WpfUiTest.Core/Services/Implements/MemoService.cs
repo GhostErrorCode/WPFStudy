@@ -61,5 +61,47 @@ namespace WpfUiTest.Core.Services.Implements
                 return ServiceResult<List<MemoDto>>.Failure("查询全部备忘录失败");
             }
         }
+
+        // 添加备忘录
+        public async Task<ServiceResult<MemoDto>> AddMemoAsync(AddMemoDto addMemoDto)
+        {
+            try
+            {
+                // 判断传入的addMemoDto是否为NULL，如果是则直接输出日志并返回失败结果
+                if(addMemoDto == null || string.IsNullOrWhiteSpace(addMemoDto.Title) || string.IsNullOrWhiteSpace((addMemoDto.Content)))
+                {
+                    // 输出日志
+                    this._logger.LogWarning("[MemoService] [用户：{Account}（{Id}）] 添加备忘录失败。备忘录标题或内容为空", this._userService.UserAccount, this._userService.UserId);
+                    // 转为Dto集合并返回
+                    return ServiceResult<MemoDto>.Failure("添加备忘录失败：备忘录标题或内容为空");
+                }
+                else
+                {
+                    // 传入的备忘录标题和内容均不为空
+                    // 将addMemoDto映射为实体并添加UserId后写入数据库
+                    Memo memo = await this._memoRepository.AddAsync(addMemoDto.ToMemo(this._userService.UserId));
+                    // 通过工作单元提交至数据库并判断是否成功
+                    if(await this._unitOfWork.SaveChangesAsync() > 0)
+                    {
+                        // 提交至数据库成功
+                        this._logger.LogInformation("[MemoService] [用户：{Account}（{Id}）] 添加备忘录成功。数据：{@Memo}", this._userService.UserAccount, this._userService.UserId, memo);
+                        return ServiceResult<MemoDto>.Success("添加备忘录成功",memo.ToMemoDto());
+                    }
+                    else
+                    {
+                        // 提交至数据库失败
+                        this._logger.LogWarning("[MemoService] [用户：{Account}（{Id}）] 添加备忘录失败。保存的数据未生效", this._userService.UserAccount, this._userService.UserId);
+                        return ServiceResult<MemoDto>.Failure("添加备忘录失败，请稍后重试");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // 输出日志
+                this._logger.LogError("[MemoService] [用户：{Account}（{Id}）] 添加备忘录失败。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                // 转为Dto集合并返回
+                return ServiceResult<MemoDto>.Failure("添加备忘录失败");
+            }
+        }
     }
 }

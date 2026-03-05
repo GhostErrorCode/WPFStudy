@@ -23,5 +23,15 @@ namespace WpfUiTest.App.ViewModels.Mapping
                 UpdateDate = memoDto.UpdateDate
             };
         }
+
+        // IndexMemoItemViewModel 转 AddMemoDto
+        public static AddMemoDto ToAddMemoDto(this IndexMemoItemViewModel indexMemoItemViewModel)
+        {
+            return new AddMemoDto()
+            {
+                Title = indexMemoItemViewModel.Title,
+                Content = indexMemoItemViewModel.Content
+            };
+        }
     }
 }

@@ -1,0 +1,44 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                    >
+
+    <!-- 首页待办事项添加/修改时候对话框模板 -->
+    <StackPanel
+        x:Key="ToDoContentDialog"
+        Orientation="Vertical"
+        Width="400"
+        >
+        <!-- 选择待办还是完成状态的ComboBox -->
+        <ComboBox
+            Margin="5,0,0,5"
+            HorizontalAlignment="Left"
+            MinWidth="100"
+            MaxWidth="200"
+            ItemsSource="{Binding SettingsThemeViewModel.ThemeOptions}"
+            >
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <ui:TextBlock Text="{Binding Converter={StaticResource ThemeToStringConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <!-- 待办的标题 -->
+        <ui:TextBox
+            Text="{Binding UserLoginViewModel.Account}"
+            TextWrapping="NoWrap"
+            Height="Auto"
+            PlaceholderText="请输入待办事项标题..."
+            Style="{StaticResource InputUiTextBoxStyle}"
+            />
+        <!-- 待办的内容 -->
+        <ui:TextBox
+            Text="{Binding UserLoginViewModel.Account}"
+            TextWrapping="Wrap"
+            Height="Auto"
+            PlaceholderText="请输入待办事项内容..."
+            Style="{StaticResource InputUiTextBoxStyle}"
+            />
+    </StackPanel>
+</ResourceDictionary>

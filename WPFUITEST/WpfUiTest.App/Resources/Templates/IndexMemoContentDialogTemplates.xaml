@@ -1,0 +1,31 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                    xmlns:vm="clr-namespace:WpfUiTest.App.ViewModels.Main"
+                    >
+
+    <!-- 首页备忘录添加/修改时候对话框模板 -->
+    <DataTemplate x:Key="MemoContentDialog">
+        <StackPanel
+            Orientation="Vertical"
+            Width="400"
+            >
+            <!-- 备忘录的标题 -->
+            <ui:TextBox
+                Text="{Binding Title}"
+                TextWrapping="NoWrap"
+                Height="Auto"
+                PlaceholderText="请输入备忘录标题..."
+                Style="{StaticResource InputUiTextBoxStyle}"
+                />
+            <!-- 备忘录的内容 -->
+            <ui:TextBox
+                Text="{Binding Content}"
+                TextWrapping="Wrap"
+                Height="Auto"
+                PlaceholderText="请输入备忘录内容..."
+                Style="{StaticResource InputUiTextBoxStyle}"
+                />
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>
