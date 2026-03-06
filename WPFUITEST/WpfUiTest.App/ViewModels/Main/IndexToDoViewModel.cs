@@ -40,6 +40,9 @@ namespace WpfUiTest.App.ViewModels.Main
             get { return _indexToDoItems; }
             set { SetProperty(ref _indexToDoItems, value); }
         }
+        // 属性（固定）：添加或修改时候的待办事项状态组合框源数据
+        public List<TodoStatusEnum> ToDoStatuses { get; } = new List<TodoStatusEnum>() { TodoStatusEnum.Pending, TodoStatusEnum.Completed };
+
         // 属性：要添加或修改的待办事项列表项
         private IndexToDoItemViewModel _indexToDoItem;
         public IndexToDoItemViewModel IndexToDoItem
@@ -66,6 +69,7 @@ namespace WpfUiTest.App.ViewModels.Main
             this._contentDialogService = contentDialogService;
 
             // 初始化属性
+            this.IndexToDoItem.Status = TodoStatusEnum.Pending;  // 添加或修改的待办事项永远有一个默认值：待办状态
 
             // 初始化命令
             this.AddToDoItemCommand = new AsyncRelayCommand<object>(AddToDoItem);
@@ -78,7 +82,7 @@ namespace WpfUiTest.App.ViewModels.Main
             await this._contentDialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions()
             {
                 Title = "添加待办",
-                Content = content,
+                Content = ContentPresenterHelper.Build(this, content),
                 PrimaryButtonText = "添加",
                 SecondaryButtonText = "暂不添加",
                 CloseButtonText = "取消",

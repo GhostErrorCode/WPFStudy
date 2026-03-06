@@ -70,7 +70,7 @@
                 FontTypography="BodyStrong"
                 Text="用户"
                 />
-            <!-- 应用主题的设置 CardControl-->
+            <!-- 用户的设置 CardControl-->
             <ui:CardControl Icon="{ui:SymbolIcon Symbol=Person24}">
                 <!-- 设置头部区域 -->
                 <ui:CardControl.Header>

@@ -8,4 +8,7 @@
     
     <!-- 首页 汇总ItemsControl数量 转 列数 -->
     <converters:ItemsCountToColumnsConverter x:Key="ItemsCountToColumnsConverter" />
+    
+    <!-- 首页 待办事项状态 转 ComboBox要显示的字符 -->
+    <converters:ToDoStatusToStringConverter x:Key="ToDoStatusToStringConverter" />
 </ResourceDictionary>
