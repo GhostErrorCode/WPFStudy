@@ -68,6 +68,33 @@
         >
         <Setter Property="Margin" Value="5,0,5,10" />
         <Setter Property="SelectionMode" Value="Single" />
+
+        <!-- 使用ItemContainerStyle设置自定义样式 -->
+        <!-- 已经View中实现
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style 
+                    TargetType="{x:Type ui:ListViewItem}"
+                    BasedOn="{StaticResource {x:Type ui:ListViewItem}}"
+                    >
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu>
+                                <MenuItem
+                                    Header="编辑" 
+                                    Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=ui:ListView}}"
+                                    CommandParameter="{Binding}"/>
+                                <MenuItem
+                                    Header="删除" 
+                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ui:ListView}}"
+                                    CommandParameter="{Binding}"/>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        -->
     </Style>
     
     <!-- 待办事项和备忘录显示数据的标题样式 -->

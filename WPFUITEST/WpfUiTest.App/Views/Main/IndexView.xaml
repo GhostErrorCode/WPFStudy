@@ -161,6 +161,41 @@
                         </Grid>
                     </DataTemplate>
                 </ui:ListView.ItemTemplate>
+                <!-- ListView子项的上下文菜单 -->
+                <ui:ListView.ItemContainerStyle>
+                    <Style 
+                        TargetType="{x:Type ui:ListViewItem}"
+                        BasedOn="{StaticResource {x:Type ui:ListViewItem}}"
+                        >
+                        <!-- 
+                            将父级 ListView 的 DataContext 存储到当前 ListViewItem 的 Tag 中。
+                            - Binding 使用 RelativeSource 查找祖先 ListView（因为 ListViewItem 是 ListView 的可视化树后代）。
+                            - 这样，每个 ListViewItem 的 Tag 都引用了包含命令的根 ViewModel（如 IndexViewModel）。
+                        -->
+                        <Setter Property="Tag" Value="{Binding DataContext,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ui:ListView}}}" />
+                        <!--
+                            PlacementTarget 是 ContextMenu 的一个属性，指向触发该右键菜单的控件。
+                            在这里，它指向被右键点击的那个 ListViewItem。通过它，菜单项可以访问到该 ListViewItem 及其属性（如 Tag）。
+                        -->
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem
+                                        Header="添加待办事项" 
+                                        Command="{Binding PlacementTarget.Tag.IndexToDoViewModel.AddToDoItemCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                        CommandParameter="{StaticResource ToDoContentDialog}"
+                                        />
+                                    <MenuItem
+                                        Header="编辑此待办事项" 
+                                        />
+                                    <MenuItem
+                                        Header="删除此待办事项" 
+                                        />
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ui:ListView.ItemContainerStyle>
             </ui:ListView>
         </Grid>
 
@@ -229,6 +264,54 @@
                         </Grid>
                     </DataTemplate>
                 </ui:ListView.ItemTemplate>
+                <!-- ListView子项的上下文菜单 -->
+                <!-- 
+                    ListView.ItemContainerStyle：为 ListView 中的每个项（ListViewItem）定义样式。
+                    主要目标：为每个项添加右键菜单，并正确绑定 ViewModel 中的命令。
+    
+                    为什么不能直接用 RelativeSource FindAncestor 在 ContextMenu 中查找 ListView？
+                    - ContextMenu 是一个独立的弹出窗口，它不在 ListView 的可视化树中，因此无法通过 FindAncestor 找到父级 ListView。
+                    - 这会导致绑定失败，命令无法执行。
+    
+                    解决方案：利用 Tag 属性作为桥梁。
+                    - 在 ListViewItem 样式中，通过 FindAncestor 找到父级 ListView，并将其 DataContext 赋值给 Tag 属性。
+                        （因为 ListViewItem 在 ListView 的可视化树内，所以这里可以找到。）
+                    - 在 ContextMenu 中，通过 PlacementTarget（指向触发菜单的 ListViewItem）访问其 Tag，从而获取父级 ViewModel。
+                -->
+                <ui:ListView.ItemContainerStyle>
+                    <Style 
+                        TargetType="{x:Type ui:ListViewItem}"
+                        BasedOn="{StaticResource {x:Type ui:ListViewItem}}"
+                        >
+                        <!-- 
+                            将父级 ListView 的 DataContext 存储到当前 ListViewItem 的 Tag 中。
+                            - Binding 使用 RelativeSource 查找祖先 ListView（因为 ListViewItem 是 ListView 的可视化树后代）。
+                            - 这样，每个 ListViewItem 的 Tag 都引用了包含命令的根 ViewModel（如 IndexViewModel）。
+                        -->
+                        <Setter Property="Tag" Value="{Binding DataContext,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ui:ListView}}}" />
+                        <!--
+                            PlacementTarget 是 ContextMenu 的一个属性，指向触发该右键菜单的控件。
+                            在这里，它指向被右键点击的那个 ListViewItem。通过它，菜单项可以访问到该 ListViewItem 及其属性（如 Tag）。
+                        -->
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem
+                                        Header="添加备忘录" 
+                                        Command="{Binding PlacementTarget.Tag.MemoViewModel.AddMemoItemCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                        CommandParameter="{StaticResource MemoContentDialog}"
+                                        />
+                                    <MenuItem
+                                        Header="编辑此备忘录" 
+                                        />
+                                    <MenuItem
+                                        Header="删除此备忘录" 
+                                        />
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ui:ListView.ItemContainerStyle>
             </ui:ListView>
         </Grid>
     </Grid>
