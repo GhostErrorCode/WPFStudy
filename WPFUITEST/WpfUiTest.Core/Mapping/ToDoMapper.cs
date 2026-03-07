@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using WpfUiTest.Core.Data.Entities;
+using WpfUiTest.Core.DTOs.Memo;
 using WpfUiTest.Core.DTOs.ToDo;
+using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.Core.Mapping
 {
@@ -35,6 +37,20 @@ namespace WpfUiTest.Core.Mapping
             foreach(ToDo toDo in toDos) { toDoDtos.Add(toDo.ToToDoDto()); }
             // 返回结果Dto集合
             return toDoDtos;
+        }
+
+        // AddToDoDto数据传输对象 映射 ToDo实体
+        public static ToDo ToToDo(this AddToDoDto addToDoDto, int userId)
+        {
+            return new ToDo()
+            {
+                Title = addToDoDto.Title,
+                Content = addToDoDto.Content,
+                Status = addToDoDto.Status,
+                UserId = userId,
+                CreateDate = DateTimeUtility.NowNoMilliseconds(),
+                UpdateDate = DateTimeUtility.NowNoMilliseconds()
+            };
         }
     }
 }

@@ -151,14 +151,14 @@ namespace WpfUiTest.App.ViewModels.Main
 
             // 拿到待办事项的完成量
             IndexSummaryItemViewModel? toDoCompletedItem = this.IndexSummaryItems.FirstOrDefault(t => t.SummaryType == IndexSummaryType.ToDoCompleted);
-            int toDoToCompleted = toDoCompletedItem != null ? int.Parse(toDoCompletedItem.Content) : 0;
+            int toDoCompleted = toDoCompletedItem != null ? int.Parse(toDoCompletedItem.Content) : 0;
 
             // 计算待办事项的完成比例
             IndexSummaryItemViewModel? toDoCompletionRateItem = this.IndexSummaryItems.FirstOrDefault(t => t.SummaryType == IndexSummaryType.ToDoCompletionRate);
             if(toDoCompletionRateItem != null)
             {
                 // 如果找到了待办事项完成比例项就计算他
-                toDoCompletionRateItem.Content = $"{(double)toDoToCompleted / toDoTotal * 100:F2)}";
+                toDoCompletionRateItem.Content = toDoTotal == 0 ? "0.00%" : $"{(double)toDoCompleted / toDoTotal * 100:F2}%";
                 this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项完成比例）成功。完成比例={TodoCompletionRate}", this._userService.UserAccount, this._userService.UserId, toDoCompletionRateItem.Content);
             }
             else

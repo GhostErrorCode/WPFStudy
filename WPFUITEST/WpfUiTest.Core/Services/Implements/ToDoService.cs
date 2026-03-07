@@ -5,6 +5,7 @@ using System.Text;
 using WpfUiTest.Core.Data.Entities;
 using WpfUiTest.Core.Data.Repositories.Interfaces;
 using WpfUiTest.Core.Data.UnitOfWork.Interfaces;
+using WpfUiTest.Core.DTOs.Memo;
 using WpfUiTest.Core.DTOs.ToDo;
 using WpfUiTest.Core.Mapping;
 using WpfUiTest.Core.Services.Interfaces;
@@ -56,6 +57,47 @@ namespace WpfUiTest.Core.Services.Implements
                 this._logger.LogInformation("[ToDoService] [用户：{Account}（{Id}）] 查询全部未完成待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
                 // 转为Dto集合并返回
                 return ServiceResult<List<ToDoDto>>.Failure("查询全部未完成待办事项失败");
+            }
+        }
+
+        // 添加待办事项
+        public async Task<ServiceResult<ToDoDto>> AddToDoAsync(AddToDoDto addToDoDto)
+        {
+            try
+            {
+                // 判断传入的 addToDoDto 是否为 NULL，如果是则直接输出日志并返回失败结果
+                if(addToDoDto == null || string.IsNullOrWhiteSpace(addToDoDto.Title) || string.IsNullOrWhiteSpace(addToDoDto.Content) || (addToDoDto.Status != TodoStatusEnum.Pending && addToDoDto.Status != TodoStatusEnum.Completed))
+                {
+                    // 输出日志
+                    this._logger.LogWarning("[ToDoService] [用户：{Account}（{Id}）] 添加待办事项失败。待办事项标题、内容或状态为空", this._userService.UserAccount, this._userService.UserId);
+                    // 转为Dto集合并返回
+                    return ServiceResult<ToDoDto>.Failure("添加待办事项失败：待办事项标题、内容或状态为空");
+                }
+                else
+                {
+                    // 传入的 addToDoDto 数据均不为空且合法，则继续写入数据库操作
+                    ToDo toDo = await this._toDoRepository.AddAsync(addToDoDto.ToToDo(this._userService.UserId));
+                    // 通过工作单元提交至数据库并判断是否成功
+                    if (await this._unitOfWork.SaveChangesAsync() > 0)
+                    {
+                        // 提交至数据库成功
+                        this._logger.LogInformation("[ToDoService] [用户：{Account}（{Id}）] 添加待办事项成功。数据：{@ToDo}", this._userService.UserAccount, this._userService.UserId, toDo);
+                        return ServiceResult<ToDoDto>.Success("添加待办事项成功", toDo.ToToDoDto());
+                    }
+                    else
+                    {
+                        // 提交至数据库失败
+                        this._logger.LogWarning("[ToDoService] [用户：{Account}（{Id}）] 添加待办事项失败。保存的数据未生效", this._userService.UserAccount, this._userService.UserId);
+                        return ServiceResult<ToDoDto>.Failure("添加待办事项失败，请稍后重试");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // 输出日志
+                this._logger.LogError("[ToDoService] [用户：{Account}（{Id}）] 添加待办事项失败。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                // 转为Dto集合并返回
+                return ServiceResult<ToDoDto>.Failure("添加待办事项失败");
             }
         }
     }

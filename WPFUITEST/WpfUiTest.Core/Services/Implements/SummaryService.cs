@@ -45,13 +45,13 @@ namespace WpfUiTest.Core.Services.Implements
                 // 待办总数
                 int toDoTotal = await this._toDoRepository.CountAsync((ToDo toDo) => toDo.UserId == this._userService.UserId);
                 // 待办完成数
-                int toDoComleted = await this._toDoRepository.CountAsync((ToDo toDo) => toDo.UserId == this._userService.UserId && toDo.Status == TodoStatusEnum.Completed);
+                int toDoCompleted = await this._toDoRepository.CountAsync((ToDo toDo) => toDo.UserId == this._userService.UserId && toDo.Status == TodoStatusEnum.Completed);
 
                 SummaryDto summaryDto = new SummaryDto()
                 {
                     ToDoTotal = toDoTotal,
-                    TodoCompleted = toDoComleted,
-                    TodoCompletionRate = toDoTotal == 0 ? "0.00%" : $"{(double)toDoComleted / toDoTotal * 100:F2}%",
+                    TodoCompleted = toDoCompleted,
+                    TodoCompletionRate = toDoTotal == 0 ? "0.00%" : $"{(double)toDoCompleted / toDoTotal * 100:F2}%",
                     MemoTotal = await this._memoRepository.CountAsync((Memo memo) => memo.UserId == this._userService.UserId),
                     Custom = 0
                 };

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using WpfUiTest.App.ViewModels.Main;
+using WpfUiTest.Core.DTOs.Memo;
 using WpfUiTest.Core.DTOs.ToDo;
 
 namespace WpfUiTest.App.ViewModels.Mapping
@@ -21,6 +22,17 @@ namespace WpfUiTest.App.ViewModels.Mapping
                 Status = toDoDto.Status,
                 CreateDate = toDoDto.CreateDate,
                 UpdateDate = toDoDto.UpdateDate
+            };
+        }
+
+        // IndexToDoItemViewModel 转 AddToDoDto
+        public static AddToDoDto ToAddToDoDto(this IndexToDoItemViewModel indexToDoItemViewModel)
+        {
+            return new AddToDoDto()
+            {
+                Title = indexToDoItemViewModel.Title,
+                Content = indexToDoItemViewModel.Content,
+                Status = indexToDoItemViewModel.Status
             };
         }
     }
