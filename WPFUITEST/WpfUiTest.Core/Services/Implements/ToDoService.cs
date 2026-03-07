@@ -45,7 +45,9 @@ namespace WpfUiTest.Core.Services.Implements
             try
             {
                 // 从数据库中查到当前用户未完成的待办事项实体集合
-                List<ToDo> toDos = await this._toDoRepository.FindAsync((ToDo toDo)=>toDo.UserId == this._userService.UserId && toDo.Status == TodoStatusEnum.Pending);
+                List<ToDo> toDos = await this._toDoRepository.FindAsync(
+                    (ToDo toDo) => toDo.UserId == this._userService.UserId && toDo.Status == TodoStatusEnum.Pending,
+                    (IQueryable<ToDo> toDoOrderBy) => toDoOrderBy.OrderByDescending((ToDo toDo) => toDo.CreateDate));
                 // 输出日志
                 this._logger.LogInformation("[ToDoService] [用户：{Account}（{Id}）] 查询全部未完成待办事项成功。数据条数={Count}", this._userService.UserAccount, this._userService.UserId, toDos.Count);
                 // 转为Dto集合并返回

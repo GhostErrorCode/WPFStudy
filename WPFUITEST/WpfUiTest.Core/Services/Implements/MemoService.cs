@@ -47,7 +47,9 @@ namespace WpfUiTest.Core.Services.Implements
             try
             {
                 // 从数据库中查到当前用户备忘录实体集合
-                List<Memo> memos = await this._memoRepository.FindAsync((Memo memo) => memo.UserId == this._userService.UserId);
+                List<Memo> memos = await this._memoRepository.FindAsync(
+                    (Memo memo) => memo.UserId == this._userService.UserId,
+                    (IQueryable<Memo> memoOrderby) => memoOrderby.OrderByDescending((Memo memo) => memo.CreateDate));
                 // 输出日志
                 this._logger.LogInformation("[MemoService] [用户：{Account}（{Id}）] 查询全部备忘录完成。数据条数={Count}", this._userService.UserAccount, this._userService.UserId, memos.Count);
                 // 转为Dto集合并返回

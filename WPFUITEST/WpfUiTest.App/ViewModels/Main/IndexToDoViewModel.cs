@@ -82,48 +82,65 @@ namespace WpfUiTest.App.ViewModels.Main
         // 方法：添加待办事项
         private async Task AddToDoItem(object content)
         {
-            // 保存ContentDialogService服务结果
-            ContentDialogResult addToDoContentDialogResult = await this._contentDialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions()
+            try
             {
-                Title = "添加待办",
-                Content = ContentPresenterHelper.Build(this, content),
-                PrimaryButtonText = "添加",
-                SecondaryButtonText = "暂不添加",
-                CloseButtonText = "取消",
-            });
-
-            // 判断是否保存填写的待办事项数据
-            // 如果是点击的添加,就写入数据库变添加到当前的IndexToDoItems集合
-            if (addToDoContentDialogResult == ContentDialogResult.Primary)
-            {
-                // 调用后台服务添加待办事项
-                ServiceResult<ToDoDto> addToDoResult = await this._toDoService.AddToDoAsync(this._indexToDoItem.ToAddToDoDto());
-                // 判断添加待办事项是否成功
-                if (addToDoResult != null && addToDoResult.IsSuccess && addToDoResult.Data != null)
+                // 保存ContentDialogService服务结果
+                ContentDialogResult addToDoContentDialogResult = await this._contentDialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions()
                 {
-                    this.IndexToDoItems.Add(addToDoResult.Data.ToIndexToDoItemViewModel());
-                    // 通知首页汇总数据更新（判断新增的是待办还是已完成）
-                    if(addToDoResult.Data.Status == TodoStatusEnum.Pending)
-                    { this._messenger.Send(new UpdateIndexSummaryMessage() { Type = UpdateIndexSummaryType.AddToDo }); }
-                    else { this._messenger.Send(new UpdateIndexSummaryMessage() { Type = UpdateIndexSummaryType.AddToDoCompleted }); }
+                    Title = "添加待办",
+                    Content = ContentPresenterHelper.Build(this, content),
+                    PrimaryButtonText = "添加",
+                    SecondaryButtonText = "暂不添加",
+                    CloseButtonText = "取消",
+                });
 
-                    // 清除 IndexToDoItem
-                    this.ClearIndexToDoItem();
-                    // 日志
-                    this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 添加待办事项成功，已添加至当前UI集合，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, addToDoResult.Data.Id, addToDoResult.Data.Title);
-                    this._messenger.ShowSuccess(SnackbarTarget.MainView, addToDoResult.Message, "添加待办事项成功");
-                }
-                else
+                // 判断是否保存填写的待办事项数据
+                // 如果是点击的添加,就写入数据库变添加到当前的IndexToDoItems集合
+                if (addToDoContentDialogResult == ContentDialogResult.Primary)
                 {
-                    this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 添加待办事项失败，异常信息：{Message}", this._userService.UserAccount, this._userService.UserId, addToDoResult != null ? addToDoResult.Message : "服务返回结果为空");
-                    this._messenger.ShowSuccess(SnackbarTarget.MainView, "添加待办事项失败", addToDoResult != null ? addToDoResult.Message : "添加待办事项失败");
+                    // 调用后台服务添加待办事项
+                    ServiceResult<ToDoDto> addToDoResult = await this._toDoService.AddToDoAsync(this._indexToDoItem.ToAddToDoDto());
+                    // 判断添加待办事项是否成功
+                    if (addToDoResult != null && addToDoResult.IsSuccess && addToDoResult.Data != null)
+                    {
+                        // 判断新增的待办事项状态是待办还是已完成
+                        if (addToDoResult.Data.Status == TodoStatusEnum.Pending)
+                        {
+                            // 如果是待办状态，则添加到首页ListView列表中以及刷新首页汇总数据
+                            // 添加到 ObservableCollection 集合第一位，这样就符合倒序排序了
+                            this.IndexToDoItems.Insert(0, addToDoResult.Data.ToIndexToDoItemViewModel());
+                            // this.IndexToDoItems.Add(addToDoResult.Data.ToIndexToDoItemViewModel());
+                            this._messenger.Send(new UpdateIndexSummaryMessage() { Type = UpdateIndexSummaryType.AddToDo });
+                        }
+                        else
+                        {
+                            // 如果是已完成状态，则只刷新首页汇总数据
+                            this._messenger.Send(new UpdateIndexSummaryMessage() { Type = UpdateIndexSummaryType.AddToDoCompleted });
+                        }
+
+                        // 清除 IndexToDoItem
+                        this.ClearIndexToDoItem();
+                        // 日志
+                        this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 添加待办事项成功，已添加至当前UI集合，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, addToDoResult.Data.Id, addToDoResult.Data.Title);
+                        this._messenger.ShowSuccess(SnackbarTarget.MainView, addToDoResult.Message, "添加待办事项成功");
+                    }
+                    else
+                    {
+                        this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 添加待办事项失败，异常信息：{Message}", this._userService.UserAccount, this._userService.UserId, addToDoResult != null ? addToDoResult.Message : "服务返回结果为空");
+                        this._messenger.ShowCaution(SnackbarTarget.MainView, "添加待办事项失败", addToDoResult != null ? addToDoResult.Message : "添加待办事项失败");
+                    }
                 }
+                // 如果是点击的暂不添加，就直接关闭对话框，保留已写的数据
+                // Warning（保留功能未实现，暂时不考虑保留功能）
+                if (addToDoContentDialogResult == ContentDialogResult.Secondary) { return; }
+                // 如果是点击的取消，就关闭对话框并清除已写的数据
+                if (addToDoContentDialogResult == ContentDialogResult.None) { this.ClearIndexToDoItem(); return; }
             }
-            // 如果是点击的暂不添加，就直接关闭对话框，保留已写的数据
-            // Warning（保留功能未实现，暂时不考虑保留功能）
-            if (addToDoContentDialogResult == ContentDialogResult.Secondary) { return; }
-            // 如果是点击的取消，就关闭对话框并清除已写的数据
-            if (addToDoContentDialogResult == ContentDialogResult.None) { this.ClearIndexToDoItem(); return; }
+            catch (Exception ex)
+            {
+                this._logger.LogError("[首页（IndexView）] [用户：{Account}（{Id}）] 添加待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                this._messenger.ShowDanger(SnackbarTarget.MainView, "添加待办事项失败", "添加待办事项时出现异常");
+            }
         }
 
         // 方法：清理添加/修改的待办事项列表项IndexMemoItem

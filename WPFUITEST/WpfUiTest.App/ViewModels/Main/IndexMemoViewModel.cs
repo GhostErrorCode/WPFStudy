@@ -78,46 +78,56 @@ namespace WpfUiTest.App.ViewModels.Main
         // 方法：添加备忘录
         private async Task AddMemoItem(object content)
         {
-            // 调用清理要添加/修改的备忘录列表项IndexMemoItem
-            // this.ClearIndexMemoItem();
-            // 设置对话框内容DataTemplate模板的DataContent数据上下文，如果转换DataTemplate失败，则依旧使用传入的content赋值
-            // 保存ContentDialogService服务结果
-            ContentDialogResult addMemoContentDialogResult = await this._contentDialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions()
+            try
             {
-                Title = "添加备忘",
-                Content = ContentPresenterHelper.Build(this.IndexMemoItem, content),  
-                PrimaryButtonText = "添加",
-                SecondaryButtonText = "暂不添加",
-                CloseButtonText = "取消",
-            });
+                // 调用清理要添加/修改的备忘录列表项IndexMemoItem
+                // this.ClearIndexMemoItem();
+                // 设置对话框内容DataTemplate模板的DataContent数据上下文，如果转换DataTemplate失败，则依旧使用传入的content赋值
+                // 保存ContentDialogService服务结果
+                ContentDialogResult addMemoContentDialogResult = await this._contentDialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions()
+                {
+                    Title = "添加备忘",
+                    Content = ContentPresenterHelper.Build(this.IndexMemoItem, content),
+                    PrimaryButtonText = "添加",
+                    SecondaryButtonText = "暂不添加",
+                    CloseButtonText = "取消",
+                });
 
-            // 判断是否保存填写的备忘录数据
-            // 如果是点击的添加,就写入数据库变添加到当前的IndexMemoItems集合种
-            if(addMemoContentDialogResult == ContentDialogResult.Primary)
-            {
-                // 调用后台服务添加备忘录
-                ServiceResult<MemoDto> addMemoResult = await this._memoService.AddMemoAsync(this._indexMemoItem.ToAddMemoDto());
-                // 判断添加备忘录是否成功
-                if(addMemoResult != null && addMemoResult.IsSuccess && addMemoResult.Data != null)
+                // 判断是否保存填写的备忘录数据
+                // 如果是点击的添加,就写入数据库变添加到当前的IndexMemoItems集合种
+                if (addMemoContentDialogResult == ContentDialogResult.Primary)
                 {
-                    this.IndexMemoItems.Add(addMemoResult.Data.ToIndexMemoItemViewModel());
-                    // 通知首页汇总数据更新
-                    this._messenger.Send(new UpdateIndexSummaryMessage() { Type = UpdateIndexSummaryType.AddMemo });
-                    this.ClearIndexMemoItem();
-                    this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 添加备忘录成功，已添加至当前UI集合，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, addMemoResult.Data.Id, addMemoResult.Data.Title);
-                    this._messenger.ShowSuccess(SnackbarTarget.MainView, addMemoResult.Message,"添加备忘录成功");
+                    // 调用后台服务添加备忘录
+                    ServiceResult<MemoDto> addMemoResult = await this._memoService.AddMemoAsync(this._indexMemoItem.ToAddMemoDto());
+                    // 判断添加备忘录是否成功
+                    if (addMemoResult != null && addMemoResult.IsSuccess && addMemoResult.Data != null)
+                    {
+                        // this.IndexMemoItems.Add(addMemoResult.Data.ToIndexMemoItemViewModel());
+                        // 添加到 ObservableCollection 集合第一位，这样就符合倒序排序了
+                        this.IndexMemoItems.Insert(0, addMemoResult.Data.ToIndexMemoItemViewModel());
+                        // 通知首页汇总数据更新
+                        this._messenger.Send(new UpdateIndexSummaryMessage() { Type = UpdateIndexSummaryType.AddMemo });
+                        this.ClearIndexMemoItem();
+                        this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 添加备忘录成功，已添加至当前UI集合，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, addMemoResult.Data.Id, addMemoResult.Data.Title);
+                        this._messenger.ShowSuccess(SnackbarTarget.MainView, addMemoResult.Message, "添加备忘录成功");
+                    }
+                    else
+                    {
+                        this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 添加备忘录失败，异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, addMemoResult != null ? addMemoResult.Message : "服务返回结果为空");
+                        this._messenger.ShowCaution(SnackbarTarget.MainView, "添加备忘录失败", addMemoResult != null ? addMemoResult.Message : "添加备忘录失败");
+                    }
                 }
-                else
-                {
-                    this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 添加备忘录失败，异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, addMemoResult != null ? addMemoResult.Message : "服务返回结果为空");
-                    this._messenger.ShowSuccess(SnackbarTarget.MainView, "添加备忘录失败", addMemoResult != null ? addMemoResult.Message : "添加备忘录失败");
-                }
+                // 如果是点击的暂不添加，就直接关闭对话框，保留已写的数据
+                // Warning（保留功能未实现，暂时不考虑保留功能）
+                if (addMemoContentDialogResult == ContentDialogResult.Secondary) { return; }
+                // 如果是点击的取消，就关闭对话框并清除已写的数据
+                if (addMemoContentDialogResult == ContentDialogResult.None) { this.ClearIndexMemoItem(); return; }
             }
-            // 如果是点击的暂不添加，就直接关闭对话框，保留已写的数据
-            // Warning（保留功能未实现，暂时不考虑保留功能）
-            if (addMemoContentDialogResult == ContentDialogResult.Secondary) { return; }
-            // 如果是点击的取消，就关闭对话框并清除已写的数据
-            if (addMemoContentDialogResult == ContentDialogResult.None) { this.ClearIndexMemoItem(); return; }
+            catch (Exception ex)
+            {
+                this._logger.LogError("[首页（IndexView）] [用户：{Account}（{Id}）] 添加备忘录时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                this._messenger.ShowDanger(SnackbarTarget.MainView, "添加备忘录失败", "添加备忘录时出现异常");
+            }
         }
 
 
