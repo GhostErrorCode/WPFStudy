@@ -9,11 +9,15 @@ namespace WpfUiTest.Shared.Enums
     {
         // 添加备忘录
         AddMemo,
+        // 删除备忘录
+        DeleteMemo,
         // 添加待办事项（未完成）
         AddToDo,
         // 添加待办事项（已完成）
         AddToDoCompleted,
         // 修改待办事项状态至已完成
-        UpdateToDoCompleted
+        UpdateToDoCompleted,
+        // 删除待办事项
+        DeleteToDo
     }
 }

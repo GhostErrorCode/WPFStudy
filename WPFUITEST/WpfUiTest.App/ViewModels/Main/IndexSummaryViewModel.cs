@@ -83,6 +83,23 @@ namespace WpfUiTest.App.ViewModels.Main
                 }
             }
 
+            // 如果传入的参数是删除备忘录就将汇总数据备忘录数量减一
+            if (message.Type == UpdateIndexSummaryType.DeleteMemo)
+            {
+                // 查询汇总数据列表中备忘录总量的列表项
+                IndexSummaryItemViewModel? memoTotalItem = this.IndexSummaryItems.FirstOrDefault(t => t.SummaryType == IndexSummaryType.MemoTotal);
+                // 如果找到了对应的列表项
+                if (memoTotalItem != null)
+                {
+                    memoTotalItem.Content = $"{int.Parse(memoTotalItem.Content) - 1}";
+                    this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（备忘录总量）成功。备忘录总量={memoTotal}", this._userService.UserAccount, this._userService.UserId, memoTotalItem.Content);
+                }
+                else
+                {
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（备忘录总量）失败。未找到此汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
+                }
+            }
+
             // 如果传入的参数是添加待办事项（未完成）就将加一，并计算比例
             if (message.Type == UpdateIndexSummaryType.AddToDo)
             {
@@ -138,6 +155,24 @@ namespace WpfUiTest.App.ViewModels.Main
                 else
                 {
                     this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项总量、待办事项完成量）失败。未找到相关汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
+                }
+            }
+
+            // 如果传入的参数是删除待办事项（未完成）就减一，并计算比例
+            if (message.Type == UpdateIndexSummaryType.DeleteToDo)
+            {
+                // 查询汇总数据列表中待办事项总量的列表项
+                IndexSummaryItemViewModel? toDoTotalItem = this.IndexSummaryItems.FirstOrDefault(t => t.SummaryType == IndexSummaryType.ToDoTotal);
+                // 如果找到了对应的列表项
+                if (toDoTotalItem != null)
+                {
+                    toDoTotalItem.Content = $"{int.Parse(toDoTotalItem.Content) - 1}";
+                    this.UpdateToDoCompletionRate();
+                    this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项总量、待办事项完成比例）成功。待办事项总量={toDoTotal}", this._userService.UserAccount, this._userService.UserId, toDoTotalItem.Content);
+                }
+                else
+                {
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项总量）失败。未找到此汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
                 }
             }
         }

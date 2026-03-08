@@ -262,6 +262,8 @@ namespace WpfUiTest.App.ViewModels.Main
                             this.IndexMemoItems.Remove(indexMemoItemViewModel);
                             // 清理IndexMemoItem
                             this.ClearIndexMemoItem();
+                            // 重新计算汇总数据
+                            this._messenger.Send(new UpdateIndexSummaryMessage() { Type = UpdateIndexSummaryType.DeleteMemo });
                             this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 删除备忘录成功，已从当前UI集合中清除，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, item.Id, item.Title);
                             this._messenger.ShowSuccess(SnackbarTarget.MainView, deleteMemoResult.Message, "删除备忘录成功");
                         }

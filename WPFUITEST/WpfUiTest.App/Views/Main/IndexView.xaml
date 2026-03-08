@@ -187,7 +187,9 @@
                                         CommandParameter="{StaticResource ToDoContentDialog}"
                                         />
                                     <MenuItem
-                                        Header="编辑此待办事项" 
+                                        Header="编辑此待办事项"
+                                        Command="{Binding PlacementTarget.Tag.IndexToDoViewModel.UpdateToDoItemCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                        CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                         />
                                     <MenuItem
                                         Header="删除此待办事项" 

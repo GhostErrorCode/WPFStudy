@@ -35,5 +35,18 @@ namespace WpfUiTest.App.ViewModels.Mapping
                 Status = indexToDoItemViewModel.Status
             };
         }
+
+        // IndexToDoItemViewModel 转 UpdateToDoDto
+        public static UpdateToDoDto ToUpdateToDoDto(this IndexToDoItemViewModel indexToDoItemViewModel)
+        {
+            return new UpdateToDoDto()
+            {
+                Id = indexToDoItemViewModel.Id,
+                UserId = indexToDoItemViewModel.UserId,
+                Title = indexToDoItemViewModel.Title,
+                Content = indexToDoItemViewModel.Content,
+                Status = indexToDoItemViewModel.Status
+            };
+        }
     }
 }

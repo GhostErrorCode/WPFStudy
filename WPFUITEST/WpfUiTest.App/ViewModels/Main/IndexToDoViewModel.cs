@@ -6,11 +6,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Numerics;
 using System.Text;
+using System.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Extensions;
 using WpfUiTest.App.ViewModels.Mapping;
-using WpfUiTest.Core.DTOs.Memo;
+using WpfUiTest.Core.DTOs.ToDo;
 using WpfUiTest.Core.DTOs.ToDo;
 using WpfUiTest.Core.Services.Interfaces;
 using WpfUiTest.Shared.Base;
@@ -56,6 +57,10 @@ namespace WpfUiTest.App.ViewModels.Main
 
         // 命令：添加待办事项Command
         public AsyncRelayCommand<object> AddToDoItemCommand { get; private set; }
+        // 命令：修改待办事项Command
+        public AsyncRelayCommand<IndexToDoItemViewModel> UpdateToDoItemCommand { get; private set; }
+        // 命令：删除待办事项Command
+        public AsyncRelayCommand<IndexToDoItemViewModel> DeleteToDoItemCommand { get; private set; }
 
 
         // ==================== 构造函数 ====================
@@ -76,6 +81,7 @@ namespace WpfUiTest.App.ViewModels.Main
 
             // 初始化命令
             this.AddToDoItemCommand = new AsyncRelayCommand<object>(AddToDoItem);
+            this.UpdateToDoItemCommand = new AsyncRelayCommand<IndexToDoItemViewModel>(UpdateToDoItem);
         }
 
         // ==================== 方法 ====================
@@ -143,7 +149,104 @@ namespace WpfUiTest.App.ViewModels.Main
             }
         }
 
-        // 方法：清理添加/修改的待办事项列表项IndexMemoItem
+        // 方法：修改待办事项
+        private async Task UpdateToDoItem(IndexToDoItemViewModel? item)
+        {
+            try
+            {
+                // 如果传入的 IndexToDoItemViewModel 参数是NULL，就记录日志并直接返回
+                if (item == null)
+                {
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 修改待办事项时失败。传入的待办事项数据参数为NULL", this._userService.UserAccount, this._userService.UserId);
+                    this._messenger.ShowCaution(SnackbarTarget.MainView, "修改待办事项失败", "传入的待办事项数据参数为空");
+                    return;
+                }
+
+                // 如果传入的参数不为NULL，就正常进行业务流程
+                // 给属性 IndexToDoItem 赋值
+                this.LoadIndexToDoItem(item);
+                // 打开对话框并保存结果
+                ContentDialogResult updateToDoContentDialogResult = await this._contentDialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions()
+                {
+                    Title = "修改待办",
+                    Content = ContentPresenterHelper.Build(this, Application.Current.Resources["ToDoContentDialog"]),
+                    PrimaryButtonText = "修改",
+                    SecondaryButtonText = "暂不修改",
+                    CloseButtonText = "取消",
+                });
+
+                // 如果是点击的暂不修改，就直接关闭对话框，保留已写的数据
+                // Warning（保留功能未实现，暂时不考虑保留功能）
+                if (updateToDoContentDialogResult == ContentDialogResult.Secondary) { return; }
+                // 如果是点击的取消，就关闭对话框并清除已写的数据
+                if (updateToDoContentDialogResult == ContentDialogResult.None) { this.ClearIndexToDoItem(); return; }
+
+                // 如果是点击的修改,就将变更信息写入数据库并修改当前的IndexToDoItems集合，这里不在用if
+                // 调用后台服务修改待办事项
+                ServiceResult<ToDoDto> updateToDoResult = await this._toDoService.UpdateToDoAsync(this._indexToDoItem.ToUpdateToDoDto());
+                // 判断修改待办事项是否成功
+                if (updateToDoResult != null && updateToDoResult.IsSuccess && updateToDoResult.Data != null)
+                {
+                    // 从当前的集合列表中找到需要修改的那个待办事项
+                    IndexToDoItemViewModel? indexToDoItem = this.IndexToDoItems.FirstOrDefault(m => m.Id == updateToDoResult.Data.Id && m.UserId == updateToDoResult.Data.UserId);
+                    // 判断是否在当前集合中找到，如果找到就修改它
+                    if (indexToDoItem != null)
+                    {
+                        // 如果待办事项状态修改成了已完成，就从首页数据集合移除它，并重新计算汇总数据
+                        if (updateToDoResult.Data.Status == TodoStatusEnum.Completed)
+                        {
+                            this.IndexToDoItems.Remove(indexToDoItem);
+                            this._messenger.Send(new UpdateIndexSummaryMessage() { Type = UpdateIndexSummaryType.UpdateToDoCompleted });
+                        }
+                        else
+                        {
+                            // 如果只是修改了标题和内容，状态依旧是待办状态，那么只变更集合中的指定项即可
+                            // 修改
+                            indexToDoItem.Title = updateToDoResult.Data.Title;
+                            indexToDoItem.Content = updateToDoResult.Data.Content;
+                            indexToDoItem.Status = updateToDoResult.Data.Status;
+                            indexToDoItem.UpdateDate = updateToDoResult.Data.UpdateDate;
+                        }
+                        // 清理IndexToDoItem
+                        this.ClearIndexToDoItem();
+                        this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 修改待办事项成功，已更新当前UI集合，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, updateToDoResult.Data.Id, updateToDoResult.Data.Title);
+                        this._messenger.ShowSuccess(SnackbarTarget.MainView, updateToDoResult.Message, "修改待办事项成功");
+                    }
+                    else
+                    {
+                        this.ClearIndexToDoItem();
+                        this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 修改待办事项成功，但更新当前UI集合失败，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, updateToDoResult.Data.Id, updateToDoResult.Data.Title);
+                        this._messenger.ShowCaution(SnackbarTarget.MainView, updateToDoResult.Message, "修改待办事项成功，但更新当前集合失败");
+                    }
+                }
+                else
+                {
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 修改待办事项失败，原因：{Reason}", this._userService.UserAccount, this._userService.UserId, updateToDoResult != null ? updateToDoResult.Message : "服务返回结果为空");
+                    this._messenger.ShowCaution(SnackbarTarget.MainView, "删除待办事项失败", updateToDoResult != null ? updateToDoResult.Message : "添加待办事项失败");
+                }
+            }
+            catch(Exception ex)
+            {
+                this._logger.LogError("[首页（IndexView）] [用户：{Account}（{Id}）] 修改待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                this._messenger.ShowDanger(SnackbarTarget.MainView, "修改待办事项失败", "修改待办事项时出现异常");
+            }
+        }
+
+        // 方法：删除待办事项
+        
+
+        // 方法：填充修改/删除的待办事项列表项 至 IndexToDoItem
+        private void LoadIndexToDoItem(IndexToDoItemViewModel IndexToDoItemViewModel)
+        {
+            this.IndexToDoItem.Id = IndexToDoItemViewModel.Id;
+            this.IndexToDoItem.UserId = IndexToDoItemViewModel.UserId;
+            this.IndexToDoItem.Title = IndexToDoItemViewModel.Title;
+            this.IndexToDoItem.Content = IndexToDoItemViewModel.Content;
+            this.IndexToDoItem.Status = IndexToDoItemViewModel.Status;
+            this.IndexToDoItem.CreateDate = IndexToDoItemViewModel.CreateDate;
+            this.IndexToDoItem.UpdateDate = IndexToDoItemViewModel.UpdateDate;
+        }
+        // 方法：清理添加/修改的待办事项列表项IndexToDoItem
         private void ClearIndexToDoItem()
         {
             this.IndexToDoItem.Id = 0;
