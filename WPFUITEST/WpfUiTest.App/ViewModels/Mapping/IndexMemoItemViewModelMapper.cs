@@ -33,5 +33,17 @@ namespace WpfUiTest.App.ViewModels.Mapping
                 Content = indexMemoItemViewModel.Content
             };
         }
+
+        // IndexMemoItemViewModel 转 UpdateMemoDto
+        public static UpdateMemoDto ToUpdateMemoDto(this IndexMemoItemViewModel indexMemoItemViewModel)
+        {
+            return new UpdateMemoDto()
+            {
+                Id = indexMemoItemViewModel.Id,
+                UserId = indexMemoItemViewModel.UserId,
+                Title = indexMemoItemViewModel.Title,
+                Content = indexMemoItemViewModel.Content
+            };
+        }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -53,6 +54,10 @@ namespace WpfUiTest.App.ViewModels.Main
 
         // 命令：添加待办事项Command
         public AsyncRelayCommand<object> AddMemoItemCommand { get; private set; }
+        // 命令：修改待办事项Command
+        public AsyncRelayCommand<IndexMemoItemViewModel> UpdateMemoItemCommand { get; private set; }
+        // 命令：删除待办事项Command
+        public AsyncRelayCommand<IndexMemoItemViewModel> DeleteMemoItemCommand { get; private set; }
 
 
         // ==================== 构造函数 ====================
@@ -72,6 +77,8 @@ namespace WpfUiTest.App.ViewModels.Main
 
             // 初始化命令
             this.AddMemoItemCommand = new AsyncRelayCommand<object>(AddMemoItem);
+            this.UpdateMemoItemCommand = new AsyncRelayCommand<IndexMemoItemViewModel>(UpdateMemoItem);
+            this.DeleteMemoItemCommand = new AsyncRelayCommand<IndexMemoItemViewModel>(DeleteMemoItem);
         }
 
         // ==================== 方法 ====================
@@ -130,7 +137,126 @@ namespace WpfUiTest.App.ViewModels.Main
             }
         }
 
+        // 方法：修改备忘录
+        private async Task UpdateMemoItem(IndexMemoItemViewModel? item)
+        {
+            try
+            {
+                // 如果传入的 IndexMemoItemViewModel 参数是NULL，就记录日志并直接返回
+                if (item == null)
+                {
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 修改备忘录时失败。传入的备忘录数据参数为NULL", this._userService.UserAccount, this._userService.UserId);
+                    this._messenger.ShowDanger(SnackbarTarget.MainView, "修改备忘录失败", "传入的备忘录数据参数为空");
+                    return;
+                }
 
+                // 如果传入的参数不为NULL，就正常进行业务流程
+                // 给属性 IndexMemoItem 赋值
+                this.LoadIndexMemoItem(item);
+                // 打开对话框并保存结果
+                ContentDialogResult updateMemoContentDialogResult = await this._contentDialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions()
+                {
+                    Title = "修改备忘",
+                    Content = ContentPresenterHelper.Build(this.IndexMemoItem, Application.Current.Resources["MemoContentDialog"]),
+                    PrimaryButtonText = "修改",
+                    SecondaryButtonText = "暂不修改",
+                    CloseButtonText = "取消",
+                });
+
+                // 判断是否保存修改的备忘录数据
+                // 如果是点击的修改,就将变更信息写入数据库并修改当前的IndexMemoItems集合
+                if (updateMemoContentDialogResult == ContentDialogResult.Primary)
+                {
+                    // 调用后台服务修改备忘录
+                    ServiceResult<MemoDto> updateMemoResult = await this._memoService.UpdateMemoAsync(this._indexMemoItem.ToUpdateMemoDto());
+                    // 判断修改备忘录是否成功
+                    if(updateMemoResult != null && updateMemoResult.IsSuccess && updateMemoResult.Data != null)
+                    {
+                        // 从当前的集合列表中找到需要修改的那个备忘录
+                        IndexMemoItemViewModel? indexMemoItemViewModel = this.IndexMemoItems.FirstOrDefault(m=>m.Id == updateMemoResult.Data.Id && m.UserId == updateMemoResult.Data.UserId);
+                        // 判断是否在当前集合中找到，如果找到就修改它
+                        if(indexMemoItemViewModel != null)
+                        {
+                            // 修改
+                            indexMemoItemViewModel.Title = updateMemoResult.Data.Title;
+                            indexMemoItemViewModel.Content = updateMemoResult.Data.Content;
+                            indexMemoItemViewModel.UpdateDate = updateMemoResult.Data.UpdateDate;
+                            // 清理IndexMemoItem
+                            this.ClearIndexMemoItem();
+                            this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 修改备忘录成功，已更新当前UI集合，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, updateMemoResult.Data.Id, updateMemoResult.Data.Title);
+                            this._messenger.ShowSuccess(SnackbarTarget.MainView, updateMemoResult.Message, "修改备忘录成功");
+                        }
+                        else
+                        {
+                            this.ClearIndexMemoItem();
+                            this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 修改备忘录成功，但更新当前UI集合失败，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, updateMemoResult.Data.Id, updateMemoResult.Data.Title);
+                            this._messenger.ShowCaution(SnackbarTarget.MainView, updateMemoResult.Message, "修改备忘录成功，但更新当前集合失败");
+                        }
+                    }
+                    else
+                    {
+                        this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 修改备忘录失败，异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, updateMemoResult != null ? updateMemoResult.Message : "服务返回结果为空");
+                        this._messenger.ShowCaution(SnackbarTarget.MainView, "添加备忘录失败", updateMemoResult != null ? updateMemoResult.Message : "添加备忘录失败");
+                    }
+                }
+                // 如果是点击的暂不修改，就直接关闭对话框，保留已写的数据
+                // Warning（保留功能未实现，暂时不考虑保留功能）
+                if (updateMemoContentDialogResult == ContentDialogResult.Secondary) { return; }
+                // 如果是点击的取消，就关闭对话框并清除已写的数据
+                if (updateMemoContentDialogResult == ContentDialogResult.None) { this.ClearIndexMemoItem(); return; }
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError("[首页（IndexView）] [用户：{Account}（{Id}）] 修改备忘录时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                this._messenger.ShowDanger(SnackbarTarget.MainView, "修改备忘录失败", "修改备忘录时出现异常");
+            }
+        }
+
+        // 方法：删除备忘录
+        private async Task DeleteMemoItem(IndexMemoItemViewModel? item)
+        {
+            try
+            {
+                // 如果传入的 IndexMemoItemViewModel 参数是NULL，就记录日志并直接返回
+                if (item == null)
+                {
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 修改备忘录时失败。传入的备忘录数据参数为NULL", this._userService.UserAccount, this._userService.UserId);
+                    this._messenger.ShowDanger(SnackbarTarget.MainView, "修改备忘录失败", "传入的备忘录数据参数为空");
+                    return;
+                }
+
+                // 如果传入的参数不为NULL，就正常进行业务流程
+                // 给属性 IndexMemoItem 赋值
+                this.LoadIndexMemoItem(item);
+                // 打开对话框并保存结果
+                ContentDialogResult updateMemoContentDialogResult = await this._contentDialogService.ShowAsync(new ContentDialog()
+                {
+                    Title = "删除备忘",
+                    Content = ContentPresenterHelper.Build(this.IndexMemoItem, Application.Current.Resources["MemoContentDialog"]),
+                    PrimaryButtonAppearance = ControlAppearance.Danger,
+                    PrimaryButtonText = "删除",
+                    SecondaryButtonText = "暂不删除",
+                    CloseButtonText = "取消"
+                }, CancellationToken.None);
+            }
+            catch(Exception ex)
+            {
+                this._logger.LogError("[首页（IndexView）] [用户：{Account}（{Id}）] 删除备忘录时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                this._messenger.ShowDanger(SnackbarTarget.MainView, "删除备忘录失败", "删除备忘录时出现异常");
+            }
+        }
+
+
+        // 方法：填充修改/删除的备忘录列表项 至 IndexMemoItem
+        private void LoadIndexMemoItem(IndexMemoItemViewModel indexMemoItemViewModel)
+        {
+            this.IndexMemoItem.Id = indexMemoItemViewModel.Id;
+            this.IndexMemoItem.UserId = indexMemoItemViewModel.UserId;
+            this.IndexMemoItem.Title = indexMemoItemViewModel.Title;
+            this.IndexMemoItem.Content = indexMemoItemViewModel.Content;
+            this.IndexMemoItem.CreateDate = indexMemoItemViewModel.CreateDate;
+            this.IndexMemoItem.UpdateDate = indexMemoItemViewModel.UpdateDate;
+        }
         // 方法：清理添加/修改的备忘录列表项IndexMemoItem
         private void ClearIndexMemoItem()
         {

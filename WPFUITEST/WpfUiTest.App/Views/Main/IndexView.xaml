@@ -302,10 +302,14 @@
                                         CommandParameter="{StaticResource MemoContentDialog}"
                                         />
                                     <MenuItem
-                                        Header="编辑此备忘录" 
+                                        Header="编辑此备忘录"
+                                        Command="{Binding PlacementTarget.Tag.MemoViewModel.UpdateMemoItemCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                        CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                         />
                                     <MenuItem
                                         Header="删除此备忘录" 
+                                        Command="{Binding PlacementTarget.Tag.MemoViewModel.DeleteMemoItemCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                        CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                         />
                                 </ContextMenu>
                             </Setter.Value>

@@ -52,5 +52,17 @@ namespace WpfUiTest.Core.Mapping
                 UpdateDate = DateTimeUtility.NowNoMilliseconds()
             };
         }
+
+        // 待修改的ToDo 转 修改后的ToDo，需要参数 UpdateToDoDto
+        public static ToDo ToUpdatedToDo(this ToDo toDo, UpdateToDoDto updateToDoDto)
+        {
+            // 修改待办事项标题、内容、状态与修改时间，剩下字段保持原样并返回
+            toDo.Title = updateToDoDto.Title;
+            toDo.Content = updateToDoDto.Content;
+            toDo.Status = updateToDoDto.Status;
+            toDo.UpdateDate = DateTimeUtility.NowNoMilliseconds();
+
+            return toDo;
+        }
     }
 }

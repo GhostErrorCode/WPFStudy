@@ -17,5 +17,11 @@ namespace WpfUiTest.Core.Services.Interfaces
 
         // 添加待办事项
         public Task<ServiceResult<ToDoDto>> AddToDoAsync(AddToDoDto addToDoDto);
+
+        // 修改待办事项
+        public Task<ServiceResult<ToDoDto>> UpdateToDoAsync(UpdateToDoDto updateToDoDto);
+
+        // 删除待办事项
+        public Task<ServiceResult<bool>> DeleteToDoAsync(DeleteToDoDto deleteToDoDto);
     }
 }
