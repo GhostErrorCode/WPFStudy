@@ -114,6 +114,8 @@
         >
         <Setter Property="FontSize" Value="13" />
         <Setter Property="Margin" Value="0,4,0,0" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Height" Value="Auto" />
         <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorSecondaryBrush}" />
     </Style>
 

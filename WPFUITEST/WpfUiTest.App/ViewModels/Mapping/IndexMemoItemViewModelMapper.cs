@@ -45,5 +45,16 @@ namespace WpfUiTest.App.ViewModels.Mapping
                 Content = indexMemoItemViewModel.Content
             };
         }
+
+        // IndexMemoItemViewModel 转 DeleteMemoDto
+        public static DeleteMemoDto ToDeleteMemoDto(this IndexMemoItemViewModel indexMemoItemViewModel)
+        {
+            return new DeleteMemoDto()
+            {
+                Id = indexMemoItemViewModel.Id,
+                UserId = indexMemoItemViewModel.UserId,
+                Title = indexMemoItemViewModel.Title
+            };
+        }
     }
 }

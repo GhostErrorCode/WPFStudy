@@ -122,6 +122,7 @@
             <!-- 第2行 待办事项数据区域 -->
             <ui:ListView
                 Grid.Row="1"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ItemsSource="{Binding IndexToDoViewModel.IndexToDoItems}"
                 Style="{StaticResource IndexDataListViewStyle}"
                 >
@@ -237,7 +238,7 @@
             <!-- 第2行 备忘录数据区域 -->
             <ui:ListView
                 Grid.Row="1"
-                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ItemsSource="{Binding MemoViewModel.IndexMemoItems}"
                 Style="{StaticResource IndexDataListViewStyle}"
                 >
@@ -249,13 +250,13 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <!-- 待办事项标题 -->
+                            <!-- 备忘录标题 -->
                             <TextBlock
                                 Grid.Row="0"
                                 Text="{Binding Title}"
                                 Style="{StaticResource IndexDataTitleTextBlockStyle}"
                                 />
-                            <!-- 待办事项内容 -->
+                            <!-- 备忘录内容 -->
                             <TextBlock
                                 Grid.Row="1"
                                 Text="{Binding Content}"

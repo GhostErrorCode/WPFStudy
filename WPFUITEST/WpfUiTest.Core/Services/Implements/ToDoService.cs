@@ -178,7 +178,7 @@ namespace WpfUiTest.Core.Services.Implements
             try
             {
                 // 判断传入的 deleteToDoDto 是否为 NULL，如果是则直接输出日志并返回失败结果
-                if (deleteToDoDto == null || deleteToDoDto.Id > 0)
+                if (deleteToDoDto == null || deleteToDoDto.Id <= 0)
                 {
                     // 输出日志
                     this._logger.LogWarning("[ToDoService] [用户：{Account}（{Id}）] 删除待办事项失败。需要删除的待办事项数据为空", this._userService.UserAccount, this._userService.UserId);

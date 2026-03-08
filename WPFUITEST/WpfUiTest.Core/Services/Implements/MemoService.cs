@@ -181,12 +181,12 @@ namespace WpfUiTest.Core.Services.Implements
             try
             {
                 // 判断传入的 deleteMemoDto 是否为 NULL，如果是则直接输出日志并返回失败结果
-                if (deleteMemoDto == null || deleteMemoDto.Id > 0)
+                if (deleteMemoDto == null || deleteMemoDto.Id <= 0)
                 {
                     // 输出日志
                     this._logger.LogWarning("[MemoService] [用户：{Account}（{Id}）] 删除备忘录失败。需要删除的备忘录数据为空", this._userService.UserAccount, this._userService.UserId);
                     // 转为Dto集合并返回
-                    return ServiceResult<bool>.Failure("删除备忘录失败：需要删除的备忘录数据为空");
+                    return ServiceResult<bool>.Failure("删除备忘录失败：需要删除的备忘录数据为空", false);
                 }
 
                 // 判断传入的 deleteMemoDto 的 userId 是否跟当前登录的用户一致，否则就提示无权删除他人备忘录
@@ -195,7 +195,7 @@ namespace WpfUiTest.Core.Services.Implements
                     // 输出日志
                     this._logger.LogWarning("[MemoService] [用户：{Account}（{Id}）] 删除备忘录失败。无法跨用户删除备忘录，用户（ID={currentUserId}）正尝试修改用户（ID={userId}）的备忘录数据", this._userService.UserAccount, this._userService.UserId, this._userService.UserId, deleteMemoDto.UserId);
                     // 转为Dto集合并返回
-                    return ServiceResult<bool>.Failure("删除备忘录失败：无权删除他人备忘录");
+                    return ServiceResult<bool>.Failure("删除备忘录失败：无权删除他人备忘录", false);
                 }
 
                 // ========== 正常业务流程。输入的内容均不为空且是当前用户的备忘录，则开始删除 ==========
@@ -216,7 +216,7 @@ namespace WpfUiTest.Core.Services.Implements
                         // 输出日志
                         this._logger.LogWarning("[MemoService] [用户：{Account}（{Id}）] 删除备忘录失败，删除的数据未生效", this._userService.UserAccount, this._userService.UserId);
                         // 转为Dto集合并返回
-                        return ServiceResult<bool>.Failure("修改备忘录失败，请稍后重试");
+                        return ServiceResult<bool>.Failure("修改备忘录失败，请稍后重试", false);
                     }
                 }
                 else
@@ -225,7 +225,7 @@ namespace WpfUiTest.Core.Services.Implements
                     // 输出日志
                     this._logger.LogWarning("[MemoService] [用户：{Account}（{Id}）] 删除备忘录失败。未找到需要删除的备忘录实体，需要删除的备忘录：ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, deleteMemoDto.Id, deleteMemoDto.Title);
                     // 转为Dto集合并返回
-                    return ServiceResult<bool>.Failure("修改备忘录失败：未找到此备忘录，请检查或稍后重试");
+                    return ServiceResult<bool>.Failure("修改备忘录失败：未找到此备忘录，请检查或稍后重试", false);
                 }
             }
             catch (Exception ex)
@@ -233,7 +233,7 @@ namespace WpfUiTest.Core.Services.Implements
                 // 输出日志
                 this._logger.LogError("[MemoService] [用户：{Account}（{Id}）] 删除备忘录失败。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
                 // 转为Dto集合并返回
-                return ServiceResult<bool>.Failure("删除备忘录时出现异常");
+                return ServiceResult<bool>.Failure("删除备忘录时出现异常", false);
             }
         }
     }
