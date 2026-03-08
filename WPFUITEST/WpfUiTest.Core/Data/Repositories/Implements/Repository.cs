@@ -7,6 +7,7 @@ using System.Text;
 using WpfUiTest.Core.Data.DbContexts;
 using WpfUiTest.Core.Data.Repositories.Interfaces;
 using WpfUiTest.Core.Services.Interfaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WpfUiTest.Core.Data.Repositories.Implements
 {
@@ -93,6 +94,31 @@ namespace WpfUiTest.Core.Data.Repositories.Implements
 
             return entities;
         }
+
+        // 带排序的查询
+        public virtual async Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, CancellationToken cancellationToken = default)
+        {
+            // 第一步：构建基础查询
+            // - 从 DbSet 开始，它是表的入口点，实现了 IQueryable<TEntity>
+            // - 应用 Where 条件：将 predicate 表达式树附加到查询中，用于生成 SQL 的 WHERE 子句
+            // - 调用 AsNoTracking()：告诉 EF Core 不跟踪返回的实体，提高只读查询性能
+            IQueryable<TEntity> entities = this._dbSet
+                .Where(predicate)
+                .AsNoTracking();
+            // 第二步：如果调用者提供了排序规则，则应用排序
+            // orderBy 是一个委托，它接受当前的 IQueryable 并返回一个 IOrderedQueryable
+            // 调用 orderBy(query) 会执行传入的 Lambda 表达式（例如 q => q.OrderBy(m => m.CreateDate)），
+            // 在现有查询表达式树的基础上附加排序逻辑（生成 SQL 的 ORDER BY 子句）
+            if (orderBy != null)
+                entities = orderBy(entities);
+
+            // 第三步：异步执行查询并返回结果列表
+            // - ToListAsync 会触发 EF Core 将当前的 IQueryable 表达式树翻译成 SQL 语句
+            // - 执行 SQL 查询，将结果数据映射为实体对象，并返回 List<TEntity>
+            // - cancellationToken 可用于提前取消操作
+            return await entities.ToListAsync(cancellationToken);
+        }
+
 
         // 查询单条数据的方法
         public async Task<TEntity?> FindSingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)

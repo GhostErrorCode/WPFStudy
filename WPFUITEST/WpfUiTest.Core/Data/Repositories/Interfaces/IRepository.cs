@@ -46,6 +46,9 @@ namespace WpfUiTest.Core.Data.Repositories.Interfaces
         // 返回值：Task<List<TEntity>> - 异步任务，返回符合条件的实体列表
         public Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
+        // 带排序的查询集合
+        public Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, CancellationToken cancellationToken = default);
+
         // 查询单条数据的方法
         public Task<TEntity?> FindSingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 

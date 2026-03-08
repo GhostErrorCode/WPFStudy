@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WpfUiTest.Core.DTOs.Memo;
 using WpfUiTest.Core.DTOs.ToDo;
 using WpfUiTest.Shared.Utilities;
 
@@ -13,5 +14,14 @@ namespace WpfUiTest.Core.Services.Interfaces
 
         // 查询所有未完成（待办）待办事项
         public Task<ServiceResult<List<ToDoDto>>> GetAllPendingToDosAsync();
+
+        // 添加待办事项
+        public Task<ServiceResult<ToDoDto>> AddToDoAsync(AddToDoDto addToDoDto);
+
+        // 修改待办事项
+        public Task<ServiceResult<ToDoDto>> UpdateToDoAsync(UpdateToDoDto updateToDoDto);
+
+        // 删除待办事项
+        public Task<ServiceResult<bool>> DeleteToDoAsync(DeleteToDoDto deleteToDoDto);
     }
 }

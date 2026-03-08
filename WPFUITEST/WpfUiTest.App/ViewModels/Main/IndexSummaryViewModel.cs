@@ -79,7 +79,24 @@ namespace WpfUiTest.App.ViewModels.Main
                 }
                 else
                 {
-                    this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（备忘录总量）失败。未找到此汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（备忘录总量）失败。未找到此汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
+                }
+            }
+
+            // 如果传入的参数是删除备忘录就将汇总数据备忘录数量减一
+            if (message.Type == UpdateIndexSummaryType.DeleteMemo)
+            {
+                // 查询汇总数据列表中备忘录总量的列表项
+                IndexSummaryItemViewModel? memoTotalItem = this.IndexSummaryItems.FirstOrDefault(t => t.SummaryType == IndexSummaryType.MemoTotal);
+                // 如果找到了对应的列表项
+                if (memoTotalItem != null)
+                {
+                    memoTotalItem.Content = $"{int.Parse(memoTotalItem.Content) - 1}";
+                    this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（备忘录总量）成功。备忘录总量={memoTotal}", this._userService.UserAccount, this._userService.UserId, memoTotalItem.Content);
+                }
+                else
+                {
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（备忘录总量）失败。未找到此汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
                 }
             }
 
@@ -97,7 +114,7 @@ namespace WpfUiTest.App.ViewModels.Main
                 }
                 else
                 {
-                    this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项总量）失败。未找到此汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项总量）失败。未找到此汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
                 }
             }
 
@@ -118,7 +135,7 @@ namespace WpfUiTest.App.ViewModels.Main
                 }
                 else
                 {
-                    this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项总量、待办事项完成量）失败。未找到相关汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项总量、待办事项完成量）失败。未找到相关汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
                 }
             }
 
@@ -137,7 +154,25 @@ namespace WpfUiTest.App.ViewModels.Main
                 }
                 else
                 {
-                    this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项总量、待办事项完成量）失败。未找到相关汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项总量、待办事项完成量）失败。未找到相关汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
+                }
+            }
+
+            // 如果传入的参数是删除待办事项（未完成）就减一，并计算比例
+            if (message.Type == UpdateIndexSummaryType.DeleteToDo)
+            {
+                // 查询汇总数据列表中待办事项总量的列表项
+                IndexSummaryItemViewModel? toDoTotalItem = this.IndexSummaryItems.FirstOrDefault(t => t.SummaryType == IndexSummaryType.ToDoTotal);
+                // 如果找到了对应的列表项
+                if (toDoTotalItem != null)
+                {
+                    toDoTotalItem.Content = $"{int.Parse(toDoTotalItem.Content) - 1}";
+                    this.UpdateToDoCompletionRate();
+                    this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项总量、待办事项完成比例）成功。待办事项总量={toDoTotal}", this._userService.UserAccount, this._userService.UserId, toDoTotalItem.Content);
+                }
+                else
+                {
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项总量）失败。未找到此汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
                 }
             }
         }
@@ -151,20 +186,20 @@ namespace WpfUiTest.App.ViewModels.Main
 
             // 拿到待办事项的完成量
             IndexSummaryItemViewModel? toDoCompletedItem = this.IndexSummaryItems.FirstOrDefault(t => t.SummaryType == IndexSummaryType.ToDoCompleted);
-            int toDoToCompleted = toDoCompletedItem != null ? int.Parse(toDoCompletedItem.Content) : 0;
+            int toDoCompleted = toDoCompletedItem != null ? int.Parse(toDoCompletedItem.Content) : 0;
 
             // 计算待办事项的完成比例
             IndexSummaryItemViewModel? toDoCompletionRateItem = this.IndexSummaryItems.FirstOrDefault(t => t.SummaryType == IndexSummaryType.ToDoCompletionRate);
             if(toDoCompletionRateItem != null)
             {
                 // 如果找到了待办事项完成比例项就计算他
-                toDoCompletionRateItem.Content = $"{(double)toDoToCompleted / toDoTotal * 100:F2)}";
+                toDoCompletionRateItem.Content = toDoTotal == 0 ? "0.00%" : $"{(double)toDoCompleted / toDoTotal * 100:F2}%";
                 this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项完成比例）成功。完成比例={TodoCompletionRate}", this._userService.UserAccount, this._userService.UserId, toDoCompletionRateItem.Content);
             }
             else
             {
                 toDoCompletionRateItem?.Content = "0.00%" ;
-                this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项完成比例）失败。未找到此汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
+                this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 更新首页汇总数据（待办事项完成比例）失败。未找到此汇总项或其他原因", this._userService.UserAccount, this._userService.UserId);
             }
         }
 
@@ -181,7 +216,7 @@ namespace WpfUiTest.App.ViewModels.Main
             }
             catch (Exception ex)
             {
-                this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 订阅更新首页汇总数据事件时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                this._logger.LogError("[首页（IndexView）] [用户：{Account}（{Id}）] 订阅更新首页汇总数据事件时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
             }
 
             try
@@ -211,7 +246,7 @@ namespace WpfUiTest.App.ViewModels.Main
                 {
                     foreach (IndexSummaryItemViewModel item in this.IndexSummaryItems) { item.Content = "获取失败"; }
                     // 输出日志
-                    this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 汇总数据加载失败。{Message}", this._userService.UserAccount, this._userService.UserId, summaryResult == null ? "调用Service失败" : summaryResult.Message);
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 汇总数据加载失败。{Message}", this._userService.UserAccount, this._userService.UserId, summaryResult == null ? "调用Service失败" : summaryResult.Message);
                 }
             }
             catch (Exception ex)

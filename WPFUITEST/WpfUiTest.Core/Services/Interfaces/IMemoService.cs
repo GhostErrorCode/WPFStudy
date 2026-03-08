@@ -17,5 +17,11 @@ namespace WpfUiTest.Core.Services.Interfaces
 
         // 添加备忘录
         public Task<ServiceResult<MemoDto>> AddMemoAsync(AddMemoDto addMemoDto);
+
+        // 修改备忘录
+        public Task<ServiceResult<MemoDto>> UpdateMemoAsync(UpdateMemoDto updateMemoDto);
+
+        // 删除备忘录
+        public Task<ServiceResult<bool>> DeleteMemoAsync(DeleteMemoDto deleteMemoDto);
     }
 }

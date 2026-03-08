@@ -48,5 +48,16 @@ namespace WpfUiTest.Core.Mapping
                 UpdateDate = DateTimeUtility.NowNoMilliseconds()
             };
         }
+
+        // 待修改的 Memo 转 修改后的 Memo，需要参数 UpdateMemoDto
+        public static Memo ToUpdatedMemo(this Memo memo, UpdateMemoDto updateMemoDto)
+        {
+            // 修改备忘录标题、内容与修改时间，剩下字段保持原样并返回
+            memo.Title = updateMemoDto.Title;
+            memo.Content = updateMemoDto.Content;
+            memo.UpdateDate = DateTimeUtility.NowNoMilliseconds();
+
+            return memo;
+        }
     }
 }
