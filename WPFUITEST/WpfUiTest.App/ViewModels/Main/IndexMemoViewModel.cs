@@ -195,7 +195,7 @@ namespace WpfUiTest.App.ViewModels.Main
                     else
                     {
                         this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 修改备忘录失败，原因：{Reason}", this._userService.UserAccount, this._userService.UserId, updateMemoResult != null ? updateMemoResult.Message : "服务返回结果为空");
-                        this._messenger.ShowCaution(SnackbarTarget.MainView, "删除备忘录失败", updateMemoResult != null ? updateMemoResult.Message : "添加备忘录失败");
+                        this._messenger.ShowCaution(SnackbarTarget.MainView, "修改备忘录失败", updateMemoResult != null ? updateMemoResult.Message : "修改备忘录失败");
                     }
                 }
                 // 如果是点击的暂不修改，就直接关闭对话框，保留已写的数据
@@ -230,7 +230,7 @@ namespace WpfUiTest.App.ViewModels.Main
                 // 打开对话框并保存结果
                 ContentDialogResult deleteMemoContentDialogResult = await this._contentDialogService.ShowAsync(new ContentDialog()
                 {
-                    Title = "删除备忘",
+                    Title = "删除备忘？",
                     Content = new TextBlock
                     {
                         Text = $"是否删除此备忘录，此备忘录信息如下：{Environment.NewLine}" +
@@ -280,7 +280,7 @@ namespace WpfUiTest.App.ViewModels.Main
                     else
                     {
                         this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 删除备忘录失败，原因：{Reason}", this._userService.UserAccount, this._userService.UserId, deleteMemoResult != null ? deleteMemoResult.Message : "服务返回结果为空");
-                        this._messenger.ShowCaution(SnackbarTarget.MainView, "删除备忘录失败", deleteMemoResult != null ? deleteMemoResult.Message : "添加备忘录失败");
+                        this._messenger.ShowCaution(SnackbarTarget.MainView, "删除备忘录失败", deleteMemoResult != null ? deleteMemoResult.Message : "删除备忘录失败");
                     }
                 }
                 // 如果是点击的暂不删除，就直接关闭对话框，保留已写的数据

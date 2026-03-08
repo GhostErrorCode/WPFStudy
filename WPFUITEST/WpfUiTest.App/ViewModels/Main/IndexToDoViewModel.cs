@@ -60,6 +60,8 @@ namespace WpfUiTest.App.ViewModels.Main
         public AsyncRelayCommand<IndexToDoItemViewModel> UpdateToDoItemCommand { get; private set; }
         // 命令：删除待办事项Command
         public AsyncRelayCommand<IndexToDoItemViewModel> DeleteToDoItemCommand { get; private set; }
+        // 命令：一键完成待办事项Command
+        public AsyncRelayCommand<IndexToDoItemViewModel> CompletedToDoItemCommand { get; private set; }
 
 
         // ==================== 构造函数 ====================
@@ -82,6 +84,7 @@ namespace WpfUiTest.App.ViewModels.Main
             this.AddToDoItemCommand = new AsyncRelayCommand<object>(AddToDoItem);
             this.UpdateToDoItemCommand = new AsyncRelayCommand<IndexToDoItemViewModel>(UpdateToDoItem);
             this.DeleteToDoItemCommand = new AsyncRelayCommand<IndexToDoItemViewModel>(DeleteToDoItem);
+            this.CompletedToDoItemCommand = new AsyncRelayCommand<IndexToDoItemViewModel>(CompletedToDoItem);
         }
 
         // ==================== 方法 ====================
@@ -222,7 +225,7 @@ namespace WpfUiTest.App.ViewModels.Main
                 else
                 {
                     this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 修改待办事项失败，原因：{Reason}", this._userService.UserAccount, this._userService.UserId, updateToDoResult != null ? updateToDoResult.Message : "服务返回结果为空");
-                    this._messenger.ShowCaution(SnackbarTarget.MainView, "删除待办事项失败", updateToDoResult != null ? updateToDoResult.Message : "添加待办事项失败");
+                    this._messenger.ShowCaution(SnackbarTarget.MainView, "修改待办事项失败", updateToDoResult != null ? updateToDoResult.Message : "修改待办事项失败");
                 }
             }
             catch(Exception ex)
@@ -251,7 +254,7 @@ namespace WpfUiTest.App.ViewModels.Main
                 // 打开对话框并保存结果
                 ContentDialogResult deleteToDoContentDialogResult = await this._contentDialogService.ShowAsync(new ContentDialog()
                 {
-                    Title = "删除待办",
+                    Title = "删除待办？",
                     Content = new TextBlock
                     {
                         Text = $"是否删除此待办事项，此待办事项信息如下：{Environment.NewLine}" +
@@ -303,13 +306,93 @@ namespace WpfUiTest.App.ViewModels.Main
                 else
                 {
                     this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 删除待办事项失败，原因：{Reason}", this._userService.UserAccount, this._userService.UserId, deleteToDoResult != null ? deleteToDoResult.Message : "服务返回结果为空");
-                    this._messenger.ShowCaution(SnackbarTarget.MainView, "删除待办事项失败", deleteToDoResult != null ? deleteToDoResult.Message : "添加待办事项失败");
+                    this._messenger.ShowCaution(SnackbarTarget.MainView, "删除待办事项失败", deleteToDoResult != null ? deleteToDoResult.Message : "删除待办事项失败");
                 }
             }
             catch (Exception ex)
             {
                 this._logger.LogError("[首页（IndexView）] [用户：{Account}（{Id}）] 删除待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
                 this._messenger.ShowDanger(SnackbarTarget.MainView, "删除待办事项失败", "删除待办事项时出现异常");
+            }
+        }
+
+        // 方法：一键完成待办事项
+        private async Task CompletedToDoItem(IndexToDoItemViewModel? item)
+        {
+            try
+            {
+                // 如果传入的 IndexToDoItemViewModel 参数是NULL，就记录日志并直接返回
+                if (item == null)
+                {
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 一键完成待办事项时失败。传入的待办事项数据参数为NULL", this._userService.UserAccount, this._userService.UserId);
+                    this._messenger.ShowCaution(SnackbarTarget.MainView, "一键完成待办事项失败", "传入的待办事项数据参数为空");
+                    return;
+                }
+
+                // 如果传入的参数不为NULL，就正常进行业务流程
+                // 给属性 IndexToDoItem 赋值，并直接把待办事项状态改成已完成
+                this.LoadIndexToDoItem(item);
+                this.IndexToDoItem.Status = TodoStatusEnum.Completed;
+                // 打开对话框并保存结果
+                ContentDialogResult completedToDoContentDialogResult = await this._contentDialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions()
+                {
+                    Title = "一键完成待办？",
+                    Content = new TextBlock
+                    {
+                        Text = $"是否一键完成此待办事项，此待办事项信息如下：{Environment.NewLine}" +
+                               $"├─ 状态：{(item.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}" +
+                               $"├─ 标题：{item.Title}{Environment.NewLine}" +
+                               $"└─ 内容：{item.Content}",
+                        TextWrapping = TextWrapping.Wrap
+                    },
+                    PrimaryButtonText = "一键完成",
+                    SecondaryButtonText = "暂不一键完成",
+                    CloseButtonText = "取消",
+                });
+
+                // 如果是点击的暂不一键完成，就直接关闭对话框，保留已写的数据
+                // Warning（保留功能未实现，暂时不考虑保留功能）
+                if (completedToDoContentDialogResult == ContentDialogResult.Secondary) { return; }
+                // 如果是点击的取消，就关闭对话框并清除已写的数据
+                if (completedToDoContentDialogResult == ContentDialogResult.None) { this.ClearIndexToDoItem(); return; }
+
+                // 如果是点击的一键完成,就将变更信息写入数据库并从当前的IndexToDoItems集合去除
+                // 调用后台服务修改待办事项
+                ServiceResult<ToDoDto> completedToDoResult = await this._toDoService.UpdateToDoAsync(this._indexToDoItem.ToUpdateToDoDto());
+                // 判断修改待办事项是否成功
+                if (completedToDoResult != null && completedToDoResult.IsSuccess && completedToDoResult.Data != null)
+                {
+                    // 从当前的集合列表中找到需要一键完成的那个待办事项
+                    IndexToDoItemViewModel? indexToDoItem = this.IndexToDoItems.FirstOrDefault(m => m.Id == completedToDoResult.Data.Id && m.UserId == completedToDoResult.Data.UserId);
+                    // 判断是否在当前集合中找到，如果找到就从当前集合去除
+                    if (indexToDoItem != null)
+                    {
+  
+                        this.IndexToDoItems.Remove(indexToDoItem);
+                        this._messenger.Send(new UpdateIndexSummaryMessage() { Type = UpdateIndexSummaryType.UpdateToDoCompleted });
+
+                        // 清理IndexToDoItem
+                        this.ClearIndexToDoItem();
+                        this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 一键完成待办事项成功，已更新当前UI集合，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, completedToDoResult.Data.Id, completedToDoResult.Data.Title);
+                        this._messenger.ShowSuccess(SnackbarTarget.MainView, "一键完成待办事项成功", "一键完成待办事项成功");
+                    }
+                    else
+                    {
+                        this.ClearIndexToDoItem();
+                        this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 一键完成待办事项成功，但更新当前UI集合失败，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, completedToDoResult.Data.Id, completedToDoResult.Data.Title);
+                        this._messenger.ShowCaution(SnackbarTarget.MainView, completedToDoResult.Message, "一键完成待办事项成功，但更新当前集合失败");
+                    }
+                }
+                else
+                {
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 一键完成待办事项失败，原因：{Reason}", this._userService.UserAccount, this._userService.UserId, completedToDoResult != null ? completedToDoResult.Message : "服务返回结果为空");
+                    this._messenger.ShowCaution(SnackbarTarget.MainView, "删除待办事项失败", completedToDoResult != null ? completedToDoResult.Message : "一键完成待办事项失败");
+                }
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError("[首页（IndexView）] [用户：{Account}（{Id}）] 一键完成待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                this._messenger.ShowDanger(SnackbarTarget.MainView, "一键完成待办事项失败", "一键完成待办事项时出现异常");
             }
         }
 

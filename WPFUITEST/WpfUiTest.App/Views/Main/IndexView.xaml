@@ -156,6 +156,8 @@
                             <ui:Button
                                 Grid.RowSpan="2"
                                 Grid.Column="1"
+                                Command="{Binding DataContext.IndexToDoViewModel.CompletedToDoItemCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ui:ListView}}}"
+                                CommandParameter="{Binding}"
                                 VerticalAlignment="Center"
                                 Style="{StaticResource IndexToDoCompletedUiButonStyle}"
                                 />
