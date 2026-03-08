@@ -48,5 +48,16 @@ namespace WpfUiTest.App.ViewModels.Mapping
                 Status = indexToDoItemViewModel.Status
             };
         }
+
+        // IndexToDoItemViewModel 转 DeleteToDoDto
+        public static DeleteToDoDto ToDeleteToDoDto(this IndexToDoItemViewModel indexToDoItemViewModel)
+        {
+            return new DeleteToDoDto()
+            {
+                Id = indexToDoItemViewModel.Id,
+                UserId = indexToDoItemViewModel.UserId,
+                Title = indexToDoItemViewModel.Title
+            };
+        }
     }
 }

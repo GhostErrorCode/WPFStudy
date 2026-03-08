@@ -193,6 +193,8 @@
                                         />
                                     <MenuItem
                                         Header="删除此待办事项" 
+                                        Command="{Binding PlacementTarget.Tag.IndexToDoViewModel.DeleteToDoItemCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                        CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                         />
                                 </ContextMenu>
                             </Setter.Value>

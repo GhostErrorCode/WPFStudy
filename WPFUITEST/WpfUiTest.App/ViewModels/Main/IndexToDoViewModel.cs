@@ -12,7 +12,6 @@ using Wpf.Ui.Controls;
 using Wpf.Ui.Extensions;
 using WpfUiTest.App.ViewModels.Mapping;
 using WpfUiTest.Core.DTOs.ToDo;
-using WpfUiTest.Core.DTOs.ToDo;
 using WpfUiTest.Core.Services.Interfaces;
 using WpfUiTest.Shared.Base;
 using WpfUiTest.Shared.Enums;
@@ -82,6 +81,7 @@ namespace WpfUiTest.App.ViewModels.Main
             // 初始化命令
             this.AddToDoItemCommand = new AsyncRelayCommand<object>(AddToDoItem);
             this.UpdateToDoItemCommand = new AsyncRelayCommand<IndexToDoItemViewModel>(UpdateToDoItem);
+            this.DeleteToDoItemCommand = new AsyncRelayCommand<IndexToDoItemViewModel>(DeleteToDoItem);
         }
 
         // ==================== 方法 ====================
@@ -233,7 +233,85 @@ namespace WpfUiTest.App.ViewModels.Main
         }
 
         // 方法：删除待办事项
-        
+        private async Task DeleteToDoItem(IndexToDoItemViewModel? item)
+        {
+            try
+            {
+                // 如果传入的 IndexToDoItemViewModel 参数是NULL，就记录日志并直接返回
+                if (item == null)
+                {
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 删除待办事项时失败。传入的待办事项数据参数为NULL", this._userService.UserAccount, this._userService.UserId);
+                    this._messenger.ShowCaution(SnackbarTarget.MainView, "删除待办事项失败", "传入的待办事项数据参数为空");
+                    return;
+                }
+
+                // 如果传入的参数不为NULL，就正常进行业务流程
+                // 给属性 IndexToDoItem 赋值
+                this.LoadIndexToDoItem(item);
+                // 打开对话框并保存结果
+                ContentDialogResult deleteToDoContentDialogResult = await this._contentDialogService.ShowAsync(new ContentDialog()
+                {
+                    Title = "删除待办",
+                    Content = new TextBlock
+                    {
+                        Text = $"是否删除此待办事项，此待办事项信息如下：{Environment.NewLine}" +
+                               $"├─ 状态：{(item.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}" +
+                               $"├─ 标题：{item.Title}{Environment.NewLine}" +
+                               $"└─ 内容：{item.Content}",
+                        TextWrapping = TextWrapping.Wrap
+                    },
+                    PrimaryButtonAppearance = ControlAppearance.Danger,
+                    PrimaryButtonText = "删除",
+                    SecondaryButtonText = "暂不删除",
+                    CloseButtonText = "取消",
+                    DialogMaxWidth = 650
+                }, CancellationToken.None);
+
+                // 如果是点击的暂不删除，就直接关闭对话框，保留已写的数据
+                // Warning（保留功能未实现，暂时不考虑保留功能）
+                if (deleteToDoContentDialogResult == ContentDialogResult.Secondary) { return; }
+                // 如果是点击的取消，就关闭对话框并清除已写的数据
+                if (deleteToDoContentDialogResult == ContentDialogResult.None) { this.ClearIndexToDoItem(); return; }
+
+                // 调用后台服务删除待办事项
+                ServiceResult<bool> deleteToDoResult = await this._toDoService.DeleteToDoAsync(this._indexToDoItem.ToDeleteToDoDto());
+                // 判断删除待办事项是否成功
+                if (deleteToDoResult != null && deleteToDoResult.IsSuccess && deleteToDoResult.Data == true)
+                {
+                    // 如果从数据库中删除成功就从当前集合中清除指定项
+                    // 从当前的集合列表中找到需要删除的那个待办事项
+                    IndexToDoItemViewModel? indexToDoItemViewModel = this.IndexToDoItems.FirstOrDefault(m => m.Id == item.Id && m.UserId == item.UserId && m.Title == item.Title);
+                    // 判断是否在当前集合中找到，如果找到就删除它
+                    if (indexToDoItemViewModel != null)
+                    {
+                        // 删除
+                        this.IndexToDoItems.Remove(indexToDoItemViewModel);
+                        // 清理IndexToDoItem
+                        this.ClearIndexToDoItem();
+                        // 重新计算汇总数据
+                        this._messenger.Send(new UpdateIndexSummaryMessage() { Type = UpdateIndexSummaryType.DeleteToDo });
+                        this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 删除待办事项成功，已从当前UI集合中清除，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, item.Id, item.Title);
+                        this._messenger.ShowSuccess(SnackbarTarget.MainView, deleteToDoResult.Message, "删除待办事项成功");
+                    }
+                    else
+                    {
+                        this.ClearIndexToDoItem();
+                        this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 删除待办事项成功，但当前UI集合中清除失败，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, item.Id, item.Title);
+                        this._messenger.ShowCaution(SnackbarTarget.MainView, deleteToDoResult.Message, "删除待办事项成功，但从当前集合中清除失败");
+                    }
+                }
+                else
+                {
+                    this._logger.LogWarning("[首页（IndexView）] [用户：{Account}（{Id}）] 删除待办事项失败，原因：{Reason}", this._userService.UserAccount, this._userService.UserId, deleteToDoResult != null ? deleteToDoResult.Message : "服务返回结果为空");
+                    this._messenger.ShowCaution(SnackbarTarget.MainView, "删除待办事项失败", deleteToDoResult != null ? deleteToDoResult.Message : "添加待办事项失败");
+                }
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError("[首页（IndexView）] [用户：{Account}（{Id}）] 删除待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                this._messenger.ShowDanger(SnackbarTarget.MainView, "删除待办事项失败", "删除待办事项时出现异常");
+            }
+        }
 
         // 方法：填充修改/删除的待办事项列表项 至 IndexToDoItem
         private void LoadIndexToDoItem(IndexToDoItemViewModel IndexToDoItemViewModel)

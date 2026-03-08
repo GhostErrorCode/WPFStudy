@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Extensions;
@@ -232,14 +231,18 @@ namespace WpfUiTest.App.ViewModels.Main
                 ContentDialogResult deleteMemoContentDialogResult = await this._contentDialogService.ShowAsync(new ContentDialog()
                 {
                     Title = "删除备忘",
-                    Content = $"是否删除此备忘录，此备忘录信息如下：{Environment.NewLine}" +
-                              $"├─ 标题：{item.Title}{Environment.NewLine}" +
-                              $"└─ 内容：{item.Content}",
+                    Content = new TextBlock
+                    {
+                        Text = $"是否删除此备忘录，此备忘录信息如下：{Environment.NewLine}" +
+                               $"├─ 标题：{item.Title}{Environment.NewLine}" +
+                               $"└─ 内容：{item.Content}",
+                        TextWrapping = TextWrapping.Wrap
+                    },
                     PrimaryButtonAppearance = ControlAppearance.Danger,
                     PrimaryButtonText = "删除",
                     SecondaryButtonText = "暂不删除",
                     CloseButtonText = "取消",
-                    DialogMaxWidth=600
+                    DialogMaxWidth=650
                 }, CancellationToken.None);
 
 
