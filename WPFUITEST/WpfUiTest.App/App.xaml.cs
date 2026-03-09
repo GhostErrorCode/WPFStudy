@@ -12,9 +12,12 @@ using System.Data;
 using System.IO;
 using System.Text;
 using System.Windows;
+using System.Windows.Media;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
 using Wpf.Ui.DependencyInjection;
+using Wpf.Ui.Violeta.Controls;
 using WpfUiTest.App.Services.Implements;
 using WpfUiTest.App.ViewModels.Main;
 using WpfUiTest.App.ViewModels.User;
@@ -56,6 +59,9 @@ namespace WpfUiTest.App
         /// </summary>
         public App()
         {
+            // 显示启动动画
+            Splash.ShowAsync("pack://application:,,,/WpfUiTest.App;component/Resources/Images/User.jpg");
+
             // 获取命令行参数：Skip(1)跳过第一个元素（程序自身完整路径），仅保留用户传入的有效参数
             string[] args = Environment.GetCommandLineArgs().Skip(1).ToArray();
 
@@ -373,8 +379,8 @@ namespace WpfUiTest.App
                 // MessageBox.Show: 显示错误消息对话框给用户
                 // MessageBoxButton.OK: 对话框只包含"确定"按钮
                 // MessageBoxImage.Error: 显示错误图标，提醒用户这是错误消息
-                MessageBox.Show($"应用程序启动失败: {ex.Message}", "错误",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show($"应用程序启动失败: {ex.Message}", "错误",
+                    System.Windows.MessageBoxButton.OK, MessageBoxImage.Error);
 
                 // Log.Fatal: 记录致命错误日志，通常用于应用程序启动失败等严重错误
                 // ex: 捕获的异常对象，会记录完整的异常堆栈信息
