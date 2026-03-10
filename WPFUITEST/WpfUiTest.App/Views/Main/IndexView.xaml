@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:loadingOverlay="clr-namespace:WpfUiTest.Controls.Controls.LoadingOverlay;assembly=WpfUiTest.Controls"
       xmlns:local="clr-namespace:WpfUiTest.App.Views.Main"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -22,6 +23,15 @@
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
         
+        <!-- 首页加载动画（全页面覆盖） -->
+        <loadingOverlay:LoadingRing
+            Grid.RowSpan="3"
+            Grid.ColumnSpan="2"
+            Panel.ZIndex="9"
+            IsLoading="{Binding IsLoading}"
+            LoadingText="{Binding LoadingText}"
+            />
+
         <!-- 首页标题 第1行 跨2列 -->
         <StackPanel
             Grid.Row="0"

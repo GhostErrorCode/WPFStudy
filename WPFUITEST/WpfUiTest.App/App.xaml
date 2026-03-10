@@ -49,9 +49,10 @@
                 <ResourceDictionary Source="/Resources/Styles/Modules/Index/IndexSummaryStyles.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Modules/Index/IndexDataStyles.xaml" />
 
-                <!-- 全局转换器 -->
+                <!-- 转换器 -->
                 <ResourceDictionary Source="/Resources/Converters/Converters.xaml" />
-                
+                <ResourceDictionary Source="/WpfUiTest.Controls;component/Resources/Converters/Converter.xaml" />
+
                 <!-- 全局对话模板 -->
                 <ResourceDictionary Source="/Resources/Templates/IndexToDoContentDialogTemplates.xaml" />
                 <ResourceDictionary Source="/Resources/Templates/IndexMemoContentDialogTemplates.xaml" />

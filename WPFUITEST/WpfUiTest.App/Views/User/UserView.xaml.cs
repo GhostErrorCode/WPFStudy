@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
+using Wpf.Ui.Violeta.Controls;
 using WpfUiTest.App.ViewModels.User;
 using WpfUiTest.App.Views.Main;
 using WpfUiTest.Shared.Enums;
@@ -38,6 +39,10 @@ namespace WpfUiTest.App.Views.User
         public UserView(UserViewModel userViewModel, IMessenger messenger, IServiceProvider serviceProvider)
         {
             InitializeComponent();
+
+            // 延迟800ms后关闭启动动画
+            Thread.Sleep(800);
+            Splash.CloseOnLoaded(this, minimumMilliseconds: 600);
 
             // 获取ViewModel
             this.DataContext = userViewModel;

@@ -10,13 +10,14 @@
       Title="ToDoView">
 
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <!-- 标题 -->
-            <ui:TextBlock
-                Text="待办事项页 (占位符)"
-                Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                Style="{StaticResource TitleOneUiTextBlockStyle}"
-                />
-        </StackPanel>
+        <!-- 2行 -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <!-- 第1行：搜索/添加待办区域 -->
+        
+        <!-- 第2行：数据显示区域 -->
     </Grid>
 </Page>

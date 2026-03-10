@@ -45,6 +45,21 @@ namespace WpfUiTest.App.ViewModels.Main
             set { SetProperty(ref _memoViewModel, value); }
         }
 
+        // 属性：加载动画是否可见
+        private bool _isLoading = false;
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set { SetProperty(ref _isLoading, value); }
+        }
+        // 属性：加载时提示文本
+        private string _loadingText = "加载中...";
+        public string LoadingText
+        {
+            get { return _loadingText; }
+            set { SetProperty(ref _loadingText, value); }
+        }
+
         // ==================== 构造函数 ====================
         public IndexViewModel(ILogger<IndexViewModel> logger, IUserService userService, IndexTitleViewModel indexTitleViewModel, IndexSummaryViewModel indexSummaryViewModel, IndexToDoViewModel indexToDoViewModel, IndexMemoViewModel indexMemoViewModel)
         {
@@ -65,14 +80,30 @@ namespace WpfUiTest.App.ViewModels.Main
         // 方法：导航进入后执行
         public override async Task OnNavigatedToAsync()
         {
-            this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 导航进入，开始初始化...", this._userService.UserAccount, this._userService.UserId);
-            // 调用子VM此方法
-            await Task.WhenAll(
-                this._indexTitleViewModel.OnNavigatedToAsync(),
-                this._indexSummaryViewModel.OnNavigatedToAsync(),
-                this._indexToDoViewModel.OnNavigatedToAsync(),
-                this._memoViewModel.OnNavigatedToAsync()
-                );
+            try
+            {
+                // 显示加载动画
+                this.IsLoading = true;
+                this.LoadingText = "首页初始化中...";
+
+                this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 导航进入，开始初始化...", this._userService.UserAccount, this._userService.UserId);
+                // 调用子VM此方法
+                await Task.WhenAll(
+                    this._indexTitleViewModel.OnNavigatedToAsync(),
+                    this._indexSummaryViewModel.OnNavigatedToAsync(),
+                    this._indexToDoViewModel.OnNavigatedToAsync(),
+                    this._memoViewModel.OnNavigatedToAsync()
+                    );
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogInformation("[首页（IndexView）] [用户：{Account}（{Id}）] 初始化失败。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+            }
+            finally
+            {
+                // 关闭加载动画
+                this.IsLoading = false;
+            }
         }
         // 方法：导航离开后执行
         public override async Task OnNavigatedFromAsync()

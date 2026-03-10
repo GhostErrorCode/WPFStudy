@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WpfUiTest.Modules.ToDo.ViewModels;
 using WpfUiTest.Modules.ToDo.Views;
 
 namespace WpfUiTest.Modules.ToDo
@@ -16,7 +17,7 @@ namespace WpfUiTest.Modules.ToDo
             services.AddSingleton<ToDoView>();
 
             // 注册ViewModel
-            // services.AddTransient<SettingsViewModel>();
+            services.AddTransient<ToDoViewModel>();
 
             // 如果模块有其他服务，也在这里注册
 

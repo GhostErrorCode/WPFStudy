@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfUiTest.Modules.ToDo.ViewModels;
 
 namespace WpfUiTest.Modules.ToDo.Views
 {
@@ -18,9 +19,12 @@ namespace WpfUiTest.Modules.ToDo.Views
     /// </summary>
     public partial class ToDoView : Page
     {
-        public ToDoView()
+        public ToDoView(ToDoViewModel toDoViewModel)
         {
             InitializeComponent();
+
+            // 依赖注入获取ViewModel
+            this.DataContext = toDoViewModel;
         }
     }
 }
