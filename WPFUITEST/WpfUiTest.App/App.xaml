@@ -9,28 +9,31 @@
     <!-- StartupUri="MainWindow.xaml" 不设置StartupUri，因为我们将在代码中手动启动窗口 -->
 
     <!-- ==============================================
-                  ShutdownMode 配置说明（WPF应用退出时机控制）
-                  可选值共3个，以下是详细说明：
-                  1. OnLastWindowClose（默认值）：
-                     - 含义：最后一个窗口关闭时，应用自动退出
-                     - 适用：无后台服务的简单WPF应用（如记事本、计算器）
-                  2. OnMainWindowClose：
-                     - 含义：主窗口（MainWindow）关闭时，应用自动退出（不管其他窗口是否打开）
-                     - 适用：以主窗口为核心、无后台任务的应用
-                  3. OnExplicitShutdown（当前选用）：
-                     - 含义：仅当显式调用 Application.Current.Shutdown() 时，应用才退出
-                     - 适用：集成IHost（DI/日志/数据库）的应用，确保退出前执行资源清理逻辑
-                     - 原因：避免窗口关闭时强制终止进程，保证_host.StopAsync()、日志刷新等操作完成
-              ============================================== -->
+        ShutdownMode 配置说明（WPF应用退出时机控制）
+        可选值共3个，以下是详细说明：
+        1. OnLastWindowClose（默认值）：
+            - 含义：最后一个窗口关闭时，应用自动退出
+            - 适用：无后台服务的简单WPF应用（如记事本、计算器）
+        2. OnMainWindowClose：
+            - 含义：主窗口（MainWindow）关闭时，应用自动退出（不管其他窗口是否打开）
+            - 适用：以主窗口为核心、无后台任务的应用
+        3. OnExplicitShutdown（当前选用）：
+            - 含义：仅当显式调用 Application.Current.Shutdown() 时，应用才退出
+            - 适用：集成IHost（DI/日志/数据库）的应用，确保退出前执行资源清理逻辑
+            - 原因：避免窗口关闭时强制终止进程，保证_host.StopAsync()、日志刷新等操作完成
+    ============================================== -->
     
     <Application.Resources>
         <!-- 在此处添加全局资源 -->
         <!-- WPF-UI资源 -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!-- ===========================================================
+                    App层自定义样式、资源、转换器等
+                ============================================================ -->
+                <!-- WPFUI资源 -->
                 <ui:ThemesDictionary />
                 <ui:ControlsDictionary />
-
                 <!-- 自定义样式、资源等-->
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiTitleBar.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/Border.xaml" />
@@ -43,7 +46,7 @@
                 <ResourceDictionary Source="/Resources/Styles/Controls/CheckBox.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiNavigationView.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiAnchor.xaml" />
-
+                
                 <!-- 首页样式 -->
                 <ResourceDictionary Source="/Resources/Styles/Modules/Index/IndexTitleStyles.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Modules/Index/IndexSummaryStyles.xaml" />
@@ -51,11 +54,18 @@
 
                 <!-- 转换器 -->
                 <ResourceDictionary Source="/Resources/Converters/Converters.xaml" />
-                <ResourceDictionary Source="/WpfUiTest.Controls;component/Resources/Converters/Converter.xaml" />
 
-                <!-- 全局对话模板 -->
+                <!-- 对话模板 -->
                 <ResourceDictionary Source="/Resources/Templates/IndexToDoContentDialogTemplates.xaml" />
                 <ResourceDictionary Source="/Resources/Templates/IndexMemoContentDialogTemplates.xaml" />
+
+
+                <!-- ===========================================================
+                    Controls层自定义样式、资源、转换器等
+                ============================================================ -->
+                <!-- 转换器 -->
+                <ResourceDictionary Source="/WpfUiTest.Controls;component/Resources/Converters/Converter.xaml" />
+                
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
