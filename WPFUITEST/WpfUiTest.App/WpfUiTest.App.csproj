@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WpfUiTest.Controls\WpfUiTest.Controls.csproj" />
     <ProjectReference Include="..\WpfUiTest.Core\WpfUiTest.Core.csproj" />
     <ProjectReference Include="..\WpfUiTest.Modules.Memo\WpfUiTest.Modules.Memo.csproj" />
     <ProjectReference Include="..\WpfUiTest.Modules.ToDo\WpfUiTest.Modules.ToDo.csproj" />

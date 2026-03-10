@@ -34,6 +34,13 @@ namespace WpfUiTest.App.Services.Implements
                 d.Source?.ToString().EndsWith("pack://application:,,,/WpfUiTest.App;component/Resources/Colors/Themes/HighContrast.xaml") == true);
             // 如果找到了且不为null就移除他
             if (oldResource != null) this._appResources.Remove(oldResource);
+            // 删除Controls层（类库）旧字典，查找资源字典集合里的自定义主题资源
+            ResourceDictionary? oldControlsResource = this._appResources.FirstOrDefault(d =>
+                d.Source?.ToString().EndsWith("pack://application:,,,/WpfUiTest.Controls;component/Resources/Themes/Dark.xaml") == true ||
+                d.Source?.ToString().EndsWith("pack://application:,,,/WpfUiTest.Controls;component/Resources/Themes/Light.xaml") == true ||
+                d.Source?.ToString().EndsWith("pack://application:,,,/WpfUiTest.Controls;component/Resources/Themes/HighContrast.xaml") == true);
+            // 如果找到了且不为null就移除他
+            if (oldControlsResource != null) this._appResources.Remove(oldControlsResource);
 
             // 2. 拼接绝对路径
             // 根据切换后的目标主题找到需要的自定义主题资源字典文件
@@ -42,9 +49,12 @@ namespace WpfUiTest.App.Services.Implements
             string fullPath = $"pack://application:,,,/{this._projectName};component/{this._customThemeBasePath}{fileName}";
             // 新的资源字典
             ResourceDictionary newResource = new ResourceDictionary { Source = new Uri(fullPath, UriKind.Absolute) };
+            // 再添加Controls层（类库）的资源字典（主题）
+            ResourceDictionary newControlsResource = new ResourceDictionary() { Source = new Uri($"pack://application:,,,/WpfUiTest.Controls;component/Resources/Themes/{fileName}", UriKind.Absolute) };
 
             // 3. 添加新字典
             this._appResources.Add(newResource);
+            this._appResources.Add(newControlsResource);
 
             // 4.强制刷新资源字典集合
             // 重置资源字典引用，触发DynamicResource重新解析
