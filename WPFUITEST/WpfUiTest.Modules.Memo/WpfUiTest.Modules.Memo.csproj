@@ -8,15 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WpfUiTest.Shared\WpfUiTest.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="ViewModels\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WpfUiTest.Controls\WpfUiTest.Controls.csproj" />
+    <ProjectReference Include="..\WpfUiTest.Core\WpfUiTest.Core.csproj" />
+    <ProjectReference Include="..\WpfUiTest.Shared\WpfUiTest.Shared.csproj" />
   </ItemGroup>
 
 </Project>

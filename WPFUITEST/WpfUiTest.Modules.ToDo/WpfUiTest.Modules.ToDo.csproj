@@ -12,6 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WpfUiTest.Controls\WpfUiTest.Controls.csproj" />
+    <ProjectReference Include="..\WpfUiTest.Core\WpfUiTest.Core.csproj" />
     <ProjectReference Include="..\WpfUiTest.Shared\WpfUiTest.Shared.csproj" />
   </ItemGroup>
 

@@ -13,10 +13,13 @@ namespace WpfUiTest.App.Services.Implements
     // 自定义应用主题服务接口实现类
     public class CustomThemeService : ICustomThemeService
     {
-        // 配置项：实际项目名称
-        private string _projectName = "WpfUiTest.App";
-        private string _customThemeBasePath = "Resources/Colors/Themes/";
-
+        // 配置项
+        // 字段：PackUrl前缀（固定协议头：声明这是 WPF 的 Pack URI（类似 http:// 是网页协议））
+        private string _packUrlPrefix = "pack://application:,,,/";
+        // 字段：固定分隔符（表示 “程序集内的资源组件”）
+        private string _component = ";component/";
+        // 字段：各程序、类库主题存放路径
+        private string _themesPath = "Resources/Themes/";
         // 字段: 资源字典上下文
         private Collection<ResourceDictionary> _appResources = Application.Current.Resources.MergedDictionaries;
 
@@ -27,6 +30,32 @@ namespace WpfUiTest.App.Services.Implements
 
         public void SwitchTheme(Theme targetTheme)
         {
+            // 移除所有旧主题（查询能匹配主题路径的资源字典）
+            List<ResourceDictionary> oldThemes = this._appResources.Where((ResourceDictionary d) => d.Source != null && d.Source.OriginalString.Contains(this._themesPath)).ToList();
+            foreach (ResourceDictionary theme in oldThemes)
+            {
+                this._appResources.Remove(theme);
+            }
+
+            // 加载新主题（包括全局和类库中的）
+            string[] themeAssemblies = new string[] { "WpfUiTest.App", "WpfUiTest.Controls"};
+            foreach(string assemblyName in themeAssemblies)
+            {
+                this._appResources.Add(new ResourceDictionary()
+                {
+                    Source = new Uri(this._packUrlPrefix +
+                                    assemblyName + 
+                                    this._component + 
+                                    this._themesPath + 
+                                    targetTheme.EnumThemeToEnglishStringTheme() + 
+                                    ".xaml")
+                });
+            }
+
+            // 最后应用WPFUI主题
+            ApplicationThemeManager.Apply(targetTheme.EnumThemeToApplicationTheme());
+
+            /*
             // 1. 删除旧字典，查找资源字典集合里的自定义主题资源
             ResourceDictionary? oldResource = this._appResources.FirstOrDefault(d =>
                 d.Source?.ToString().EndsWith("pack://application:,,,/WpfUiTest.App;component/Resources/Colors/Themes/Dark.xaml") == true ||
@@ -62,6 +91,7 @@ namespace WpfUiTest.App.Services.Implements
 
             // 5.应用WPFUI主题
             ApplicationThemeManager.Apply(targetTheme.EnumThemeToApplicationTheme());
+            */
         }
     }
 }
