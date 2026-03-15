@@ -65,7 +65,9 @@
                 ============================================================ -->
                 <!-- 转换器 -->
                 <ResourceDictionary Source="/WpfUiTest.Controls;component/Resources/Converters/Converter.xaml" />
-                
+                <!-- 样式 -->
+                <ResourceDictionary Source="/WpfUiTest.Controls;component/Resources/Styles/Modules/PaginationStyles.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
