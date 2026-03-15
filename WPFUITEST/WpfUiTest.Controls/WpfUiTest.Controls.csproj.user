@@ -8,5 +8,8 @@
     <Compile Update="Controls\LoadingOverlay\LoadingRing.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Controls\Pagination\Pagination.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

@@ -1,0 +1,94 @@
+﻿<UserControl x:Class="WpfUiTest.Controls.Controls.Pagination.Pagination"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:local="clr-namespace:WpfUiTest.Controls.Controls.Pagination"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="pagination">
+    <Grid>
+        <!-- 外层容器StackPanel，确保所有控件水平摆放 -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <!-- 总条数显示文本块 -->
+            <TextBlock x:Name="TotalCountTextBlock" Style="{StaticResource TotalCountTextBlockStyle}"/>
+            
+            <!-- 选择每页显示条数ComboBox -->
+            <ComboBox
+                x:Name="PageSizeCombo"
+                MinWidth="80"
+                Margin="0,0,10,0"
+                ItemsSource="{Binding PageSizeOptions,ElementName=pagination}"
+                SelectedItem="{Binding PageSize,ElementName=pagination}"
+                >
+                <!-- 数据模板，用来显示Combo列表项的文字 -->
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource PageSizeToStringConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <!--
+            关于Command绑定不到方法原因：
+                因为 ItemsControl 在生成其项时（通常发生在 InitializeComponent 之后）
+                此时 InternalPageChangedCommand 已经被构造函数赋值，所以绑定能获取到非 null 的命令。
+                而上一页/下一页按钮的绑定在 XAML 解析时（即 InitializeComponent 执行期间）就建立了，
+                那时命令属性还是 null，并且之后属性变化不会触发更新，所以按钮永远绑定到 null。
+            -->
+            <!-- 上一页 -->
+            <ui:Button
+                x:Name="PreviousPageButton"
+                Icon="{ui:SymbolIcon Symbol=ChevronLeft24}"
+                Command="{Binding InternalPageChangedCommand,ElementName=pagination}"
+                CommandParameter="{Binding CurrentPage,ElementName=pagination,Converter={StaticResource SubtractOneConverter}}"
+                Style="{StaticResource PageNumberUiButtonStyle}"
+                />
+                
+            <!-- 中间页码 -->
+            <ItemsControl ItemsSource="{Binding PageItems,ElementName=pagination}">
+                <!-- ItemsControl容器定义 -->
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                
+                <!-- ItemsControl数据模板 -->
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <!-- 页码Button -->
+                        <ui:Button
+                            Content="{Binding DisplayText}"
+                            IsEnabled="{Binding IsEnabled}"
+                            Command="{Binding InternalPageChangedCommand,ElementName=pagination}"
+                            CommandParameter="{Binding PageNumber}"
+                            >
+                            <!-- 页码Button触发器，用于将当前选中页更改背景色 -->
+                            <ui:Button.Style>
+                                <Style TargetType="{x:Type ui:Button}" BasedOn="{StaticResource PageNumberUiButtonStyle}">
+                                    <Style.Triggers>
+                                        <!-- 数据触发器，根据当前是否为选择项来更改背景色Primary -->
+                                        <DataTrigger Binding="{Binding IsCurrent}" Value="True">
+                                            <Setter Property="Appearance" Value="Primary" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ui:Button.Style>
+                        </ui:Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            
+            <!-- 下一页 -->
+            <ui:Button
+                x:Name="NextPageButton"
+                Icon="{ui:SymbolIcon Symbol=ChevronRight24}"
+                Command="{Binding InternalPageChangedCommand,ElementName=pagination}"
+                CommandParameter="{Binding CurrentPage,ElementName=pagination,Converter={StaticResource AddOneConverter}}"
+                Style="{StaticResource PageNumberUiButtonStyle}"
+                />
+        </StackPanel>
+    </Grid>
+</UserControl>

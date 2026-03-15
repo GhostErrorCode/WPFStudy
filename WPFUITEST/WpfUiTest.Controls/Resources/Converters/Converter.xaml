@@ -1,5 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converter="clr-namespace:WpfUiTest.Controls.Resources.Converters"
+                    >
     <!-- 内置的布尔转可视 -->
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    
+    <!-- 当前页加一减一转换器 -->
+    <converter:AddOneConverter x:Key="AddOneConverter" />
+    <converter:SubtractOneConverter x:Key="SubtractOneConverter" />
+    
+    <!-- 页大小 转 字符说明转换器 -->
+    <converter:PageSizeToStringConverter x:Key="PageSizeToStringConverter" />
 </ResourceDictionary>
