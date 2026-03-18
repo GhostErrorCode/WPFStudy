@@ -30,7 +30,7 @@ namespace WpfUiTest.Controls.Controls.Pagination
                 nameof(TotalPages),
                 typeof(int),
                 typeof(Pagination),
-                new PropertyMetadata(0, OnPagingPropertyChanged)
+                new PropertyMetadata(0)
                 );
         // 总条数
         public static readonly DependencyProperty TotalCountProperty =
@@ -38,7 +38,7 @@ namespace WpfUiTest.Controls.Controls.Pagination
                 nameof(TotalCount),
                 typeof(int),
                 typeof(Pagination),
-                new PropertyMetadata(0, OnPagingPropertyChanged)
+                new PropertyMetadata(0)
                 );
         // 页大小（每页显示多少条）
         public static readonly DependencyProperty PageSizeProperty =
@@ -70,7 +70,7 @@ namespace WpfUiTest.Controls.Controls.Pagination
                 nameof(PageSizeOptions),
                 typeof(IEnumerable<int>),
                 typeof(Pagination),
-                new PropertyMetadata(new List<int> { 10, 20, 50, 100 }, OnPagingPropertyChanged)
+                new PropertyMetadata(new List<int> { 10, 20, 50, 100 })
                 );
 
         // ==================== CLR包装属性 ====================

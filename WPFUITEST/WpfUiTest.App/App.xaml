@@ -68,6 +68,16 @@
                 <!-- 样式 -->
                 <ResourceDictionary Source="/WpfUiTest.Controls;component/Resources/Styles/Modules/PaginationStyles.xaml" />
 
+
+                <!-- ===========================================================
+                    模块ToDo层自定义样式、资源、转换器等
+                ============================================================ -->
+                <!-- 转换器 -->
+                <ResourceDictionary Source="/WpfUiTest.Modules.ToDo;component/Resources/Converters/Converters.xaml" />
+                <!-- 样式 -->
+                <ResourceDictionary Source="/WpfUiTest.Modules.ToDo;component/Resources/Styles/Modules/ToDo/ToDoSearchStyles.xaml" />
+                <ResourceDictionary Source="/WpfUiTest.Modules.ToDo;component/Resources/Styles/Modules/ToDo/ToDoDataStyles.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

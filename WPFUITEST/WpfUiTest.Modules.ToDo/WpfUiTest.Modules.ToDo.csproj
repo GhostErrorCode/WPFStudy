@@ -18,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <Folder Include="Resources\Styles\Controls\" />
+    <Folder Include="Resources\Styles\Specific\" />
   </ItemGroup>
 
 </Project>

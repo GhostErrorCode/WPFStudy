@@ -4,9 +4,11 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:loading="clr-namespace:WpfUiTest.Controls.Controls.LoadingOverlay;assembly=WpfUiTest.Controls"
       xmlns:pagination="clr-namespace:WpfUiTest.Controls.Controls.Pagination;assembly=WpfUiTest.Controls"
       xmlns:local="clr-namespace:WpfUiTest.Modules.ToDo.Views"
       mc:Ignorable="d" 
+      ScrollViewer.CanContentScroll="False"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ToDoView">
 
@@ -15,17 +17,112 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
         <!-- 第1行：搜索/添加待办区域 -->
-        
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <!-- 标题搜索 -->
+            <TextBlock Text="待办标题：" Style="{StaticResource ToDoSearchFieldLabelStyle}" />
+            <ui:TextBox Text="{Binding SearchTitle}" PlaceholderText="请输入需要搜索的标题..." Style="{StaticResource ToDoSearchTextBoxStyle}" />
+            <!-- 内容搜索 -->
+            <TextBlock Text="待办内容：" Style="{StaticResource ToDoSearchFieldLabelStyle}" />
+            <ui:TextBox Text="{Binding SearchContent}" PlaceholderText="请输入需要搜索的内容..." Style="{StaticResource ToDoSearchTextBoxStyle}" />
+            <!-- 状态搜索 -->
+            <TextBlock Text="待办状态：" Style="{StaticResource ToDoSearchFieldLabelStyle}" />
+            <!-- SelectedItem：用于绑定对象，对 null 值的判断机制有缺陷，导致选不中。这里改用SeletedValue -->
+            <ComboBox
+                MinWidth="140"
+                Margin="0,5,30,5"
+                ItemsSource="{Binding TodoStatusOptions}"
+                SelectedItem="{Binding SearchStatus,Converter={StaticResource ToDoStatusSelectionConverter}}"
+                >
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource ToDoStatusDisplayConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            
+            <!-- 搜索按钮 -->
+            <ui:Button
+                Content="搜索"
+                Command="{Binding SearchCommand}"
+                Style="{StaticResource ToDoSearchUiButtonStyle}"
+                />
+            <!-- 搜索重置按钮 -->
+            <ui:Button
+                Content="重置"
+                Command="{Binding SearchResetCommand}"
+                Style="{StaticResource ToDoSearchResetUiButtonStyle}"
+                />
+        </StackPanel>
         
         <!-- 第2行：数据显示区域 -->
+        <!-- 加载动画 -->
+        <loading:LoadingRing
+            Grid.Row="1"
+            IsLoading="{Binding IsLoading}"
+            LoadingText="{Binding LoadingText}"
+            />
+        <!-- 数据显示 -->
+        <ui:DynamicScrollViewer Grid.Row="1" Margin="0,20,0,0">
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding ToDoItems}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="5,10,5,10" MinHeight="55" MinWidth="115" MaxWidth="350">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <!-- 此Border用于装饰 -->
+                            <Border Grid.RowSpan="2" Style="{StaticResource ToDoDataBorderStyle}"/>
+                            <ui:SymbolIcon Grid.Row="1" Style="{StaticResource ToDoDataUiSymbolIconStyle}" />
+                            <StackPanel Orientation="Vertical" Grid.Row="0">
+                                <TextBlock Text="{Binding Title}" Style="{StaticResource ToDoDataTitleTextBlockStyle}" />
+                                <TextBlock Text="{Binding Content}" Style="{StaticResource ToDoDataContentTextBlockStyle}" />
+                            </StackPanel>
+
+                            <!-- 右键菜单 -->
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <!-- PlacementTarget 是 WPF 中 ContextMenu、ToolTip、Popup 等弹出式控件的一个属性，它指向触发该弹出控件显示的父级元素 -->
+                                    <MenuItem
+                                        Header="添加待办事项"
+                                        />
+                                    <MenuItem
+                                        Header="修改此待办事项"
+                                        />
+                                    <MenuItem
+                                        Header="删除此待办事项"
+                                        />
+                                    <MenuItem
+                                        Header="完成此待办事项"
+                                        IsEnabled="{Binding PlacementTarget.DataContext.Status,RelativeSource={RelativeSource AncestorType=ContextMenu, Mode=FindAncestor},Converter={StaticResource ToDoStatusToBooleanConverter}}"
+                                        />
+                                </ContextMenu>
+                            </Grid.ContextMenu>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ui:DynamicScrollViewer>
         
+
         <!-- 第3行：分页区域 -->
         <pagination:Pagination
-            TotalCount="654"
-            CurrentPage="3"
+            Grid.Row="2"
+            Margin="0,0,0,20"
+            TotalCount="{Binding TotalCount}"
+            PageSizeOptions="{Binding PageSizeOptions}"
+            PageSize="{Binding PageSize,Mode=TwoWay}"
+            CurrentPage="{Binding PageIndex,Mode=TwoWay}"
+            PaginationChangedCommand="{Binding SearchCommand}"
             />
     </Grid>
 </Page>

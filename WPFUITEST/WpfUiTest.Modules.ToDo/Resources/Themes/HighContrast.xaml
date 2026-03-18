@@ -1,0 +1,30 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- 自定义高对比度主题颜色 -->
+
+    <!-- ==================== 待办事项数据区域Border渐变颜色 ==================== -->
+    <!-- 待办事项待办：深暗底 → 亮蓝（高对比，不刺眼，与已完成青绿区分） -->
+    <LinearGradientBrush x:Key="ToDoDataPendingGradientBrush" StartPoint="0,0" EndPoint="0,1">
+        <!-- 顶部：极浅冰白（黑字最清晰） -->
+        <GradientStop Color="#F5F7FF" Offset="0.0"/>
+        <!-- 上中：浅天蓝（过渡自然） -->
+        <GradientStop Color="#DBEAFE" Offset="0.4"/>
+        <!-- 下中：亮天蓝（核心视觉，黑字清晰） -->
+        <GradientStop Color="#93C5FD" Offset="0.7"/>
+        <!-- 底部：超亮冰蓝（亮度拉满，黑字绝不发闷） -->
+        <GradientStop Color="#7DD3FC" Offset="1.0"/>
+    </LinearGradientBrush>
+
+    <!-- 待办事项已完成：深暗底 → 亮青（高对比，不刺眼） -->
+    <LinearGradientBrush x:Key="ToDoDataCompletedGradientBrush" StartPoint="0,0" EndPoint="0,1">
+        <!-- 顶部：极浅冰蓝（黑字最清晰） -->
+        <GradientStop Color="#F2F9FC" Offset="0.0"/>
+        <!-- 上中：浅青绿（过渡自然） -->
+        <GradientStop Color="#D1FAE5" Offset="0.4"/>
+        <!-- 下中：亮青绿（核心视觉，黑字清晰） -->
+        <GradientStop Color="#6EE7B7" Offset="0.7"/>
+        <!-- 底部：超亮青绿（亮度拉满，黑字绝不发闷） -->
+        <GradientStop Color="#5EEAD4" Offset="1.0"/>
+    </LinearGradientBrush>
+</ResourceDictionary>
