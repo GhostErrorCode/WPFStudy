@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- 自定义高对比度主题颜色 -->
+
+    <!-- ==================== 备忘录数据区域Border渐变颜色 ==================== -->
+    <!-- 备忘录 - 中性主题（豆沙柔粉，高级耐看，无青紫干扰） -->
+    <LinearGradientBrush x:Key="MemoDataGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#F9FAFB" Offset="0.0"/>
+        <!-- 左上角浅灰基底 -->
+        <GradientStop Color="#F3E8FF" Offset="0.4"/>
+        <!-- 雾豆沙过渡 -->
+        <GradientStop Color="#E9D5FF" Offset="0.7"/>
+        <!-- 柔粉紫过渡 -->
+        <GradientStop Color="#DDD6FE" Offset="1.0"/>
+        <!-- 右下角暖藕粉 -->
+    </LinearGradientBrush>
+</ResourceDictionary>

@@ -78,6 +78,13 @@
                 <ResourceDictionary Source="/WpfUiTest.Modules.ToDo;component/Resources/Styles/Modules/ToDo/ToDoSearchStyles.xaml" />
                 <ResourceDictionary Source="/WpfUiTest.Modules.ToDo;component/Resources/Styles/Modules/ToDo/ToDoDataStyles.xaml" />
 
+                <!-- ===========================================================
+                    模块Memo层自定义样式、资源、转换器等
+                ============================================================ -->
+                <!-- 转换器 -->
+                <!-- 样式 -->
+                <ResourceDictionary Source="/WpfUiTest.Modules.Memo;component/Resources/Styles/Modules/Memo/MemoSearchStyles.xaml" />
+                <ResourceDictionary Source="/WpfUiTest.Modules.Memo;component/Resources/Styles/Modules/Memo/MemoDataStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

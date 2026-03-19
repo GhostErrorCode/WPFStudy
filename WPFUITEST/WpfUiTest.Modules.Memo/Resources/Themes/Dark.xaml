@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 自定义暗黑主题颜色 -->
+
+    <!-- ====================备忘录数据区域Border渐变颜色 ==================== -->
+    <!-- 备忘录 - 暗黑主题（暖棕琥珀，暗黑高对比，避开青/紫色系） -->
+    <LinearGradientBrush x:Key="MemoDataGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#1E293B" Offset="0.0"/>
+        <!-- 统一深基底（和你的卡片一致） -->
+        <GradientStop Color="#3F2F26" Offset="0.4"/>
+        <!-- 深棕过渡 -->
+        <GradientStop Color="#78350F" Offset="0.7"/>
+        <!-- 焦糖棕过渡 -->
+        <GradientStop Color="#B45309" Offset="1.0"/>
+        <!-- 右下角暖琥珀（醒目不刺眼） -->
+    </LinearGradientBrush>
+</ResourceDictionary>

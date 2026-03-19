@@ -13,8 +13,4 @@
     <PackageReference Include="WPF-UI.Violeta" Version="4.2.0.4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Resources\Styles\Controls\" />
-  </ItemGroup>
-
 </Project>

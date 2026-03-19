@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using WpfUiTest.Core.Data.Entities;
+using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.Core.Data.Repositories.Interfaces
 {
@@ -18,6 +20,15 @@ namespace WpfUiTest.Core.Data.Repositories.Interfaces
 
         // ========== 产品特有的业务查询方法 ==========
         // 这些方法封装了产品特有的复杂查询逻辑，使业务层代码更简洁
+
+        // 分页多条件查询
+        public Task<PagedResult<Memo>> FindPagedMemosAsync(
+            Expression<Func<Memo, bool>> predicate,
+            Func<IQueryable<Memo>, IOrderedQueryable<Memo>> orderBy,
+            int pageIndex,
+            int pageSize,
+            CancellationToken cancellationToken = default
+            );
     }
 
 }

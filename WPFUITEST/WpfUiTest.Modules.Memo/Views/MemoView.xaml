@@ -4,19 +4,417 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:loading="clr-namespace:WpfUiTest.Controls.Controls.LoadingOverlay;assembly=WpfUiTest.Controls"
+      xmlns:pagination="clr-namespace:WpfUiTest.Controls.Controls.Pagination;assembly=WpfUiTest.Controls"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:WpfUiTest.Modules.Memo.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MemoView">
 
+    <!-- 页面级资源 -->
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/WpfUiTest.Controls;component/Resources/Styles/Controls/GirdStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <!-- 标题 -->
-            <ui:TextBlock
-                Text="备忘录页 (占位符)"
-                Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
-                Style="{StaticResource TitleOneUiTextBlockStyle}"
+        <!-- 2行 -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <!-- 第1行：搜索/添加备忘录区域 -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <!-- 标题搜索 -->
+            <TextBlock Text="备忘录标题：" Style="{StaticResource MemoSearchFieldLabelStyle}" />
+            <ui:TextBox Text="{Binding SearchTitle}" PlaceholderText="请输入需要搜索的标题..." Style="{StaticResource MemoSearchTextBoxStyle}" />
+            <!-- 内容搜索 -->
+            <TextBlock Text="备忘录内容：" Style="{StaticResource MemoSearchFieldLabelStyle}" />
+            <ui:TextBox Text="{Binding SearchContent}" PlaceholderText="请输入需要搜索的内容..." Style="{StaticResource MemoSearchTextBoxStyle}" />
+
+            <!-- 搜索按钮 -->
+            <ui:Button
+                Content="搜索"
+                Command="{Binding SearchCommand}"
+                Style="{StaticResource MemoSearchUiButtonStyle}"
+                />
+            <!-- 搜索重置按钮 -->
+            <ui:Button
+                Content="重置"
+                Command="{Binding SearchResetCommand}"
+                Style="{StaticResource MemoSearchResetUiButtonStyle}"
+                />
+            <!-- 画一条 2 像素宽、灰色的垂直分割线 -->
+            <Rectangle Width="1.3" Fill="Gray" HorizontalAlignment="Center" Margin="0,8,0,8" />
+            <!-- 添加备忘录事项按钮 -->
+            <ui:Button
+                Content="添加备忘录"
+                Command="{Binding OpenAddDrawerCommand}"
+                Style="{StaticResource AddMemoUiButtonStyle}"
                 />
         </StackPanel>
+
+        <!-- 第2行：数据显示区域 -->
+        <!-- 加载动画 -->
+        <loading:LoadingRing
+            Grid.Row="1"
+            Panel.ZIndex="9"
+            IsLoading="{Binding IsLoading}"
+            LoadingText="{Binding LoadingText}"
+            />
+        <!-- 数据显示 -->
+        <ui:DynamicScrollViewer Grid.Row="1" Margin="0,20,0,0">
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding MemoItems}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid
+                            Margin="5,10,5,10"
+                            MinHeight="55"
+                            MinWidth="115"
+                            MaxWidth="350"
+                            Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                            Style="{StaticResource JiggleGridStyle}" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <!-- 此Border用于装饰 -->
+                            <Border Grid.RowSpan="2" Style="{StaticResource MemoDataBorderStyle}" />
+                            <ui:SymbolIcon Grid.Row="1" Style="{StaticResource MemoDataUiSymbolIconStyle}" />
+                            <StackPanel Orientation="Vertical" Grid.Row="0">
+                                <TextBlock Text="{Binding Title}" Style="{StaticResource MemoDataTitleTextBlockStyle}" />
+                                <TextBlock Text="{Binding Content}" Style="{StaticResource MemoDataContentTextBlockStyle}" />
+                            </StackPanel>
+
+                            <!-- 右键菜单 -->
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <!-- PlacementTarget 是 WPF 中 ContextMenu、ToolTip、Popup 等弹出式控件的一个属性，它指向触发该弹出控件显示的父级元素 -->
+                                    <MenuItem
+                                        Header="添加备忘录"
+                                        Command="{Binding PlacementTarget.Tag.OpenAddDrawerCommand,RelativeSource={RelativeSource AncestorType=ContextMenu, Mode=FindAncestor}}"
+                                        />
+                                    <MenuItem
+                                        Header="修改此备忘录"
+                                        Command="{Binding PlacementTarget.Tag.OpenEditDrawerCommand,RelativeSource={RelativeSource AncestorType=ContextMenu, Mode=FindAncestor}}"
+                                        CommandParameter="{Binding PlacementTarget.DataContext,RelativeSource={RelativeSource AncestorType=ContextMenu, Mode=FindAncestor}}"
+                                        />
+                                    <MenuItem
+                                        Header="删除此备忘录"
+                                        Command="{Binding PlacementTarget.Tag.OpenDeleteDrawerCommand,RelativeSource={RelativeSource AncestorType=ContextMenu, Mode=FindAncestor}}"
+                                        CommandParameter="{Binding PlacementTarget.DataContext,RelativeSource={RelativeSource AncestorType=ContextMenu, Mode=FindAncestor}}"
+                                        />
+                                </ContextMenu>
+                            </Grid.ContextMenu>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ui:DynamicScrollViewer>
+
+        <!-- 第3行：分页区域 -->
+        <pagination:Pagination
+            Grid.Row="2"
+            Margin="0,0,0,20"
+            TotalCount="{Binding TotalCount}"
+            PageSizeOptions="{Binding PageSizeOptions}"
+            PageSize="{Binding PageSize,Mode=TwoWay}"
+            CurrentPage="{Binding PageIndex,Mode=TwoWay}"
+            PaginationChangedCommand="{Binding SearchCommand}"
+            />
+
+
+        <!-- =================================================
+        新增备忘录抽屉区域
+        ================================================== -->
+        <!-- 抽屉区域，横跨3行 -->
+        <!-- 遮罩层，仅在抽屉打开时可见，点击关闭，Z为1表示最底层，这样抽屉在Gird的上方 -->
+        <!-- 
+            在 WPF 中，一个元素要能够捕获鼠标事件（如点击），必须满足命中测试（Hit Testing）的条件。
+            对于像 Grid 这样的面板控件，默认情况下，如果它的 Background 为 null（即未设置背景），
+            那么它不会参与命中测试，鼠标点击会直接穿透它，落到它下面的元素上。这就是为什么没有背景色的 Grid 无法响应点击的原因。
+        -->
+        <Grid Grid.RowSpan="3" Panel.ZIndex="1" Background="Transparent" Visibility="{Binding IsAddDrawerOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDown">
+                    <i:InvokeCommandAction Command="{Binding CloseAddDrawerCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Grid>
+        <!-- 添加备忘录抽屉 -->
+        <ui:Drawer
+            Grid.RowSpan="3"
+            IsOpen="{Binding IsAddDrawerOpen}"
+            Width="450"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Stretch"
+            Placement="Right" Cursor=""
+            >
+            <ui:Drawer.Style>
+                <Style TargetType="{x:Type ui:Drawer}" BasedOn="{StaticResource {x:Type ui:Drawer}}">
+                    <!-- 此触发器用于调整外边距，因NavigationView控件的ContentOverlay区域默认有内边距，而Drawer又是贴着Page边缘的，所以会露出来Drawer，由此调整外边距即可 -->
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsAddDrawerOpen}" Value="false">
+                            <Setter Property="Margin" Value="0,0,-42,30" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsAddDrawerOpen}" Value="true">
+                            <Setter Property="Margin" Value="0,0,0,30" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ui:Drawer.Style>
+            <ui:DynamicScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!-- 背景色，装饰用 -->
+                    <Border Grid.RowSpan="3" Style="{StaticResource MemoDrawerBorderStyle}" />
+
+                    <!-- 第一行：抽屉标题 -->
+                    <TextBlock Grid.Row="0" Text="添加备忘录" Style="{StaticResource MemoDrawerTitleTextBlockStyle}" />
+
+                    <!-- 第二行：数据显示 -->
+                    <Grid Grid.Row="1" Margin="10,10,10,20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <!-- 备忘录ID -->
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="ID" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="0" Grid.Column="1" Text="&lt;默认保存至数据库后的ID&gt;" IsEnabled="False" Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" />
+                        <!-- 备忘录标题-->
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="标题" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MemoItem.Title,UpdateSourceTrigger=PropertyChanged}" PlaceholderText="请输入备忘录标题..." Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" />
+                        <!-- 备忘录内容 -->
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="内容" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MemoItem.Content,UpdateSourceTrigger=PropertyChanged}" PlaceholderText="请输入备忘录内容..." Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" Cursor="IBeam" />
+                        <!-- 备忘录创建日期 -->
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="创建时间" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="3" Grid.Column="1" Text="&lt;默认提交时的本地系统日期时间&gt;" IsEnabled="False" Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" />
+                        <!-- 备忘录修改日期 -->
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="修改时间" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="4" Grid.Column="1" Text="&lt;默认提交时的本地系统日期时间&gt;" IsEnabled="False" Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" Cursor="" />
+                    </Grid>
+
+                    <!-- 第三行：按钮区域 -->
+                    <Grid Grid.Row="2">
+                        <StackPanel Orientation="Horizontal">
+                            <!-- 修改备忘录按钮 -->
+                            <ui:Button Command="{Binding AddMemoItemCommand}" Icon="{ui:SymbolIcon Symbol=Add24}" Content="添加！保存至数据库" Style="{StaticResource MemoDrawerPrimaryUiButtonStyle}" />
+                            <ui:Button Command="{Binding CloseAddDrawerCommand}" Style="{StaticResource MemoDrawerSecondaryUiButtonStyle}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </ui:DynamicScrollViewer>
+        </ui:Drawer>
+
+        <!-- =================================================
+        修改备忘录抽屉区域
+        ================================================== -->
+        <!-- 抽屉区域，横跨3行 -->
+        <!-- 遮罩层，仅在抽屉打开时可见，点击关闭，Z为1表示最底层，这样抽屉在Gird的上方 -->
+        <!-- 
+            在 WPF 中，一个元素要能够捕获鼠标事件（如点击），必须满足命中测试（Hit Testing）的条件。
+            对于像 Grid 这样的面板控件，默认情况下，如果它的 Background 为 null（即未设置背景），
+            那么它不会参与命中测试，鼠标点击会直接穿透它，落到它下面的元素上。这就是为什么没有背景色的 Grid 无法响应点击的原因。
+        -->
+        <Grid Grid.RowSpan="3" Panel.ZIndex="1" Background="Transparent" Visibility="{Binding IsEditDrawerOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDown">
+                    <i:InvokeCommandAction Command="{Binding CloseEditDrawerCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Grid>
+        <!-- 修改备忘录抽屉 -->
+        <ui:Drawer
+            Grid.RowSpan="3"
+            IsOpen="{Binding IsEditDrawerOpen}"
+            Width="450"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Stretch"
+            Placement="Right"
+            >
+            <ui:Drawer.Style>
+                <Style TargetType="{x:Type ui:Drawer}" BasedOn="{StaticResource {x:Type ui:Drawer}}">
+                    <!-- 此触发器用于调整外边距，因NavigationView控件的ContentOverlay区域默认有内边距，而Drawer又是贴着Page边缘的，所以会露出来Drawer，由此调整外边距即可 -->
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsEditDrawerOpen}" Value="false">
+                            <Setter Property="Margin" Value="0,0,-42,30" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsEditDrawerOpen}" Value="true">
+                            <Setter Property="Margin" Value="0,0,0,30" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ui:Drawer.Style>
+            <ui:DynamicScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!-- 背景色，装饰用 -->
+                    <Border Grid.RowSpan="3" Style="{StaticResource MemoDrawerBorderStyle}" />
+
+                    <!-- 第一行：抽屉标题 -->
+                    <TextBlock Grid.Row="0" Text="修改备忘录" Style="{StaticResource MemoDrawerTitleTextBlockStyle}" />
+
+                    <!-- 第二行：数据显示 -->
+                    <Grid Grid.Row="1" Margin="10,10,10,20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <!-- 备忘录ID -->
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="ID" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="0" Grid.Column="1" Text="{Binding MemoItem.Id}" IsReadOnly="True" Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" />
+                        <!-- 备忘录标题-->
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="标题" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MemoItem.Title,UpdateSourceTrigger=PropertyChanged}" PlaceholderText="请输入备忘录标题..." Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" />
+                        <!-- 备忘录内容 -->
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="内容" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MemoItem.Content,UpdateSourceTrigger=PropertyChanged}" PlaceholderText="请输入备忘录内容..." Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" />
+                        <!-- 备忘录创建日期 -->
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="创建时间" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="3" Grid.Column="1" Text="{Binding MemoItem.CreateDate}" IsReadOnly="True" Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" />
+                        <!-- 备忘录修改日期 -->
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="修改时间" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="4" Grid.Column="1" Text="{Binding MemoItem.UpdateDate}" IsReadOnly="True" Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" Cursor="IBeam" />
+                    </Grid>
+
+                    <!-- 第三行：按钮区域 -->
+                    <Grid Grid.Row="2" Cursor="">
+                        <StackPanel Orientation="Horizontal">
+                            <!-- 修改备忘录按钮 -->
+                            <ui:Button Command="{Binding UpdateMemoItemCommand}" Icon="{ui:SymbolIcon Symbol=Edit24}" Content="修改！然后存到数据库去" Style="{StaticResource MemoDrawerPrimaryUiButtonStyle}" />
+                            <ui:Button Command="{Binding CloseEditDrawerCommand}" Style="{StaticResource MemoDrawerSecondaryUiButtonStyle}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </ui:DynamicScrollViewer>
+        </ui:Drawer>
+
+
+        <!-- =================================================
+        删除备忘录抽屉区域
+        ================================================== -->
+        <!-- 抽屉区域，横跨3行 -->
+        <!-- 遮罩层，仅在抽屉打开时可见，点击关闭，Z为1表示最底层，这样抽屉在Gird的上方 -->
+        <!-- 
+            在 WPF 中，一个元素要能够捕获鼠标事件（如点击），必须满足命中测试（Hit Testing）的条件。
+            对于像 Grid 这样的面板控件，默认情况下，如果它的 Background 为 null（即未设置背景），
+            那么它不会参与命中测试，鼠标点击会直接穿透它，落到它下面的元素上。这就是为什么没有背景色的 Grid 无法响应点击的原因。
+        -->
+        <Grid Grid.RowSpan="3" Panel.ZIndex="1" Background="Transparent" Visibility="{Binding IsDeleteDrawerOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDown">
+                    <i:InvokeCommandAction Command="{Binding CloseDeleteDrawerCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Grid>
+        <!-- 删除备忘录抽屉 -->
+        <ui:Drawer
+            Grid.RowSpan="3"
+            IsOpen="{Binding IsDeleteDrawerOpen}"
+            Width="450"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Stretch"
+            Placement="Right"
+            >
+            <ui:Drawer.Style>
+                <Style TargetType="{x:Type ui:Drawer}" BasedOn="{StaticResource {x:Type ui:Drawer}}">
+                    <!-- 此触发器用于调整外边距，因NavigationView控件的ContentOverlay区域默认有内边距，而Drawer又是贴着Page边缘的，所以会露出来Drawer，由此调整外边距即可 -->
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsDeleteDrawerOpen}" Value="false">
+                            <Setter Property="Margin" Value="0,0,-42,30" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsDeleteDrawerOpen}" Value="true">
+                            <Setter Property="Margin" Value="0,0,0,30" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ui:Drawer.Style>
+            <ui:DynamicScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <Grid Cursor="">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!-- 背景色，装饰用 -->
+                    <Border Grid.RowSpan="3" Style="{StaticResource MemoDrawerBorderStyle}" />
+
+                    <!-- 第一行：抽屉标题 -->
+                    <TextBlock Grid.Row="0" Text="删除备忘录" Style="{StaticResource MemoDrawerTitleTextBlockStyle}" />
+
+                    <!-- 第二行：数据显示 -->
+                    <Grid Grid.Row="1" Margin="10,10,10,20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <!-- 备忘录ID -->
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="ID" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="0" Grid.Column="1" Text="{Binding MemoItem.Id}" IsReadOnly="True" Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" />
+                        <!-- 备忘录标题-->
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="标题" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MemoItem.Title,UpdateSourceTrigger=PropertyChanged}" PlaceholderText="请输入备忘录标题..." IsReadOnly="True" Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" />
+                        <!-- 备忘录内容 -->
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="内容" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MemoItem.Content,UpdateSourceTrigger=PropertyChanged}" PlaceholderText="请输入备忘录内容..." IsReadOnly="True" Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" Cursor="IBeam" />
+                        <!-- 备忘录创建日期 -->
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="创建时间" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="3" Grid.Column="1" Text="{Binding MemoItem.CreateDate}" IsReadOnly="True" Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" />
+                        <!-- 备忘录修改日期 -->
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="修改时间" Style="{StaticResource MemoDrawerFieldLabelTextBlockStyle}" />
+                        <ui:TextBox Grid.Row="4" Grid.Column="1" Text="{Binding MemoItem.UpdateDate}" IsReadOnly="True" Style="{StaticResource MemoDrawerDisplayTextBoxStyle}" />
+                    </Grid>
+
+                    <!-- 第三行：按钮区域 -->
+                    <Grid Grid.Row="2">
+                        <StackPanel Orientation="Horizontal">
+                            <!-- 修改备忘录按钮 -->
+                            <ui:Button Command="{Binding DeleteMemoItemCommand}" Appearance="Danger" Icon="{ui:SymbolIcon Symbol=Delete24}" Content="删除！我意已决" Style="{StaticResource MemoDrawerPrimaryUiButtonStyle}" />
+                            <ui:Button Command="{Binding CloseDeleteDrawerCommand}" Style="{StaticResource MemoDrawerSecondaryUiButtonStyle}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </ui:DynamicScrollViewer>
+        </ui:Drawer>
     </Grid>
 </Page>
