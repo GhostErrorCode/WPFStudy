@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 自定义暗黑主题颜色 -->
+
+    <!-- ==================== 待办事项数据区域Border渐变颜色 ==================== -->
+    <!-- 待办事项待办：靛蓝紫底（暗黑主题，与已完成强区分） -->
+    <LinearGradientBrush x:Key="ToDoDataPendingGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#1E293B" Offset="0.0"/>
+        <!-- 统一左上角深底色（保持卡片基底一致） -->
+        <GradientStop Color="#3B4A7A" Offset="0.4"/>
+        <!-- 中间暗靛蓝（过渡） -->
+        <GradientStop Color="#4F62B1" Offset="0.7"/>
+        <!-- 中后段靛蓝（核心过渡） -->
+        <GradientStop Color="#6366F1" Offset="1.0"/>
+        <!-- 右下角柔靛紫（醒目不刺眼） -->
+    </LinearGradientBrush>
+
+    <!-- 待办事项已完成：暗青底 → 柔绿（暗黑系，渐变突出） -->
+    <LinearGradientBrush x:Key="ToDoDataCompletedGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#1E293B" Offset="0.0"/>
+        <!-- 左上角深青底 -->
+        <GradientStop Color="#0F766E" Offset="0.4"/>
+        <!-- 中间暗青绿（主色#10B981深化） -->
+        <GradientStop Color="#14B8A6" Offset="0.7"/>
+        <!-- 中后段深青绿（接近主色） -->
+        <GradientStop Color="#10B981" Offset="1.0"/>
+        <!-- 右下角亮青绿（核心主色） -->
+    </LinearGradientBrush>
+</ResourceDictionary>

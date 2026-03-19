@@ -38,7 +38,7 @@ namespace WpfUiTest.App.Services.Implements
             }
 
             // 加载新主题（包括全局和类库中的）
-            string[] themeAssemblies = new string[] { "WpfUiTest.App", "WpfUiTest.Controls"};
+            string[] themeAssemblies = new string[] { "WpfUiTest.App", "WpfUiTest.Controls", "WpfUiTest.Modules.ToDo"};
             foreach(string assemblyName in themeAssemblies)
             {
                 this._appResources.Add(new ResourceDictionary()

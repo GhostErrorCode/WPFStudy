@@ -12,7 +12,7 @@
         WindowBackdropType="Mica"
         WindowCornerPreference="Round"
         WindowStartupLocation="CenterScreen"
-        Title="MainView" Height="802" Width="1450"
+        Title="MainView" Height="870" Width="1580"
         MinHeight="450" MinWidth="800">
     <!-- ===========================================================
     声明:

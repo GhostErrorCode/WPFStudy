@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:WpfUiTest.Modules.ToDo.Resources.Converters">
+    
+    <!-- 待办事项状态枚举 转 待办事项状态可读字符 -->
+    <converters:ToDoStatusDisplayConverter x:Key="ToDoStatusDisplayConverter" />
+
+    <!-- ComboBox选中项与VM层搜索状态参数转换 -->
+    <converters:ToDoStatusSelectionConverter x:Key="ToDoStatusSelectionConverter" />
+
+    <!-- 待办状态 转 布尔值 -->
+    <converters:ToDoStatusToBooleanConverter x:Key="ToDoStatusToBooleanConverter" />
+</ResourceDictionary>

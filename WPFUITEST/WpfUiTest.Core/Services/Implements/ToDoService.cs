@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using WpfUiTest.Core.Data.Entities;
 using WpfUiTest.Core.Data.Repositories.Interfaces;
@@ -10,6 +11,7 @@ using WpfUiTest.Core.DTOs.ToDo;
 using WpfUiTest.Core.Mapping;
 using WpfUiTest.Core.Services.Interfaces;
 using WpfUiTest.Shared.Enums;
+using WpfUiTest.Shared.Extensions;
 using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.Core.Services.Implements
@@ -59,6 +61,49 @@ namespace WpfUiTest.Core.Services.Implements
                 this._logger.LogError("[ToDoService] [用户：{Account}（{Id}）] 查询全部未完成待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
                 // 转为Dto集合并返回
                 return ServiceResult<List<ToDoDto>>.Failure("查询全部未完成待办事项失败");
+            }
+        }
+
+        // 根据条件分页查询待办事项
+        public async Task<ServiceResult<PagedResult<ToDoDto>>> GetPagedToDosAsync(PagedQueryToDoDto pagedQueryToDoDto)
+        {
+            try
+            {
+                // 判断传入的pagedQueryToDoDto是否为空
+                if(pagedQueryToDoDto == null)
+                {
+                    // 输出日志
+                    this._logger.LogError("[ToDoService] [用户：{Account}（{Id}）] 分页查询时参数不允许为空。", this._userService.UserAccount, this._userService.UserId);
+                    // 转为Dto集合并返回
+                    return ServiceResult<PagedResult<ToDoDto>>.Failure("分页查询时参数不允许为空");
+                }
+                // 分页参数验证
+                if (pagedQueryToDoDto.PageIndex < 1) pagedQueryToDoDto.PageIndex = 1;
+                if (pagedQueryToDoDto.PageSize < 1) pagedQueryToDoDto.PageSize = 10;
+
+                // 根据传入的查询条件进行拼接
+                Expression<Func<ToDo, bool>> predicate = (ToDo toDo) => toDo.UserId == this._userService.UserId;
+                // 判断是否搜索标题
+                if (!string.IsNullOrWhiteSpace(pagedQueryToDoDto.Title)) { predicate = predicate.And((ToDo toDo) => toDo.Title.Contains(pagedQueryToDoDto.Title)); }
+                // 判断是否搜索内容
+                if (!string.IsNullOrWhiteSpace(pagedQueryToDoDto.Content)) { predicate = predicate.And((ToDo toDo) => toDo.Content.Contains(pagedQueryToDoDto.Content)); }
+                // 判断是否搜索状态
+                if (pagedQueryToDoDto.Status != null) { predicate = predicate.And((ToDo toDo) => toDo.Status == pagedQueryToDoDto.Status); }
+
+                // 从数据库中查找当前用户的多条件分页数据
+                PagedResult<ToDo> pagedResult = await this._toDoRepository.FindPagedToDosAsync(predicate, toDoOrderby => toDoOrderby.OrderByDescending((ToDo toDo) => toDo.CreateDate), pagedQueryToDoDto.PageIndex, pagedQueryToDoDto.PageSize);
+
+                // 输出日志
+                this._logger.LogInformation("[ToDoService] [用户：{Account}（{Id}）] 分页查询待办事项成功。当前页={pageIndex}, 数据条数={Count}, 总数据条数={allCount}", this._userService.UserAccount, this._userService.UserId, pagedQueryToDoDto.PageIndex, pagedResult.Items.Count, pagedResult.TotalCount);
+                // 转为Dto集合并返回
+                return ServiceResult<PagedResult<ToDoDto>>.Success("分页查询待办事项成功", new PagedResult<ToDoDto>() { TotalCount = pagedResult.TotalCount, Items = pagedResult.Items.ToToDoDtoCollection() });
+            }
+            catch(Exception ex)
+            {
+                // 输出日志
+                this._logger.LogError("[ToDoService] [用户：{Account}（{Id}）] 分页查询待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                // 转为Dto集合并返回
+                return ServiceResult<PagedResult<ToDoDto>>.Failure("分页查询待办事项失败");
             }
         }
 

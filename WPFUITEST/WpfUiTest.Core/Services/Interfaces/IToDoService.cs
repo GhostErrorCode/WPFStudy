@@ -15,6 +15,9 @@ namespace WpfUiTest.Core.Services.Interfaces
         // 查询所有未完成（待办）待办事项
         public Task<ServiceResult<List<ToDoDto>>> GetAllPendingToDosAsync();
 
+        // 根据条件分页查询待办事项
+        public Task<ServiceResult<PagedResult<ToDoDto>>> GetPagedToDosAsync(PagedQueryToDoDto pagedQueryToDoDto);
+
         // 添加待办事项
         public Task<ServiceResult<ToDoDto>> AddToDoAsync(AddToDoDto addToDoDto);
 

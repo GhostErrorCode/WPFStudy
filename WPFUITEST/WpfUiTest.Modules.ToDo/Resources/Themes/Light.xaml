@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 自定义明亮主题颜色 -->
+
+    <!-- ==================== 待办事项数据区域Border渐变颜色 ==================== -->
+    <!-- 待办事项待办：柔蓝 → 浅天蓝（明亮系，对比明显不刺眼） -->
+    <LinearGradientBrush x:Key="ToDoDataPendingGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FFFFFF" Offset="0.0"/>
+        <!-- 左上角纯白（黑字清晰） -->
+        <GradientStop Color="#DBEAFE" Offset="0.3"/>
+        <!-- 中间浅天蓝（标准待办色浅化） -->
+        <GradientStop Color="#BFDBFE" Offset="1.0"/>
+        <!-- 右下角柔天蓝（主色进一步浅化） -->
+    </LinearGradientBrush>
+
+    <!-- 待办事项已完成：柔青 → 浅绿（明亮系，对比明显不刺眼） -->
+    <LinearGradientBrush x:Key="ToDoDataCompletedGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FFFFFF" Offset="0.0"/>
+        <!-- 左上角纯白（黑字清晰） -->
+        <GradientStop Color="#D1FAE5" Offset="0.3"/>
+        <!-- 中间浅青绿（主色#10B981浅化） -->
+        <GradientStop Color="#A7F3D0" Offset="1.0"/>
+        <!-- 右下角柔青绿（主色进一步浅化） -->
+    </LinearGradientBrush>
+</ResourceDictionary>
