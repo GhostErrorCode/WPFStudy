@@ -1,0 +1,37 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- 独立的抖动动画 -->
+    <!--  ====================== 卡片Q弹抖动动画合集 ====================== -->
+    <!--  动画名称：JiggleStoryboard | 效果：缩放弹动 + 左右摇摆  -->
+    <Storyboard x:Key="JiggleStoryboard">
+
+        <!-- ====================== X轴缩放动画 ====================== -->
+        <!-- TargetProperty：绑定控件变换组中 第一个子元素(缩放)的X轴缩放比例 -->
+        <!-- From：动画起始缩放值 = 原始大小(1) -->
+        <!-- To：动画结束缩放值 = 放大10%(1.1) -->
+        <!-- Duration：单次动画时长 = 0.05秒(快速弹动) -->
+        <!-- AutoReverse：动画执行完后自动反向执行(放大后自动缩回) -->
+        <!-- FillBehavior：动画结束后恢复控件初始状态 -->
+        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"
+                     From="1" To="1.1" Duration="0:0:0.05" AutoReverse="True" FillBehavior="Stop"/>
+
+        <!-- ====================== Y轴缩放动画 ====================== -->
+        <!-- TargetProperty：绑定控件变换组中 第一个子元素(缩放)的Y轴缩放比例 -->
+        <!-- 时长、回弹、结束行为 与X轴完全同步，保证等比例缩放不变形 -->
+        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY"
+                     From="1" To="1.1" Duration="0:0:0.05" AutoReverse="True" FillBehavior="Stop"/>
+
+        <!-- ====================== 旋转摇摆动画 ====================== -->
+        <!-- TargetProperty：绑定控件变换组中 第二个子元素(旋转)的角度值 -->
+        <!-- From：旋转起始角度 = 向左偏2° -->
+        <!-- To：旋转结束角度 = 向右偏2° -->
+        <!-- Duration：单次旋转时长 = 0.1秒 -->
+        <!-- RepeatBehavior：动画重复执行次数 = 2次 -->
+        <!-- AutoReverse：旋转后自动回弹 -->
+        <!-- FillBehavior：动画结束后恢复初始角度 -->
+        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Children[1].Angle"
+                     From="-2" To="2" Duration="0:0:0.1" AutoReverse="True" RepeatBehavior="2x" FillBehavior="Stop"/>
+    </Storyboard>
+
+</ResourceDictionary>

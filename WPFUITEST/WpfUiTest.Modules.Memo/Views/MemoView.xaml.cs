@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfUiTest.Modules.Memo.ViewModels;
 
 namespace WpfUiTest.Modules.Memo.Views
 {
@@ -18,9 +19,12 @@ namespace WpfUiTest.Modules.Memo.Views
     /// </summary>
     public partial class MemoView : Page
     {
-        public MemoView()
+        public MemoView(MemoViewModel memoViewModel)
         {
             InitializeComponent();
+
+            // 依赖注入VM
+            this.DataContext = memoViewModel;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using WpfUiTest.Core.Data.Entities;
 using WpfUiTest.Core.Data.Repositories.Implements;
@@ -8,9 +9,10 @@ using WpfUiTest.Core.Data.Repositories.Interfaces;
 using WpfUiTest.Core.Data.UnitOfWork.Implements;
 using WpfUiTest.Core.Data.UnitOfWork.Interfaces;
 using WpfUiTest.Core.DTOs.Memo;
-using WpfUiTest.Core.DTOs.ToDo;
+using WpfUiTest.Core.DTOs.Memo;
 using WpfUiTest.Core.Mapping;
 using WpfUiTest.Core.Services.Interfaces;
+using WpfUiTest.Shared.Extensions;
 using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.Core.Services.Implements
@@ -21,7 +23,7 @@ namespace WpfUiTest.Core.Services.Implements
         // ==================== 字段、属性 ====================
         // 字段：用户服务
         private readonly IUserService _userService;
-        // 字段：待办事项仓储
+        // 字段：备忘录仓储
         private readonly IMemoRepository _memoRepository;
         // 字段：工作单元
         private readonly IUnitOfWork _unitOfWork;
@@ -61,6 +63,47 @@ namespace WpfUiTest.Core.Services.Implements
                 this._logger.LogError("[MemoService] [用户：{Account}（{Id}）] 查询全部备忘录失败。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
                 // 转为Dto集合并返回
                 return ServiceResult<List<MemoDto>>.Failure("查询全部备忘录失败");
+            }
+        }
+
+        // 根据条件分页查询备忘录
+        public async Task<ServiceResult<PagedResult<MemoDto>>> GetPagedMemosAsync(PagedQueryMemoDto pagedQueryMemoDto)
+        {
+            try
+            {
+                // 判断传入的pagedQueryMemoDto是否为空
+                if (pagedQueryMemoDto == null)
+                {
+                    // 输出日志
+                    this._logger.LogError("[MemoService] [用户：{Account}（{Id}）] 分页查询时参数不允许为空。", this._userService.UserAccount, this._userService.UserId);
+                    // 转为Dto集合并返回
+                    return ServiceResult<PagedResult<MemoDto>>.Failure("分页查询时参数不允许为空");
+                }
+                // 分页参数验证
+                if (pagedQueryMemoDto.PageIndex < 1) pagedQueryMemoDto.PageIndex = 1;
+                if (pagedQueryMemoDto.PageSize < 1) pagedQueryMemoDto.PageSize = 20;
+
+                // 根据传入的查询条件进行拼接
+                Expression<Func<Memo, bool>> predicate = (Memo Memo) => Memo.UserId == this._userService.UserId;
+                // 判断是否搜索标题
+                if (!string.IsNullOrWhiteSpace(pagedQueryMemoDto.Title)) { predicate = predicate.And((Memo Memo) => Memo.Title.Contains(pagedQueryMemoDto.Title)); }
+                // 判断是否搜索内容
+                if (!string.IsNullOrWhiteSpace(pagedQueryMemoDto.Content)) { predicate = predicate.And((Memo Memo) => Memo.Content.Contains(pagedQueryMemoDto.Content)); }
+
+                // 从数据库中查找当前用户的多条件分页数据
+                PagedResult<Memo> pagedResult = await this._memoRepository.FindPagedMemosAsync(predicate, MemoOrderby => MemoOrderby.OrderByDescending((Memo Memo) => Memo.CreateDate), pagedQueryMemoDto.PageIndex, pagedQueryMemoDto.PageSize);
+
+                // 输出日志
+                this._logger.LogInformation("[MemoService] [用户：{Account}（{Id}）] 分页查询备忘录成功。当前页={pageIndex}, 数据条数={Count}, 总数据条数={allCount}", this._userService.UserAccount, this._userService.UserId, pagedQueryMemoDto.PageIndex, pagedResult.Items.Count, pagedResult.TotalCount);
+                // 转为Dto集合并返回
+                return ServiceResult<PagedResult<MemoDto>>.Success("分页查询备忘录成功", new PagedResult<MemoDto>() { TotalCount = pagedResult.TotalCount, Items = pagedResult.Items.ToMemoDtoCollection() });
+            }
+            catch (Exception ex)
+            {
+                // 输出日志
+                this._logger.LogError("[MemoService] [用户：{Account}（{Id}）] 分页查询备忘录时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                // 转为Dto集合并返回
+                return ServiceResult<PagedResult<MemoDto>>.Failure("分页查询备忘录失败");
             }
         }
 

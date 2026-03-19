@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WpfUiTest.Modules.Memo.ViewModels;
 using WpfUiTest.Modules.Memo.Views;
 
 namespace WpfUiTest.Modules.Memo
@@ -16,7 +17,7 @@ namespace WpfUiTest.Modules.Memo
             services.AddSingleton<MemoView>();
 
             // 注册ViewModel
-            // services.AddTransient<SettingsViewModel>();
+            services.AddTransient<MemoViewModel>();
 
             // 如果模块有其他服务，也在这里注册
 

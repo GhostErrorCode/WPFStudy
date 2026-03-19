@@ -13,6 +13,15 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ToDoView">
 
+    <!-- 页面级资源 -->
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/WpfUiTest.Controls;component/Resources/Styles/Controls/GirdStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
     <Grid>
         <!-- 2行 -->
         <Grid.RowDefinitions>
@@ -70,6 +79,7 @@
         <!-- 加载动画 -->
         <loading:LoadingRing
             Grid.Row="1"
+            Panel.ZIndex="9"
             IsLoading="{Binding IsLoading}"
             LoadingText="{Binding LoadingText}"
             />
@@ -83,7 +93,13 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="5,10,5,10" MinHeight="55" MinWidth="115" MaxWidth="350" Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                        <Grid
+                            Margin="5,10,5,10"
+                            MinHeight="55"
+                            MinWidth="115"
+                            MaxWidth="350"
+                            Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                            Style="{StaticResource JiggleGridStyle}" >
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
@@ -262,7 +278,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Grid>
-        <!-- 添加待办事项抽屉 -->
+        <!-- 修改待办事项抽屉 -->
         <ui:Drawer
             Grid.RowSpan="3"
             IsOpen="{Binding IsEditDrawerOpen}"
@@ -367,7 +383,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Grid>
-        <!-- 添加待办事项抽屉 -->
+        <!-- 删除待办事项抽屉 -->
         <ui:Drawer
             Grid.RowSpan="3"
             IsOpen="{Binding IsDeleteDrawerOpen}"

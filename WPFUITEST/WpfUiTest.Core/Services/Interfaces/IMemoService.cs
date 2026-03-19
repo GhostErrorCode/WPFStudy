@@ -15,6 +15,9 @@ namespace WpfUiTest.Core.Services.Interfaces
         // 查询所有备忘录
         public Task<ServiceResult<List<MemoDto>>> GetAllMemosAsync();
 
+        // 根据条件分页查询备忘录
+        public Task<ServiceResult<PagedResult<MemoDto>>> GetPagedMemosAsync(PagedQueryMemoDto pagedQueryMemoDto);
+
         // 添加备忘录
         public Task<ServiceResult<MemoDto>> AddMemoAsync(AddMemoDto addMemoDto);
 

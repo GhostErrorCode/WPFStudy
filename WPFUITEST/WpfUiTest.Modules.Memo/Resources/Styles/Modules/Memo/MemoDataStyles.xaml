@@ -1,0 +1,104 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <!-- 先把Icon控件单独拿出来，这里有个大坑，Icon只有一个实例，导致第一个控件设置后，第二个控件再设置就会把第一个控件的实例抢走，导致第一个控件的Icon就没了 -->
+    <!-- 共享实例设置为False -->
+    <!-- 默认按钮Icon -->
+    <ui:SymbolIcon x:Key="IconCheckmarkStarburst24" Symbol="CheckmarkStarburst24" x:Shared="False"/>
+    <!-- 对勾图标 -->
+    <ui:SymbolIcon x:Key="IconClock24" Symbol="Clock24" x:Shared="False"/>
+    <!-- 叉叉图标 -->
+    <ui:SymbolIcon x:Key="IconDismiss24" Symbol="Dismiss24" x:Shared="False"/>
+
+
+    <!-- 数据显示Border样式 -->
+    <Style x:Key="MemoDataBorderStyle" TargetType="{x:Type Border}">
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="CornerRadius" Value="10,10,10,10" />
+        <!-- 裁剪超出区域 -->
+        <Setter Property="ClipToBounds" Value="True" />
+        <!-- 渐变背景色 -->
+        <Setter Property="Background" Value="{DynamicResource MemoDataGradientBrush}" />
+    </Style>
+
+    <!-- 数据显示图标，用于区分已完成和待办状态 -->
+    <Style x:Key="MemoDataUiSymbolIconStyle" TargetType="{x:Type ui:SymbolIcon}">
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Width" Value="40" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="Filled" Value="False" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="Opacity" Value="0.7" />
+        <Setter Property="Margin" Value="0,0,4,0" />
+        <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorPrimaryBrush}" />
+        <Setter Property="Symbol" Value="Notepad24" />
+    </Style>
+
+    <!-- 数据显示，标题样式 -->
+    <Style x:Key="MemoDataTitleTextBlockStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="Margin" Value="15,10,15,0" />
+        <Setter Property="FontSize" Value="17" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorPrimaryBrush}" />
+    </Style>
+
+    <!-- 数据显示，内容样式 -->
+    <Style x:Key="MemoDataContentTextBlockStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="Margin" Value="15,5,15,5" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorSecondaryBrush}" />
+    </Style>
+
+    <!-- 抽屉：Border装饰样式 -->
+    <Style x:Key="MemoDrawerBorderStyle" TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="{ui:ThemeResource LayerOnMicaBaseAltFillColorTertiaryBrush}" />
+        <Setter Property="CornerRadius" Value="15" />
+        <Setter Property="BorderThickness" Value="1.8" />
+        <Setter Property="BorderBrush" Value="{ui:ThemeResource ControlStrokeColorDefaultBrush}" />
+    </Style>
+    <!-- 抽屉：标题样式 -->
+    <Style x:Key="MemoDrawerTitleTextBlockStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorPrimaryBrush}" />
+        <Setter Property="Margin" Value="15,20,15,12" />
+    </Style>
+    <!-- 抽屉：显示标签样式 -->
+    <Style x:Key="MemoDrawerFieldLabelTextBlockStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="20,5,15,5" />
+        <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorPrimaryBrush}" />
+    </Style>
+    <!-- 抽屉：数据输入、显示框样式 -->
+    <Style x:Key="MemoDrawerDisplayTextBoxStyle" TargetType="{x:Type ui:TextBox}" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{ui:ThemeResource TextFillColorPrimaryBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="2,5,15,5" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <!-- 抽屉：主要按钮（用于添加、修改保存、删除按钮） -->
+    <Style x:Key="MemoDrawerPrimaryUiButtonStyle" TargetType="{x:Type ui:Button}" BasedOn="{StaticResource {x:Type ui:Button}}">
+        <Setter Property="Appearance" Value="Primary" />
+        <Setter Property="Margin" Value="20,0,15,20" />
+        <Setter Property="MinWidth" Value="85" />
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+    <!-- 抽屉：次要按钮（用于取消并关闭抽屉） -->
+    <Style x:Key="MemoDrawerSecondaryUiButtonStyle" TargetType="{x:Type ui:Button}" BasedOn="{StaticResource {x:Type ui:Button}}">
+        <Setter Property="Appearance" Value="Secondary" />
+        <Setter Property="Margin" Value="5,0,15,20" />
+        <Setter Property="MinWidth" Value="85" />
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Content" Value="取消" />
+        <Setter Property="Icon" Value="{StaticResource IconDismiss24}" />
+    </Style>
+</ResourceDictionary>

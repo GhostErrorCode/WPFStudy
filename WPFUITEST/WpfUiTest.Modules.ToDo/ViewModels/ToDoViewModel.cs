@@ -194,9 +194,9 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
             this.OpenDeleteDrawerCommand = new RelayCommand<ToDoItemViewModel>((toDoItem) => { this.LoadToDoItem(toDoItem!); this.IsDeleteDrawerOpen = true; });
             this.CloseDeleteDrawerCommand = new RelayCommand(() => { this.IsDeleteDrawerOpen = false; });
             // CRUD命令
-            this.AddToDoItemCommand = new AsyncRelayCommand(AddToDoItem);
-            this.UpdateToDoItemCommand = new AsyncRelayCommand(UpdateToDoItem);
-            this.DeleteToDoItemCommand = new AsyncRelayCommand(DeleteToDoItem);
+            this.AddToDoItemCommand = new AsyncRelayCommand(AddToDoItemAsync);
+            this.UpdateToDoItemCommand = new AsyncRelayCommand(UpdateToDoItemAsync);
+            this.DeleteToDoItemCommand = new AsyncRelayCommand(DeleteToDoItemAsync);
             this.CompletedToDoItemCommand = new AsyncRelayCommand<ToDoItemViewModel>(async (toDoItem) =>
             {
                 // !. 表示不可能为空，用于解除警告
@@ -205,7 +205,7 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
                 // 单独修改状态为已完成
                 this.ToDoItem.Status = TodoStatusEnum.Completed;
                 // 随后调用修改方法
-                await this.UpdateToDoItem();
+                await this.UpdateToDoItemAsync();
             });
         }
 
@@ -273,7 +273,7 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
         }
 
         // 方法：添加待办事项
-        private async Task AddToDoItem()
+        private async Task AddToDoItemAsync()
         {
             try
             {
@@ -332,7 +332,7 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
         }
 
         // 方法：修改待办事项
-        private async Task UpdateToDoItem()
+        private async Task UpdateToDoItemAsync()
         {
             try
             {
@@ -387,7 +387,7 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
         }
 
         // 方法：删除待办事项
-        private async Task DeleteToDoItem()
+        private async Task DeleteToDoItemAsync()
         {
             try
             {

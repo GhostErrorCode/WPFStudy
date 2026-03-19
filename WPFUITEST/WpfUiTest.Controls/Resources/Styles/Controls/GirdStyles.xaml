@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/WpfUiTest.Controls;component/Resources/Animations/JiggleAnimations.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    
+    <!-- Grid 抖动样式 -->
+    <Style x:Key="JiggleGridStyle" TargetType="Grid">
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                    <RotateTransform Angle="0"/>
+                </TransformGroup>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+
+        <Style.Triggers>
+            <!--
+                因为在 EventTrigger 的 RoutedEvent 属性中使用了类似 Mouse.MouseEnter 的字符串
+                默认的类型转换器无法将其正确转换为 RoutedEvent。
+                在 WPF 中，EventTrigger 直接使用事件名称即可，不需要加上类前缀
+            
+                将所有的 RoutedEvent 值改为简单的事件名，例如：
+                    MouseEnter 而不是 Mouse.MouseEnter
+                    MouseLeftButtonDown 而不是 Mouse.MouseLeftButtonDown
+                    MouseRightButtonDown 而不是 Mouse.MouseRightButtonDown
+            -->
+            <EventTrigger RoutedEvent="MouseEnter">
+                <EventTrigger.Actions>
+                    <BeginStoryboard Storyboard="{StaticResource JiggleStoryboard}"/>
+                </EventTrigger.Actions>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="MouseLeftButtonDown">
+                <EventTrigger.Actions>
+                    <BeginStoryboard Storyboard="{StaticResource JiggleStoryboard}"/>
+                </EventTrigger.Actions>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="MouseRightButtonDown">
+                <EventTrigger.Actions>
+                    <BeginStoryboard Storyboard="{StaticResource JiggleStoryboard}"/>
+                </EventTrigger.Actions>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>
