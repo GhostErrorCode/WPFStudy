@@ -197,6 +197,16 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
             this.AddToDoItemCommand = new AsyncRelayCommand(AddToDoItem);
             this.UpdateToDoItemCommand = new AsyncRelayCommand(UpdateToDoItem);
             this.DeleteToDoItemCommand = new AsyncRelayCommand(DeleteToDoItem);
+            this.CompletedToDoItemCommand = new AsyncRelayCommand<ToDoItemViewModel>(async (toDoItem) =>
+            {
+                // !. 表示不可能为空，用于解除警告
+                // 添加到ToDoItem中
+                this.LoadToDoItem(toDoItem!);
+                // 单独修改状态为已完成
+                this.ToDoItem.Status = TodoStatusEnum.Completed;
+                // 随后调用修改方法
+                await this.UpdateToDoItem();
+            });
         }
 
         // ==================== 方法 ====================
@@ -464,6 +474,22 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
         // 私有方法：清理VM
         private async Task CleanupASync()
         {
+            // 关闭所有抽屉
+            this.IsAddDrawerOpen = false;
+            this.IsEditDrawerOpen = false;
+            this.IsDeleteDrawerOpen = false;
+            this._logger.LogInformation("[ToDoView] [用户：{Account}（{Id}）] 已重置所有抽屉", this._userService.UserAccount, this._userService.UserId);
+
+
+            // 清空当前编辑项
+            this.ClearToDoItem();  // 假设有方法重置 ToDoItem
+            this._logger.LogInformation("[ToDoView] [用户：{Account}（{Id}）] 已清空临时编辑项", this._userService.UserAccount, this._userService.UserId);
+
+
+            // 重置加载状态
+            this.IsLoading = false;
+            this.LoadingText = "加载中...";
+            this._logger.LogInformation("[ToDoView] [用户：{Account}（{Id}）] 已重置加载状态", this._userService.UserAccount, this._userService.UserId);
 
         }
 

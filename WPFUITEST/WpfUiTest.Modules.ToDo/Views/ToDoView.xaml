@@ -112,6 +112,8 @@
                                     <MenuItem
                                         Header="完成此待办事项"
                                         IsEnabled="{Binding PlacementTarget.DataContext.Status,RelativeSource={RelativeSource AncestorType=ContextMenu, Mode=FindAncestor},Converter={StaticResource ToDoStatusToBooleanConverter}}"
+                                        Command="{Binding PlacementTarget.Tag.CompletedToDoItemCommand,RelativeSource={RelativeSource AncestorType=ContextMenu, Mode=FindAncestor}}"
+                                        CommandParameter="{Binding PlacementTarget.DataContext,RelativeSource={RelativeSource AncestorType=ContextMenu, Mode=FindAncestor}}"
                                         />
                                     <MenuItem
                                         Header="删除此待办事项"
