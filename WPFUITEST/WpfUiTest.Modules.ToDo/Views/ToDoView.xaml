@@ -56,6 +56,14 @@
                 Command="{Binding SearchResetCommand}"
                 Style="{StaticResource ToDoSearchResetUiButtonStyle}"
                 />
+            <!-- 画一条 2 像素宽、灰色的垂直分割线 -->
+            <Rectangle Width="1.3" Fill="Gray" HorizontalAlignment="Center" Margin="0,8,0,8" />
+            <!-- 添加待办事项按钮 -->
+            <ui:Button
+                Content="添加待办事项"
+                Command="{Binding OpenAddDrawerCommand}"
+                Style="{StaticResource AddToDoUiButtonStyle}"
+                />
         </StackPanel>
 
         <!-- 第2行：数据显示区域 -->
@@ -436,7 +444,7 @@
                     <Grid Grid.Row="2">
                         <StackPanel Orientation="Horizontal">
                             <!-- 修改待办事项按钮 -->
-                            <ui:Button Appearance="Danger" Icon="{ui:SymbolIcon Symbol=Delete24}" Content="删除！我意已决" Style="{StaticResource ToDoDrawerPrimaryUiButtonStyle}" />
+                            <ui:Button Command="{Binding DeleteToDoItemCommand}" Appearance="Danger" Icon="{ui:SymbolIcon Symbol=Delete24}" Content="删除！我意已决" Style="{StaticResource ToDoDrawerPrimaryUiButtonStyle}" />
                             <ui:Button Command="{Binding CloseDeleteDrawerCommand}" Style="{StaticResource ToDoDrawerSecondaryUiButtonStyle}" />
                         </StackPanel>
                     </Grid>

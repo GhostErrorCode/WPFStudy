@@ -6,8 +6,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection.Metadata;
 using System.Text;
+using System.Windows;
 using System.Xml.XPath;
 using Wpf.Ui;
+using Wpf.Ui.Controls;
+using Wpf.Ui.Extensions;
 using WpfUiTest.Core.DTOs.ToDo;
 using WpfUiTest.Core.Services.Interfaces;
 using WpfUiTest.Modules.ToDo.Mappers;
@@ -31,6 +34,8 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
         private readonly ILogger<ToDoViewModel> _logger;
         // 字段：IUserServcei服务
         private readonly IUserService _userService;
+        // 字段：ContentDialog服务
+        private readonly IContentDialogService _contentDialogService;
 
         // 属性：待办状态ComboBox源（ComboBox不支持选择NULL项，会出现选不中的情况，这里使用字符串All代替NULL）
         public ObservableCollection<object> TodoStatusOptions { get; } = new ObservableCollection<object>() { "All", TodoStatusEnum.Pending, TodoStatusEnum.Completed };
@@ -161,13 +166,14 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
         // 命令：完成待办事项Command
         public AsyncRelayCommand<ToDoItemViewModel> CompletedToDoItemCommand { get; private set; }
         // ==================== 构造函数 ====================
-        public ToDoViewModel(IToDoService toDoService, IMessenger messenger, ILogger<ToDoViewModel> logger, IUserService userService)
+        public ToDoViewModel(IToDoService toDoService, IMessenger messenger, ILogger<ToDoViewModel> logger, IUserService userService, IContentDialogService contentDialogService)
         {
             // 初始化字段
             this._toDoService = toDoService;
             this._messenger = messenger;
             this._logger = logger;
             this._userService = userService;
+            this._contentDialogService = contentDialogService;
 
             // 初始化属性
 
@@ -190,6 +196,7 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
             // CRUD命令
             this.AddToDoItemCommand = new AsyncRelayCommand(AddToDoItem);
             this.UpdateToDoItemCommand = new AsyncRelayCommand(UpdateToDoItem);
+            this.DeleteToDoItemCommand = new AsyncRelayCommand(DeleteToDoItem);
         }
 
         // ==================== 方法 ====================
@@ -260,6 +267,24 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
         {
             try
             {
+                // 二次确认窗
+                ContentDialogResult contentDialogResult = await this._contentDialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions()
+                {
+                    Title = "确认添加？",
+                    Content = new TextBlock
+                    {
+                        Text = $"待办事项信息如下：{Environment.NewLine}" +
+                               $"├─ 状态：{(this._toDoItem.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}" +
+                               $"├─ 标题：{this._toDoItem.Title}{Environment.NewLine}" +
+                               $"└─ 内容：{this._toDoItem.Content}",
+                        TextWrapping = TextWrapping.Wrap
+                    },
+                    PrimaryButtonText = "确认添加！提交至数据库",
+                    CloseButtonText = "先不提交，我再看看"
+                });
+                // 如果点击的是CloseButton，直接return终止当前方法，否则继续执行
+                if (contentDialogResult == ContentDialogResult.None) return;
+                
                 // 调用后台服务添加待办事项
                 ServiceResult<ToDoDto> addToDoResult = await this._toDoService.AddToDoAsync(this._toDoItem.ToAddToDoDto());
                 // 判断添加待办事项是否成功
@@ -301,6 +326,27 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
         {
             try
             {
+                // 二次确认窗
+                ContentDialogResult contentDialogResult = await this._contentDialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions()
+                {
+                    Title = "确认修改？",
+                    Content = new TextBlock
+                    {
+                        Text = $"修改后待办事项信息如下：{Environment.NewLine}" +
+                               $"├─ ID：{this._toDoItem.Id}{Environment.NewLine}" +
+                               $"├─ 标题：{this._toDoItem.Title}{Environment.NewLine}" +
+                               $"├─ 内容：{this._toDoItem.Content}{Environment.NewLine}" +
+                               $"├─ 状态：{(this._toDoItem.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}" +
+                               $"├─ 创建日期：{this._toDoItem.CreateDate}{Environment.NewLine}" +
+                               $"└─ 修改日期：{this._toDoItem.UpdateDate}",
+                        TextWrapping = TextWrapping.Wrap
+                    },
+                    PrimaryButtonText = "确认修改！保存到数据库中",
+                    CloseButtonText = "先不保存，我再看看"
+                });
+                // 如果点击的是CloseButton，直接return终止当前方法，否则继续执行
+                if (contentDialogResult == ContentDialogResult.None) return;
+
                 // 调用后台服务修改待办事项
                 ServiceResult<ToDoDto> updateToDoResult = await this._toDoService.UpdateToDoAsync(this._toDoItem.ToUpdateToDoDto());
                 // 判断修改待办事项是否成功
@@ -327,6 +373,61 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
             {
                 this._logger.LogError("[ToDoView] [用户：{Account}（{Id}）] 修改待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
                 this._messenger.ShowDanger(SnackbarTarget.MainView, "修改待办事项失败", "修改待办事项时出现异常");
+            }
+        }
+
+        // 方法：删除待办事项
+        private async Task DeleteToDoItem()
+        {
+            try
+            {
+                // 二次确认窗
+                ContentDialogResult contentDialogResult = await this._contentDialogService.ShowAsync(new ContentDialog()
+                {
+                    Title = "确认删除？",
+                    Content = new TextBlock
+                    {
+                        Text = $"需要删除的待办事项信息如下：{Environment.NewLine}" +
+                               $"├─ ID：{this._toDoItem.Id}{Environment.NewLine}" +
+                               $"├─ 标题：{this._toDoItem.Title}{Environment.NewLine}" +
+                               $"├─ 内容：{this._toDoItem.Content}{Environment.NewLine}" +
+                               $"├─ 状态：{(this._toDoItem.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}" +
+                               $"├─ 创建日期：{this._toDoItem.CreateDate}{Environment.NewLine}" +
+                               $"└─ 修改日期：{this._toDoItem.UpdateDate}{Environment.NewLine}{Environment.NewLine}" +
+                               $"你真的会失去它，永远",
+                        TextWrapping = TextWrapping.Wrap
+                    },
+                    PrimaryButtonAppearance = ControlAppearance.Danger,
+                    PrimaryButtonText = "确认删除！离开我的数据库",
+                    CloseButtonText = "先不删除，我再看看"
+                }, CancellationToken.None);
+                // 如果点击的是CloseButton，直接return终止当前方法，否则继续执行
+                if (contentDialogResult == ContentDialogResult.None) return;
+
+                // 调用后台服务删除待办事项
+                ServiceResult<bool> deleteToDoResult = await this._toDoService.DeleteToDoAsync(this._toDoItem.ToDeleteToDoDto());
+                // 判断删除待办事项是否成功
+                if (deleteToDoResult != null && deleteToDoResult.IsSuccess && deleteToDoResult.Data == true)
+                {
+                    this._logger.LogInformation("[ToDoView] [用户：{Account}（{Id}）] 删除待办事项成功，已从当前UI集合中清除，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, this._toDoItem.Id, this._toDoItem.Title);
+                    this._messenger.ShowSuccess(SnackbarTarget.MainView, deleteToDoResult.Message, "删除待办事项成功");
+                    // 重新查询数据库，确保数据一致性
+                    await this.LoadPagedToDosAsync();
+                    // 关闭抽屉
+                    this.IsDeleteDrawerOpen = false;
+                    // 清除 ToDoItem
+                    this.ClearToDoItem();
+                }
+                else
+                {
+                    this._logger.LogWarning("[ToDoView] [用户：{Account}（{Id}）] 删除待办事项失败，原因：{Reason}", this._userService.UserAccount, this._userService.UserId, deleteToDoResult != null ? deleteToDoResult.Message : "服务返回结果为空");
+                    this._messenger.ShowCaution(SnackbarTarget.MainView, "删除待办事项失败", deleteToDoResult != null ? deleteToDoResult.Message : "删除待办事项失败");
+                }
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError("[ToDoView] [用户：{Account}（{Id}）] 删除待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                this._messenger.ShowDanger(SnackbarTarget.MainView, "删除待办事项失败", "删除待办事项时出现异常");
             }
         }
 
