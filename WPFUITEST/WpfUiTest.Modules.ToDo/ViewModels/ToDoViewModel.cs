@@ -155,9 +155,9 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
         // 命令：添加待办事项Command
         public AsyncRelayCommand AddToDoItemCommand { get; private set; }
         // 命令：修改待办事项Command
-        public AsyncRelayCommand<ToDoItemViewModel> UpdateToDoItemCommand { get; private set; }
+        public AsyncRelayCommand UpdateToDoItemCommand { get; private set; }
         // 命令：删除待办事项Command
-        public AsyncRelayCommand<ToDoItemViewModel> DeleteToDoItemCommand { get; private set; }
+        public AsyncRelayCommand DeleteToDoItemCommand { get; private set; }
         // 命令：完成待办事项Command
         public AsyncRelayCommand<ToDoItemViewModel> CompletedToDoItemCommand { get; private set; }
         // ==================== 构造函数 ====================
@@ -189,6 +189,7 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
             this.CloseDeleteDrawerCommand = new RelayCommand(() => { this.IsDeleteDrawerOpen = false; });
             // CRUD命令
             this.AddToDoItemCommand = new AsyncRelayCommand(AddToDoItem);
+            this.UpdateToDoItemCommand = new AsyncRelayCommand(UpdateToDoItem);
         }
 
         // ==================== 方法 ====================
@@ -292,6 +293,40 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
             {
                 this._logger.LogError("[ToDoView] [用户：{Account}（{Id}）] 添加待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
                 this._messenger.ShowDanger(SnackbarTarget.MainView, "添加待办事项失败", "添加待办事项时出现异常");
+            }
+        }
+
+        // 方法：修改待办事项
+        private async Task UpdateToDoItem()
+        {
+            try
+            {
+                // 调用后台服务修改待办事项
+                ServiceResult<ToDoDto> updateToDoResult = await this._toDoService.UpdateToDoAsync(this._toDoItem.ToUpdateToDoDto());
+                // 判断修改待办事项是否成功
+                if (updateToDoResult != null && updateToDoResult.IsSuccess && updateToDoResult.Data != null)
+                {
+
+                    this._logger.LogInformation("[ToDoView] [用户：{Account}（{Id}）] 修改待办事项成功，已更新当前UI集合，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, updateToDoResult.Data.Id, updateToDoResult.Data.Title);
+                    this._messenger.ShowSuccess(SnackbarTarget.MainView, updateToDoResult.Message, "修改待办事项成功");
+
+                    // 重新查询数据库，确保数据一致性
+                    await this.LoadPagedToDosAsync();
+                    // 关闭抽屉
+                    this.IsEditDrawerOpen = false;
+                    // 清除 ToDoItem
+                    this.ClearToDoItem();
+                }
+                else
+                {
+                    this._logger.LogWarning("[ToDoView] [用户：{Account}（{Id}）] 修改待办事项失败，原因：{Reason}", this._userService.UserAccount, this._userService.UserId, updateToDoResult != null ? updateToDoResult.Message : "服务返回结果为空");
+                    this._messenger.ShowCaution(SnackbarTarget.MainView, "修改待办事项失败", updateToDoResult != null ? updateToDoResult.Message : "修改待办事项失败");
+                }
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError("[ToDoView] [用户：{Account}（{Id}）] 修改待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                this._messenger.ShowDanger(SnackbarTarget.MainView, "修改待办事项失败", "修改待办事项时出现异常");
             }
         }
 

@@ -35,5 +35,29 @@ namespace WpfUiTest.Modules.ToDo.Mappers
                 Status = toDoItemViewModel.Status
             };
         }
+
+        // ToDoItemViewModel ->  UpdateToDoDto
+        public static UpdateToDoDto ToUpdateToDoDto(this ToDoItemViewModel toDoItemViewModel)
+        {
+            return new UpdateToDoDto()
+            {
+                Id = toDoItemViewModel.Id,
+                UserId = toDoItemViewModel.UserId,
+                Title = toDoItemViewModel.Title,
+                Content = toDoItemViewModel.Content,
+                Status = toDoItemViewModel.Status
+            };
+        }
+
+        // ToDoItemViewModel 转 DeleteToDoDto
+        public static DeleteToDoDto ToDeleteToDoDto(this ToDoItemViewModel toDoItemViewModel)
+        {
+            return new DeleteToDoDto()
+            {
+                Id = toDoItemViewModel.Id,
+                UserId = toDoItemViewModel.UserId,
+                Title = toDoItemViewModel.Title
+            };
+        }
     }
 }

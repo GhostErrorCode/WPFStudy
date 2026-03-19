@@ -331,7 +331,7 @@
                     <Grid Grid.Row="2" Cursor="">
                         <StackPanel Orientation="Horizontal">
                             <!-- 修改待办事项按钮 -->
-                            <ui:Button Icon="{ui:SymbolIcon Symbol=Edit24}" Content="修改！然后存到数据库去" Style="{StaticResource ToDoDrawerPrimaryUiButtonStyle}" />
+                            <ui:Button Command="{Binding UpdateToDoItemCommand}" Icon="{ui:SymbolIcon Symbol=Edit24}" Content="修改！然后存到数据库去" Style="{StaticResource ToDoDrawerPrimaryUiButtonStyle}" />
                             <ui:Button Command="{Binding CloseEditDrawerCommand}" Style="{StaticResource ToDoDrawerSecondaryUiButtonStyle}" />
                         </StackPanel>
                     </Grid>
