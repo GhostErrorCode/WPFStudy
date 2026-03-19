@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Xml.XPath;
 using Wpf.Ui;
@@ -13,6 +14,7 @@ using WpfUiTest.Modules.ToDo.Mappers;
 using WpfUiTest.Shared.Base;
 using WpfUiTest.Shared.Enums;
 using WpfUiTest.Shared.Extensions;
+using WpfUiTest.Shared.Messages;
 using WpfUiTest.Shared.Utilities;
 
 namespace WpfUiTest.Modules.ToDo.ViewModels
@@ -92,6 +94,30 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
             get { return _loadingText; }
             set { SetProperty(ref _loadingText, value); }
         }
+        // 属性：新增待办事项抽屉是否显示
+        private bool _isAddDrawerOpen = false;
+        public bool IsAddDrawerOpen
+        {
+            get { return _isAddDrawerOpen; }
+            set { SetProperty(ref _isAddDrawerOpen, value); }
+        }
+        // 属性：修改待办事项抽屉是否显示
+        private bool _isEditDrawerOpen = false;
+        public bool IsEditDrawerOpen
+        {
+            get { return _isEditDrawerOpen; }
+            set { SetProperty(ref _isEditDrawerOpen, value); }
+        }
+        // 属性：删除待办事项抽屉是否显示
+        private bool isDeleteDrawerOpen = false;
+        public bool IsDeleteDrawerOpen
+        {
+            get { return isDeleteDrawerOpen; }
+            set { SetProperty(ref isDeleteDrawerOpen, value); }
+        }
+        // 属性：抽屉的ComboBox源
+        public List<TodoStatusEnum> DrawerTodoStatusOptions { get; } = new List<TodoStatusEnum> { TodoStatusEnum.Pending, TodoStatusEnum.Completed };
+
 
         // 属性：用于显示待办事项数据集合
         private ObservableCollection<ToDoItemViewModel> _ToDoItems = new ObservableCollection<ToDoItemViewModel>();
@@ -109,10 +135,31 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
         }
 
 
+        // 命令：打开新增待办事项抽屉
+        public RelayCommand OpenAddDrawerCommand { get; private set; }
+        // 命令：关闭新增待办事项抽屉
+        public RelayCommand CloseAddDrawerCommand { get; private set; }
+        // 命令：打开修改待办事项抽屉
+        public RelayCommand<ToDoItemViewModel> OpenEditDrawerCommand { get; private set; }
+        // 命令：关闭修改待办事项抽屉
+        public RelayCommand CloseEditDrawerCommand { get; private set; }
+        // 命令：打开删除待办事项抽屉
+        public RelayCommand<ToDoItemViewModel> OpenDeleteDrawerCommand { get; private set; }
+        // 命令：关闭删除待办事项抽屉
+        public RelayCommand CloseDeleteDrawerCommand { get; private set; }
+
         // 命令：搜索Command
         public AsyncRelayCommand SearchCommand { get; private set; }
         // 命令：搜索重置Command
         public AsyncRelayCommand SearchResetCommand { get; private set; }
+        // 命令：添加待办事项Command
+        public AsyncRelayCommand AddToDoItemCommand { get; private set; }
+        // 命令：修改待办事项Command
+        public AsyncRelayCommand<ToDoItemViewModel> UpdateToDoItemCommand { get; private set; }
+        // 命令：删除待办事项Command
+        public AsyncRelayCommand<ToDoItemViewModel> DeleteToDoItemCommand { get; private set; }
+        // 命令：完成待办事项Command
+        public AsyncRelayCommand<ToDoItemViewModel> CompletedToDoItemCommand { get; private set; }
         // ==================== 构造函数 ====================
         public ToDoViewModel(IToDoService toDoService, IMessenger messenger, ILogger<ToDoViewModel> logger, IUserService userService)
         {
@@ -133,6 +180,15 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
                 this.SearchStatus = null;
                 await LoadPagedToDosAsync();
             });
+            // 抽屉相关命令（使用 null 包容运算符 !，这样可以消除警告）
+            this.OpenAddDrawerCommand = new RelayCommand(() => { this.ClearToDoItem(); this.IsAddDrawerOpen = true; });
+            this.CloseAddDrawerCommand = new RelayCommand(() => { this.IsAddDrawerOpen = false; });
+            this.OpenEditDrawerCommand = new RelayCommand<ToDoItemViewModel>((toDoItem) => { this.LoadToDoItem(toDoItem!); this.IsEditDrawerOpen = true; });
+            this.CloseEditDrawerCommand = new RelayCommand(() => { this.IsEditDrawerOpen = false; });
+            this.OpenDeleteDrawerCommand = new RelayCommand<ToDoItemViewModel>((toDoItem) => { this.LoadToDoItem(toDoItem!); this.IsDeleteDrawerOpen = true; });
+            this.CloseDeleteDrawerCommand = new RelayCommand(() => { this.IsDeleteDrawerOpen = false; });
+            // CRUD命令
+            this.AddToDoItemCommand = new AsyncRelayCommand(AddToDoItem);
         }
 
         // ==================== 方法 ====================
@@ -196,6 +252,71 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
                 // 隐藏加载动画
                 this.IsLoading = false;
             }
+        }
+
+        // 方法：添加待办事项
+        private async Task AddToDoItem()
+        {
+            try
+            {
+                // 调用后台服务添加待办事项
+                ServiceResult<ToDoDto> addToDoResult = await this._toDoService.AddToDoAsync(this._toDoItem.ToAddToDoDto());
+                // 判断添加待办事项是否成功
+                if (addToDoResult != null && addToDoResult.IsSuccess && addToDoResult.Data != null)
+                {
+                    /*
+                    // 添加到 ObservableCollection 集合第一位，这样就符合倒序排序了
+                    this.ToDoItems.Insert(0, addToDoResult.Data.ToToDoItemViewModel());
+                    // 当前TotalCount + 1
+                    this.TotalCount++;
+                    */
+                    // 日志
+                    this._logger.LogInformation("[ToDoView] [用户：{Account}（{Id}）] 添加待办事项成功，已添加至当前UI集合，ID={Id}，标题=\"{Title}\"", this._userService.UserAccount, this._userService.UserId, addToDoResult.Data.Id, addToDoResult.Data.Title);
+                    this._messenger.ShowSuccess(SnackbarTarget.MainView, addToDoResult.Message, "添加待办事项成功");
+                    // 跳转到第一页，因为默认按时间降序，所以新数据会出现在第一页
+                    this.PageIndex = 1;
+                    // 随后查询查询数据库，确保数据一致性
+                    await this.LoadPagedToDosAsync();
+                    // 关闭抽屉
+                    this.IsAddDrawerOpen = false;
+                    // 清除 ToDoItem
+                    this.ClearToDoItem();
+                }
+                else
+                {
+                    this._logger.LogWarning("[ToDoView] [用户：{Account}（{Id}）] 添加待办事项失败，异常信息：{Message}", this._userService.UserAccount, this._userService.UserId, addToDoResult != null ? addToDoResult.Message : "服务返回结果为空");
+                    this._messenger.ShowCaution(SnackbarTarget.MainView, "添加待办事项失败", addToDoResult != null ? addToDoResult.Message : "添加待办事项失败");
+                }
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError("[ToDoView] [用户：{Account}（{Id}）] 添加待办事项时出现异常。异常信息：{ex}", this._userService.UserAccount, this._userService.UserId, ex);
+                this._messenger.ShowDanger(SnackbarTarget.MainView, "添加待办事项失败", "添加待办事项时出现异常");
+            }
+        }
+
+
+        // 方法：装载需要修改/删除的待办事项数据至ToDoItem中
+        private void LoadToDoItem(ToDoItemViewModel toDoItemViewModel)
+        {
+            this.ToDoItem.Id = toDoItemViewModel.Id;
+            this.ToDoItem.UserId = toDoItemViewModel.UserId;
+            this.ToDoItem.Title = toDoItemViewModel.Title;
+            this.ToDoItem.Content = toDoItemViewModel.Content;
+            this.ToDoItem.Status = toDoItemViewModel.Status;
+            this.ToDoItem.CreateDate = toDoItemViewModel.CreateDate;
+            this.ToDoItem.UpdateDate = toDoItemViewModel.UpdateDate;
+        }
+        // 方法：清理ToDoItem，恢复至默认值，以便添加新的待办事项
+        private void ClearToDoItem()
+        {
+            this.ToDoItem.Id = 0;
+            this.ToDoItem.UserId = 0;
+            this.ToDoItem.Title = string.Empty;
+            this.ToDoItem.Content = string.Empty;
+            this.ToDoItem.Status = TodoStatusEnum.Pending;
+            this.ToDoItem.CreateDate = DateTime.MinValue;
+            this.ToDoItem.UpdateDate = DateTime.MinValue;
         }
 
         // 私有方法：初始化VM

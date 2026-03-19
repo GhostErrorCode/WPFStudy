@@ -10,6 +10,11 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="WPF-UI" Version="4.2.0" />
+    <PackageReference Include="WPF-UI.Violeta" Version="4.2.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\Styles\Controls\" />
   </ItemGroup>
 
 </Project>

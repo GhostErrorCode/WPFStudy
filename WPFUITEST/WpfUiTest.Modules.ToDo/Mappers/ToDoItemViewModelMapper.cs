@@ -24,5 +24,16 @@ namespace WpfUiTest.Modules.ToDo.Mappers
                 UpdateDate = toDoDto.UpdateDate
             };
         }
+
+        // ToDoItemViewModel ->  AddToDoDto
+        public static AddToDoDto ToAddToDoDto(this ToDoItemViewModel toDoItemViewModel)
+        {
+            return new AddToDoDto()
+            {
+                Title = toDoItemViewModel.Title,
+                Content = toDoItemViewModel.Content,
+                Status = toDoItemViewModel.Status
+            };
+        }
     }
 }

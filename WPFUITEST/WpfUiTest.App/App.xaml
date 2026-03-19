@@ -34,6 +34,7 @@
                 <!-- WPFUI资源 -->
                 <ui:ThemesDictionary />
                 <ui:ControlsDictionary />
+
                 <!-- 自定义样式、资源等-->
                 <ResourceDictionary Source="/Resources/Styles/Controls/UiTitleBar.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Controls/Border.xaml" />
@@ -67,7 +68,6 @@
                 <ResourceDictionary Source="/WpfUiTest.Controls;component/Resources/Converters/Converter.xaml" />
                 <!-- 样式 -->
                 <ResourceDictionary Source="/WpfUiTest.Controls;component/Resources/Styles/Modules/PaginationStyles.xaml" />
-
 
                 <!-- ===========================================================
                     模块ToDo层自定义样式、资源、转换器等

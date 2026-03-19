@@ -30,7 +30,7 @@ namespace WpfUiTest.Controls.Controls.Pagination
                 nameof(TotalPages),
                 typeof(int),
                 typeof(Pagination),
-                new PropertyMetadata(0)
+                new PropertyMetadata(0, OnPagingPropertyChanged)
                 );
         // 总条数
         public static readonly DependencyProperty TotalCountProperty =
@@ -38,7 +38,7 @@ namespace WpfUiTest.Controls.Controls.Pagination
                 nameof(TotalCount),
                 typeof(int),
                 typeof(Pagination),
-                new PropertyMetadata(0)
+                new PropertyMetadata(0, OnPagingPropertyChanged)
                 );
         // 页大小（每页显示多少条）
         public static readonly DependencyProperty PageSizeProperty =
@@ -155,8 +155,13 @@ namespace WpfUiTest.Controls.Controls.Pagination
         // 方法：静态属性变化回调
         private static void OnPagingPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            // 通知ViewModel（对外暴露的ICommand），当前总页、总数、页大小等变更了，需要重新加载数据
-            ((Pagination)d).PaginationChangedCommand?.Execute(((Pagination)d).CurrentPage);
+            // 只在页大小，当前页码变动时才需要调用外部方法，否则只刷新页码列表即可，防止循环调用外部方法
+            if(e.Property == PageSizeProperty || e.Property == CurrentPageProperty)
+            {
+                // 通知ViewModel（对外暴露的ICommand），当前总页、总数、页大小等变更了，需要重新加载数据
+                ((Pagination)d).PaginationChangedCommand?.Execute(((Pagination)d).CurrentPage);
+            }
+
             // 只要总页数、当前页、页大小等变化，就重新生成页码列表（将参数 d 转为此控件，并调用此控件的重新计算 PageItems 方法）
             ((Pagination)d).GeneratePageItems();
         }
