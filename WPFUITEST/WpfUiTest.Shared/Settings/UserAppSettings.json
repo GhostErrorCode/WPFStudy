@@ -4,7 +4,7 @@
     // 应用名称
     "AppName": "GhostWpfUiTest",
     // 版本号
-    "Version": "beta-v0.6.5",
+    "Version": "Releases-v2.0.0",
     // 当前运行环境标识
     "Environment": "Development"
   },
@@ -48,6 +48,6 @@
   // 应用主题设置
   "ThemeSettings": {
     // 应用主题
-    "Theme": "Dark"
+    "Theme": "Light"
   }
 }

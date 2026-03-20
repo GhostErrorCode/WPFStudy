@@ -4,7 +4,7 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:vio="http://schemas.lepo.co/wpfui/2022/xaml/violeta"
              xmlns:local="clr-namespace:WpfUiTest.App"
-             ShutdownMode="OnExplicitShutdown"
+             ShutdownMode="OnMainWindowClose"
              >
     <!-- StartupUri="MainWindow.xaml" 不设置StartupUri，因为我们将在代码中手动启动窗口 -->
 

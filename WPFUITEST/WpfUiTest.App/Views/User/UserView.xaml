@@ -36,10 +36,11 @@
             </ui:TitleBar.Icon>
             <!-- 标题栏标题文本 直接设置Title或Header可能导致无法图标和标题无法对齐-->
             <ui:TitleBar.Header>
-                <ui:TextBlock Text="WPFUI" VerticalAlignment="Center" />
+                <ui:TextBlock Text="UserView" VerticalAlignment="Center" />
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
+        
         <!-- 第二行: 内容区 -->
         <Grid Grid.Row="1">
             <!-- 第二行再分两列 -->
