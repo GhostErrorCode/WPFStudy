@@ -31,7 +31,7 @@
             </ui:TitleBar.Icon>
             <!-- 标题栏标题文本 直接设置Title或Header可能导致无法图标和标题无法对齐-->
             <ui:TitleBar.Header>
-                <TextBlock Text="WPFUI-MainView" VerticalAlignment="Center" />
+                <TextBlock Text="MainView" VerticalAlignment="Center" />
             </ui:TitleBar.Header>
         </ui:TitleBar>
         
