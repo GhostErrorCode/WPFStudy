@@ -26,4 +26,21 @@
         <GradientStop Color="#10B981" Offset="1.0"/>
         <!-- 右下角亮青绿（核心主色） -->
     </LinearGradientBrush>
+
+    <!-- ==============================================
+         3. 深色主题 发光特效（高亮霓虹 ✅ 你要的超明显效果）
+         适配：暗黑背景卡片，高对比度、不隐身
+    ============================================== -->
+    <!-- 深色 - 待办事项（靛紫高亮霓虹） -->
+    <DropShadowEffect x:Key="ToDoDataPendingDropShadowEffect"
+                      ShadowDepth="0"
+                      BlurRadius="18"
+                      Color="#A5B4FC"
+                      Opacity="0.9"/>
+    <!-- 深色 - 已完成（青绿高亮霓虹） -->
+    <DropShadowEffect x:Key="ToDoDataCompletedDropShadowEffect"
+                      ShadowDepth="0"
+                      BlurRadius="18"
+                      Color="#4ADE80"
+                      Opacity="0.9"/>
 </ResourceDictionary>

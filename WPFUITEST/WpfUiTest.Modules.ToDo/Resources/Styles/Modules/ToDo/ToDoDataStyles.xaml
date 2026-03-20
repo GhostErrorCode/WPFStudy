@@ -17,7 +17,6 @@
         <Setter Property="Margin" Value="0,0,0,0" />
         <Setter Property="CornerRadius" Value="10,10,10,10" />
         <!-- 裁剪超出区域 -->
-        <Setter Property="ClipToBounds" Value="True" />
         <!-- 渐变背景色 -->
         <Style.Triggers>
             <!-- 如果是待办状态就显示待办图标 -->
@@ -28,6 +27,32 @@
             <DataTrigger Binding="{Binding Status}" Value="{x:Static enum:TodoStatusEnum.Completed}">
                 <Setter Property="Background" Value="{DynamicResource ToDoDataCompletedGradientBrush}" />
             </DataTrigger>
+
+            <!-- ====================== 新增：鼠标悬停 → 状态对应发光 ====================== -->
+            <!-- 待办 + 鼠标悬停 → 靛蓝紫发光 -->
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Grid}}" Value="True" />
+                    <Condition Binding="{Binding Status}" Value="{x:Static enum:TodoStatusEnum.Pending}" />
+                </MultiDataTrigger.Conditions>
+                <Setter Property="Effect" Value="{DynamicResource ToDoDataPendingDropShadowEffect}" />
+                <!--
+                        BlurRadius="15"：控制发光模糊程度，值越大光晕越扩散。
+                        ShadowDepth="0"：设置为 0 使阴影均匀分布在四周，形成对称发光效果。
+                        Color="#FFD700"：发光颜色（这里用了金色），你可以随意更换。
+                        Opacity="0.8"：发光透明度，适当降低可让效果更柔和。
+                    -->
+
+            </MultiDataTrigger>
+
+            <!-- 已完成 + 鼠标悬停 → 青绿色发光 -->
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Grid}}" Value="True" />
+                    <Condition Binding="{Binding Status}" Value="{x:Static enum:TodoStatusEnum.Completed}" />
+                </MultiDataTrigger.Conditions>
+                <Setter Property="Effect" Value="{DynamicResource ToDoDataCompletedDropShadowEffect}" />
+            </MultiDataTrigger>
         </Style.Triggers>
     </Style>
     

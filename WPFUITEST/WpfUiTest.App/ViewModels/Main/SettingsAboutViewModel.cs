@@ -27,6 +27,8 @@ namespace WpfUiTest.App.ViewModels.Main
         public string LoginCredentialDirectory { get; set; } = string.Empty;
         // 属性: 设置目录
         public string SettingsDirectory { get; set; } = string.Empty;
+        // 属性：声明和致谢
+        public string DeclarationAndAcknowledgements { get; set; } = string.Empty;
 
 
         // ============ 构造函数 ==============
@@ -44,6 +46,12 @@ namespace WpfUiTest.App.ViewModels.Main
             this.LogDirectory = Path.Combine(AppContext.BaseDirectory, appConfiguration.LogSettings.Directory);
             this.LoginCredentialDirectory = Path.Combine(AppContext.BaseDirectory, appConfiguration.LoginCredentialSettings.Directory);
             this.SettingsDirectory = Path.Combine(AppContext.BaseDirectory, "Settings");
+
+            this.DeclarationAndAcknowledgements = 
+                $"This software uses the WPF UI library (https://github.com/lepoco/wpfui), {Environment.NewLine}" +
+                $"licensed under the MIT License. {Environment.NewLine}" +
+                $"Copyright (c) 2025 lepo.co | Leszek Pomianowski and WPF UI Contributors." +
+                $"";
         }
     }
 }

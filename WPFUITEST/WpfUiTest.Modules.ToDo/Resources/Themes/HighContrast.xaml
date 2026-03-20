@@ -27,4 +27,21 @@
         <!-- 底部：超亮青绿（亮度拉满，黑字绝不发闷） -->
         <GradientStop Color="#5EEAD4" Offset="1.0"/>
     </LinearGradientBrush>
+
+    <!-- ==============================================
+         2. 中性主题 发光特效（均衡通透）
+         适配：中间调/灰色背景卡片
+    ============================================== -->
+    <!-- 中性 - 待办事项（靛紫均衡光） -->
+    <DropShadowEffect x:Key="ToDoDataPendingDropShadowEffect"
+                      ShadowDepth="0"
+                      BlurRadius="18"
+                      Color="#6366F1"
+                      Opacity="0.75"/>
+    <!-- 中性 - 已完成（青绿均衡光） -->
+    <DropShadowEffect x:Key="ToDoDataCompletedDropShadowEffect"
+                      ShadowDepth="0"
+                      BlurRadius="18"
+                      Color="#059669"
+                      Opacity="0.75"/>
 </ResourceDictionary>

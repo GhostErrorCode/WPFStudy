@@ -10,4 +10,7 @@
 
     <!-- 待办状态 转 布尔值 -->
     <converters:ToDoStatusToBooleanConverter x:Key="ToDoStatusToBooleanConverter" />
+    
+    <!-- 集合Count 转 可见性 -->
+    <converters:ToDoItemsCountToVisibility x:Key="ToDoItemsCountToVisibility" />
 </ResourceDictionary>

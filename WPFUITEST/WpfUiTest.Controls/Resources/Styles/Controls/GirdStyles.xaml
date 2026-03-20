@@ -28,6 +28,7 @@
                     MouseLeftButtonDown 而不是 Mouse.MouseLeftButtonDown
                     MouseRightButtonDown 而不是 Mouse.MouseRightButtonDown
             -->
+            <!--
             <EventTrigger RoutedEvent="MouseEnter">
                 <EventTrigger.Actions>
                     <BeginStoryboard Storyboard="{StaticResource JiggleStoryboard}"/>
@@ -38,6 +39,7 @@
                     <BeginStoryboard Storyboard="{StaticResource JiggleStoryboard}"/>
                 </EventTrigger.Actions>
             </EventTrigger>
+            -->
             <EventTrigger RoutedEvent="MouseRightButtonDown">
                 <EventTrigger.Actions>
                     <BeginStoryboard Storyboard="{StaticResource JiggleStoryboard}"/>

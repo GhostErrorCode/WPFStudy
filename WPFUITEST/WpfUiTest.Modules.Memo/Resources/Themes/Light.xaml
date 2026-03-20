@@ -5,13 +5,31 @@
     <!-- ==================== 备忘录数据区域Border渐变颜色 ==================== -->
     <!-- 备忘录 - 浅色主题（暖杏奶咖，柔和护眼，与青紫完全区分） -->
     <LinearGradientBrush x:Key="MemoDataGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <!-- 
         <GradientStop Color="#FFFDFB" Offset="0.0"/>
-        <!-- 左上角奶白基底 -->
         <GradientStop Color="#FFFAF0" Offset="0.4"/>
-        <!-- 暖杏色过渡 -->
         <GradientStop Color="#FEEBC8" Offset="0.7"/>
-        <!-- 浅咖色过渡 -->
         <GradientStop Color="#FCD34D" Offset="1.0"/>
+        -->
+        <!-- 左上角奶白基底 -->
+        <!-- 暖杏色过渡 -->
+        <!-- 浅咖色过渡 -->
         <!-- 右下角柔琥珀色 -->
+
+        <GradientStop Color="#FDF4FF" Offset="0.0"/>
+        <!-- 左上角浅白紫基底 -->
+        <GradientStop Color="#E9D5FF" Offset="0.4"/>
+        <!-- 中间柔淡紫（主色#A855F7浅化） -->
+        <GradientStop Color="#C084FC" Offset="0.7"/>
+        <!-- 中后段亮紫（接近主色） -->
+        <GradientStop Color="#A855F7" Offset="1.0"/>
+        <!-- 右下角清柔紫（核心主色） -->
     </LinearGradientBrush>
+
+    <!-- 浅色 - 备忘录边缘效果（紫蓝柔光） -->
+    <DropShadowEffect x:Key="MemoDataDropShadowEffect"
+                      ShadowDepth="0"
+                      BlurRadius="16"
+                      Color="#8B5CF6"
+                      Opacity="0.5"/>
 </ResourceDictionary>
