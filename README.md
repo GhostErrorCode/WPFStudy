@@ -29,7 +29,7 @@
 10. Serilog.Settings.Configuration：从配置文件读取Serilog设置。
 11. Serilog.Sinks.Console：Serilog控制台输出目标。
 12. Serilog.Sinks.File：Serilog文件输出目标。
-13. UI：WPF现代化UI控件库。
+13. WPF-UI：WPF现代化UI控件库。
 14. WPF-UI.DependencyInjection：WPF-UI与依赖注入的集成。
 15. WPF-UI.Tray：WPF-UI系统托盘支持。
 16. WPF-UI.Violeta：WPF-UI扩展包（附加主题或控件）。
