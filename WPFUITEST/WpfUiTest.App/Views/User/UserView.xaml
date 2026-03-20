@@ -40,6 +40,7 @@
             </ui:TitleBar.Header>
         </ui:TitleBar>
 
+        
         <!-- 第二行: 内容区 -->
         <Grid Grid.Row="1">
             <!-- 第二行再分两列 -->

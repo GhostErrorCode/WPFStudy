@@ -35,6 +35,7 @@
             </ui:TitleBar.Header>
         </ui:TitleBar>
         
+        
         <!-- 导航视图 -->
         <ui:NavigationView
             x:Name="MainNavigationView"
