@@ -6,13 +6,31 @@
     <!-- ==================== 备忘录数据区域Border渐变颜色 ==================== -->
     <!-- 备忘录 - 中性主题（豆沙柔粉，高级耐看，无青紫干扰） -->
     <LinearGradientBrush x:Key="MemoDataGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <!--
         <GradientStop Color="#F9FAFB" Offset="0.0"/>
-        <!-- 左上角浅灰基底 -->
         <GradientStop Color="#F3E8FF" Offset="0.4"/>
-        <!-- 雾豆沙过渡 -->
         <GradientStop Color="#E9D5FF" Offset="0.7"/>
-        <!-- 柔粉紫过渡 -->
         <GradientStop Color="#DDD6FE" Offset="1.0"/>
+        -->
+        <!-- 左上角浅灰基底 -->
+        <!-- 雾豆沙过渡 -->
+        <!-- 柔粉紫过渡 -->
         <!-- 右下角暖藕粉 -->
+
+        <GradientStop Color="#FAF5FF" Offset="0.0"/>
+        <!-- 左上角雾灰紫基底 -->
+        <GradientStop Color="#D8B4FE" Offset="0.4"/>
+        <!-- 中间雾感紫（主色#9333EA中和） -->
+        <GradientStop Color="#A78BFA" Offset="0.7"/>
+        <!-- 中后段暖紫（过渡均衡） -->
+        <GradientStop Color="#9333EA" Offset="1.0"/>
+        <!-- 右下角柔暖紫（核心主色） -->
     </LinearGradientBrush>
+
+    <!-- 中性 - 备忘录边缘效果（紫蓝均衡光） -->
+    <DropShadowEffect x:Key="MemoDataDropShadowEffect"
+                      ShadowDepth="0"
+                      BlurRadius="18"
+                      Color="#7C3AED"
+                      Opacity="0.75"/>
 </ResourceDictionary>

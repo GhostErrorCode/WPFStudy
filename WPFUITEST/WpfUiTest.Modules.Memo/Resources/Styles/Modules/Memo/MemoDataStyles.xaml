@@ -16,9 +16,20 @@
         <Setter Property="Margin" Value="0,0,0,0" />
         <Setter Property="CornerRadius" Value="10,10,10,10" />
         <!-- 裁剪超出区域 -->
-        <Setter Property="ClipToBounds" Value="True" />
         <!-- 渐变背景色 -->
         <Setter Property="Background" Value="{DynamicResource MemoDataGradientBrush}" />
+        <Style.Triggers>
+            <!-- 监听父级 Grid 的 IsMouseOver，这里不可能监听Border，因Border与文字图标等是兄弟元素，所以指向文件、图标时，IsMouseOver将会是false -->
+            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Grid}}" Value="True">
+                <Setter Property="Effect" Value="{DynamicResource MemoDataDropShadowEffect}" />
+                <!--
+                        BlurRadius="15"：控制发光模糊程度，值越大光晕越扩散。
+                        ShadowDepth="0"：设置为 0 使阴影均匀分布在四周，形成对称发光效果。
+                        Color="#FFD700"：发光颜色（这里用了金色），你可以随意更换。
+                        Opacity="0.8"：发光透明度，适当降低可让效果更柔和。
+                    -->
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <!-- 数据显示图标，用于区分已完成和待办状态 -->

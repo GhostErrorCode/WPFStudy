@@ -22,4 +22,21 @@
         <GradientStop Color="#A7F3D0" Offset="1.0"/>
         <!-- 右下角柔青绿（主色进一步浅化） -->
     </LinearGradientBrush>
+
+    <!-- ==============================================
+         1. 浅色主题 发光特效（柔和不刺眼）
+         适配：浅色背景卡片
+    ============================================== -->
+    <!-- 浅色 - 待办事项（靛紫柔光） -->
+    <DropShadowEffect x:Key="ToDoDataPendingDropShadowEffect"
+                      ShadowDepth="0"
+                      BlurRadius="16"
+                      Color="#7C3AED"
+                      Opacity="0.5"/>
+    <!-- 浅色 - 已完成（青绿柔光） -->
+    <DropShadowEffect x:Key="ToDoDataCompletedDropShadowEffect"
+                      ShadowDepth="0"
+                      BlurRadius="16"
+                      Color="#10B981"
+                      Opacity="0.5"/>
 </ResourceDictionary>

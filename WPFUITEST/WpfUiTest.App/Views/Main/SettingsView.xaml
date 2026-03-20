@@ -114,6 +114,7 @@
                 />
             <!-- 可展开扩展面板的卡片 -->
             <ui:CardExpander
+                Margin="0,0,0,40"
                 ContentPadding="0"
                 Icon="{ui:ImageIcon 'pack://application:,,,/WpfUiTest.App;component/Resources/Images/User.jpg', Width=38, Height=35}"
                 >
@@ -259,10 +260,11 @@
                         </Grid>
                     </ui:Anchor>
 
-                    <!-- 版本号 -->
+                    <!-- 声明和致谢 -->
                     <ui:TextBlock
                         Margin="16,16,16,16"
-                        Text="{Binding SettingsAboutViewModel.Version}"
+                        FontSize="15"
+                        Text="{Binding SettingsAboutViewModel.DeclarationAndAcknowledgements}"
                         />
                 </StackPanel>
             </ui:CardExpander>
