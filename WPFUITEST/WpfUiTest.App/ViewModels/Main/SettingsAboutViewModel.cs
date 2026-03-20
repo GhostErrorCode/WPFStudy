@@ -50,7 +50,7 @@ namespace WpfUiTest.App.ViewModels.Main
             this.DeclarationAndAcknowledgements = 
                 $"This software uses the WPF UI library (https://github.com/lepoco/wpfui), {Environment.NewLine}" +
                 $"licensed under the MIT License. {Environment.NewLine}" +
-                $"Copyright (c) 2025 lepo.co | Leszek Pomianowski and WPF UI Contributors." +
+                $"Copyright (c) 2021-2025 Leszek Pomianowski and WPF UI Contributors." +
                 $"";
         }
     }
