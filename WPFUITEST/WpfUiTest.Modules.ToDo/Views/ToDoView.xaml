@@ -146,7 +146,7 @@
         <!-- 没有数据的时候显示的提示信息 -->
         <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical" Visibility="{Binding ToDoItems.Count,Converter={StaticResource ToDoItemsCountToVisibility}}">
             <ui:Image
-                Source="pack://application:,,,/WpfUiTest.App;component/Resources/Images/User.jpg"
+                Source="pack://application:,,,/GhostToDo;component/Resources/Images/User.jpg"
                 Width="300"
                 Height="180"
                 CornerRadius="20"
@@ -157,6 +157,7 @@
                 HorizontalAlignment="Center"
                 FontSize="20"
                 FontWeight="Bold"
+                Foreground="{ui:ThemeResource TextFillColorPrimaryBrush}"
                 />
         </StackPanel>
 

@@ -27,7 +27,7 @@
             Style="{StaticResource MainViewUITitleBarStyle}">
             <!-- 标题栏图标 -->
             <ui:TitleBar.Icon>
-                <ui:ImageIcon Source="pack://application:,,,/WpfUiTest.App;component/Resources/Images/User.jpg" />
+                <ui:ImageIcon Source="pack://application:,,,/GhostToDo;component/Resources/Images/User.jpg" />
             </ui:TitleBar.Icon>
             <!-- 标题栏标题文本 直接设置Title或Header可能导致无法图标和标题无法对齐-->
             <ui:TitleBar.Header>

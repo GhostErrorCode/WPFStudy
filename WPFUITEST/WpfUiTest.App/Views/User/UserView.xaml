@@ -32,7 +32,7 @@
             Style="{StaticResource UserViewUITitleBarStyle}">
             <!-- 标题栏图标 -->
             <ui:TitleBar.Icon>
-                <ui:ImageIcon Source="pack://application:,,,/WpfUiTest.App;component/Resources/Images/User.jpg" />
+                <ui:ImageIcon Source="pack://application:,,,/GhostToDo;component/Resources/Images/User.jpg" />
             </ui:TitleBar.Icon>
             <!-- 标题栏标题文本 直接设置Title或Header可能导致无法图标和标题无法对齐-->
             <ui:TitleBar.Header>
@@ -51,7 +51,7 @@
             <!-- 第二行第一列: 登录注册界面图片-->
             <!-- 图片容器：居中显示，填满左列 -->
             <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource UserLeftImageBorderStyle}">
-                <ui:Image Source="pack://application:,,,/WpfUiTest.App;component/Resources/Images/User.jpg" Style="{StaticResource UserLeftUIImageStyle}" />
+                <ui:Image Source="pack://application:,,,/GhostToDo;component/Resources/Images/User.jpg" Style="{StaticResource UserLeftUIImageStyle}" />
             </Border>
             <!-- 第二行第二列: 登录/注册功能-->
             <!-- 注册页面 -->

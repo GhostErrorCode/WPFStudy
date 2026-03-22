@@ -60,7 +60,7 @@ namespace WpfUiTest.App
         public App()
         {
             // 显示启动动画
-            Splash.ShowAsync("pack://application:,,,/WpfUiTest.App;component/Resources/Images/User.jpg");
+            Splash.ShowAsync("pack://application:,,,/GhostToDo;component/Resources/Images/User.jpg");
 
             // 获取命令行参数：Skip(1)跳过第一个元素（程序自身完整路径），仅保留用户传入的有效参数
             string[] args = Environment.GetCommandLineArgs().Skip(1).ToArray();
