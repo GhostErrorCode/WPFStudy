@@ -116,7 +116,7 @@
             <ui:CardExpander
                 Margin="0,0,0,40"
                 ContentPadding="0"
-                Icon="{ui:ImageIcon 'pack://application:,,,/WpfUiTest.App;component/Resources/Images/User.jpg', Width=38, Height=35}"
+                Icon="{ui:ImageIcon 'pack://application:,,,/GhostToDo;component/Resources/Images/User.jpg', Width=38, Height=35}"
                 >
                 <!-- 顶层区域（左侧+右侧） -->
                 <ui:CardExpander.Header>
