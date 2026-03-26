@@ -258,9 +258,9 @@ namespace WpfUiTest.App.ViewModels.Main
                     Content = new TextBlock
                     {
                         Text = $"是否删除此待办事项，此待办事项信息如下：{Environment.NewLine}" +
-                               $"├─ 状态：{(item.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}" +
-                               $"├─ 标题：{item.Title}{Environment.NewLine}" +
-                               $"└─ 内容：{item.Content}",
+                               $"----- 状态 -----{Environment.NewLine}{(item.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 标题 -----{Environment.NewLine}{item.Title}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 内容 -----{Environment.NewLine}{item.Content}",
                         TextWrapping = TextWrapping.Wrap
                     },
                     PrimaryButtonAppearance = ControlAppearance.Danger,
@@ -340,9 +340,9 @@ namespace WpfUiTest.App.ViewModels.Main
                     Content = new TextBlock
                     {
                         Text = $"是否一键完成此待办事项，此待办事项信息如下：{Environment.NewLine}" +
-                               $"├─ 状态：{(item.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}" +
-                               $"├─ 标题：{item.Title}{Environment.NewLine}" +
-                               $"└─ 内容：{item.Content}",
+                               $"----- 状态 -----{Environment.NewLine}{(item.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 标题 -----{Environment.NewLine}{item.Title}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 内容 -----{Environment.NewLine}{item.Content}",
                         TextWrapping = TextWrapping.Wrap
                     },
                     PrimaryButtonText = "一键完成",

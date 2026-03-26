@@ -284,9 +284,9 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
                     Content = new TextBlock
                     {
                         Text = $"待办事项信息如下：{Environment.NewLine}" +
-                               $"├─ 状态：{(this._toDoItem.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}" +
-                               $"├─ 标题：{this._toDoItem.Title}{Environment.NewLine}" +
-                               $"└─ 内容：{this._toDoItem.Content}",
+                               $"----- 状态 -----{Environment.NewLine}{(this._toDoItem.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 标题 -----{Environment.NewLine}{this._toDoItem.Title}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 内容 -----{Environment.NewLine}{this._toDoItem.Content}",
                         TextWrapping = TextWrapping.Wrap
                     },
                     PrimaryButtonText = "确认添加！提交至数据库",
@@ -343,12 +343,12 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
                     Content = new TextBlock
                     {
                         Text = $"修改后待办事项信息如下：{Environment.NewLine}" +
-                               $"├─ ID：{this._toDoItem.Id}{Environment.NewLine}" +
-                               $"├─ 标题：{this._toDoItem.Title}{Environment.NewLine}" +
-                               $"├─ 内容：{this._toDoItem.Content}{Environment.NewLine}" +
-                               $"├─ 状态：{(this._toDoItem.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}" +
-                               $"├─ 创建日期：{this._toDoItem.CreateDate}{Environment.NewLine}" +
-                               $"└─ 修改日期：{this._toDoItem.UpdateDate}",
+                               $"----- ID -----{Environment.NewLine}{this._toDoItem.Id}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 标题 -----{Environment.NewLine}{this._toDoItem.Title}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 内容 -----{Environment.NewLine}{this._toDoItem.Content}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 状态 -----{Environment.NewLine}{(this._toDoItem.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 创建日期 -----{Environment.NewLine}{this._toDoItem.CreateDate}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 修改日期 -----{Environment.NewLine}{this._toDoItem.UpdateDate}",
                         TextWrapping = TextWrapping.Wrap
                     },
                     PrimaryButtonText = "确认修改！保存到数据库中",
@@ -398,12 +398,12 @@ namespace WpfUiTest.Modules.ToDo.ViewModels
                     Content = new TextBlock
                     {
                         Text = $"需要删除的待办事项信息如下：{Environment.NewLine}" +
-                               $"├─ ID：{this._toDoItem.Id}{Environment.NewLine}" +
-                               $"├─ 标题：{this._toDoItem.Title}{Environment.NewLine}" +
-                               $"├─ 内容：{this._toDoItem.Content}{Environment.NewLine}" +
-                               $"├─ 状态：{(this._toDoItem.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}" +
-                               $"├─ 创建日期：{this._toDoItem.CreateDate}{Environment.NewLine}" +
-                               $"└─ 修改日期：{this._toDoItem.UpdateDate}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- ID -----{Environment.NewLine}{this._toDoItem.Id}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 标题 -----{Environment.NewLine}{this._toDoItem.Title}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 内容 -----{Environment.NewLine}{this._toDoItem.Content}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 状态 -----{Environment.NewLine}{(this._toDoItem.Status == TodoStatusEnum.Pending ? "待办" : "已完成")}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 创建日期 -----{Environment.NewLine}{this._toDoItem.CreateDate}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 修改日期 -----{Environment.NewLine}{this._toDoItem.UpdateDate}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}" +
                                $"你真的会失去它，永远",
                         TextWrapping = TextWrapping.Wrap
                     },

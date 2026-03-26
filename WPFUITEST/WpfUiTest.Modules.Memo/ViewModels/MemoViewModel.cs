@@ -262,8 +262,8 @@ namespace WpfUiTest.Modules.Memo.ViewModels
                     Content = new TextBlock
                     {
                         Text = $"备忘录信息如下：{Environment.NewLine}" +
-                               $"├─ 标题：{this._memoItem.Title}{Environment.NewLine}" +
-                               $"└─ 内容：{this._memoItem.Content}",
+                               $"----- 标题 -----{Environment.NewLine}{this._memoItem.Title}{Environment.NewLine}" +
+                               $"----- 内容 -----{Environment.NewLine}{this._memoItem.Content}",
                         TextWrapping = TextWrapping.Wrap
                     },
                     PrimaryButtonText = "确认添加！提交至数据库",
@@ -313,11 +313,11 @@ namespace WpfUiTest.Modules.Memo.ViewModels
                     Content = new TextBlock
                     {
                         Text = $"修改后备忘录信息如下：{Environment.NewLine}" +
-                               $"├─ ID：{this._memoItem.Id}{Environment.NewLine}" +
-                               $"├─ 标题：{this._memoItem.Title}{Environment.NewLine}" +
-                               $"├─ 内容：{this._memoItem.Content}{Environment.NewLine}" +
-                               $"├─ 创建日期：{this._memoItem.CreateDate}{Environment.NewLine}" +
-                               $"└─ 修改日期：{this._memoItem.UpdateDate}",
+                               $"----- ID -----{Environment.NewLine}{this._memoItem.Id}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 标题 -----{Environment.NewLine}{this._memoItem.Title}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 内容 -----{Environment.NewLine}{this._memoItem.Content}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 创建日期 -----{Environment.NewLine}{this._memoItem.CreateDate}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 修改日期 -----{Environment.NewLine}{this._memoItem.UpdateDate}",
                         TextWrapping = TextWrapping.Wrap
                     },
                     PrimaryButtonText = "确认修改！保存到数据库中",
@@ -366,11 +366,11 @@ namespace WpfUiTest.Modules.Memo.ViewModels
                     Content = new TextBlock
                     {
                         Text = $"需要删除的备忘录信息如下：{Environment.NewLine}" +
-                               $"├─ ID：{this._memoItem.Id}{Environment.NewLine}" +
-                               $"├─ 标题：{this._memoItem.Title}{Environment.NewLine}" +
-                               $"├─ 内容：{this._memoItem.Content}{Environment.NewLine}" +
-                               $"├─ 创建日期：{this._memoItem.CreateDate}{Environment.NewLine}" +
-                               $"└─ 修改日期：{this._memoItem.UpdateDate}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- ID -----{Environment.NewLine}{this._memoItem.Id}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 标题 -----{Environment.NewLine}{this._memoItem.Title}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 内容 -----{Environment.NewLine}{this._memoItem.Content}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 创建日期 -----{Environment.NewLine}{this._memoItem.CreateDate}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 修改日期 -----{Environment.NewLine}{this._memoItem.UpdateDate}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}" + 
                                $"你真的会失去它，永远",
                         TextWrapping = TextWrapping.Wrap
                     },
