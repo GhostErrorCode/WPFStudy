@@ -13,7 +13,8 @@
             <!-- 备忘录的标题 -->
             <ui:TextBox
                 Text="{Binding Title}"
-                TextWrapping="NoWrap"
+                TextWrapping="Wrap"
+                AcceptsReturn="True"
                 Height="Auto"
                 PlaceholderText="请输入备忘录标题..."
                 Style="{StaticResource InputUiTextBoxStyle}"
@@ -22,6 +23,7 @@
             <ui:TextBox
                 Text="{Binding Content}"
                 TextWrapping="Wrap"
+                AcceptsReturn="True"
                 Height="Auto"
                 PlaceholderText="请输入备忘录内容..."
                 Style="{StaticResource InputUiTextBoxStyle}"

@@ -132,7 +132,7 @@
             <!-- 第2行 待办事项数据区域 -->
             <ui:ListView
                 Grid.Row="1"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ScrollViewer.CanContentScroll="False"
                 ItemsSource="{Binding IndexToDoViewModel.IndexToDoItems}"
                 Style="{StaticResource IndexDataListViewStyle}"
                 >
@@ -254,7 +254,7 @@
             <!-- 第2行 备忘录数据区域 -->
             <ui:ListView
                 Grid.Row="1"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ScrollViewer.CanContentScroll="False"
                 ItemsSource="{Binding MemoViewModel.IndexMemoItems}"
                 Style="{StaticResource IndexDataListViewStyle}"
                 >

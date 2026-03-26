@@ -8,7 +8,8 @@
       xmlns:pagination="clr-namespace:WpfUiTest.Controls.Controls.Pagination;assembly=WpfUiTest.Controls"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:WpfUiTest.Modules.Memo.Views"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"
+      ScrollViewer.CanContentScroll="False"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MemoView">
 

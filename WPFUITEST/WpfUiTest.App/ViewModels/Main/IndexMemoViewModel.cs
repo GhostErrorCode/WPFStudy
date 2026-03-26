@@ -234,8 +234,8 @@ namespace WpfUiTest.App.ViewModels.Main
                     Content = new TextBlock
                     {
                         Text = $"是否删除此备忘录，此备忘录信息如下：{Environment.NewLine}" +
-                               $"├─ 标题：{item.Title}{Environment.NewLine}" +
-                               $"└─ 内容：{item.Content}",
+                               $"----- 标题 -----{Environment.NewLine}{item.Title}{Environment.NewLine}{Environment.NewLine}" +
+                               $"----- 内容 -----{Environment.NewLine}{item.Content}",
                         TextWrapping = TextWrapping.Wrap
                     },
                     PrimaryButtonAppearance = ControlAppearance.Danger,

@@ -126,6 +126,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Margin" Value="2,5,15,5" />
         <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="AcceptsReturn" Value="True" />
     </Style>
     <!-- 抽屉：主要按钮（用于添加、修改保存、删除按钮） -->
     <Style x:Key="ToDoDrawerPrimaryUiButtonStyle" TargetType="{x:Type ui:Button}" BasedOn="{StaticResource {x:Type ui:Button}}">

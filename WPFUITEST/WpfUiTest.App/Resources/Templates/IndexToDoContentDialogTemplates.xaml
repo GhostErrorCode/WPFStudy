@@ -28,7 +28,8 @@
             <!-- 待办的标题 -->
             <ui:TextBox
                 Text="{Binding IndexToDoItem.Title}"
-                TextWrapping="NoWrap"
+                TextWrapping="Wrap"
+                AcceptsReturn="True"
                 Height="Auto"
                 PlaceholderText="请输入待办事项标题..."
                 Style="{StaticResource InputUiTextBoxStyle}"
@@ -37,6 +38,7 @@
             <ui:TextBox
                 Text="{Binding IndexToDoItem.Content}"
                 TextWrapping="Wrap"
+                AcceptsReturn="True"
                 Height="Auto"
                 PlaceholderText="请输入待办事项内容..."
                 Style="{StaticResource InputUiTextBoxStyle}"
