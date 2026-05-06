@@ -157,6 +157,9 @@ namespace WpfUiTest.App.ViewModels.User
                 {
                     this._logger.LogWarning("[用户页（UserView）] 自动登录失败。登录凭证已超时失效，当前需要手动登录");
                     this._messenger.ShowCaution(SnackbarTarget.UserView, "登录凭证失效", "登录凭证已超时失效，当前需要手动登录");
+                    // 删除登录凭证并直接返回
+                    LoginCredentialHelper.DeleteLoginCredential();
+                    return;
                 }
                 // ====== 以下为登录凭证有效的情况 ======
                 // 尝试登录凭证
